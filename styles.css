@@ -105,12 +105,25 @@ body {
 }
 
 .project-image {
+  position: relative;
   width: 100%;
   aspect-ratio: 16 / 10;
-  background-color: var(--background);
-  border: 1px solid var(--border-color);
+  background-color: #1a1a1a;
   border-radius: 12px;
   margin-bottom: 1rem;
+  overflow: hidden;
+}
+
+.project-label {
+  position: absolute;
+  bottom: 0.75rem;
+  left: 0.75rem;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 400;
+  background-color: rgba(255, 255, 255, 0.95);
+  color: #000;
+  border-radius: 100px;
 }
 
 .project-description {
