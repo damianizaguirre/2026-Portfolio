@@ -109,9 +109,27 @@ body {
   width: 100%;
   aspect-ratio: 16 / 10;
   background-color: #1a1a1a;
+  background-size: cover;
+  background-position: center;
   border-radius: 12px;
   margin-bottom: 1rem;
   overflow: hidden;
+}
+
+.project-carfully {
+  background-image: url('images/carfully.png');
+}
+
+.project-cbre {
+  background-image: url('images/cbre-inegra.png');
+}
+
+.project-mismo {
+  background-image: url('images/mismo.png');
+}
+
+.project-sancorda {
+  background-image: url('images/sancorda.png');
 }
 
 .project-label {
