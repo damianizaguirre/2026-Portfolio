@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const projectCards = document.querySelectorAll('.project-card');
   const modals = document.querySelectorAll('.modal');
   const fullscreenButtons = document.querySelectorAll('.modal-fullscreen');
+  const backButtons = document.querySelectorAll('.modal-back');
 
   // Open modal when clicking project card
   projectCards.forEach(card => {
@@ -29,10 +30,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Close modal when clicking overlay (outside modal)
+  // Close modal when clicking overlay (outside modal) - only if not fullscreen
   modalOverlay.addEventListener('click', (e) => {
     if (e.target === modalOverlay) {
-      closeAllModals();
+      const activeModal = document.querySelector('.modal.active');
+      if (activeModal && !activeModal.classList.contains('fullscreen')) {
+        closeAllModals();
+      }
     }
   });
 
@@ -43,12 +47,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Fullscreen toggle
+  // Fullscreen - opens modal in fullscreen mode
   fullscreenButtons.forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
       const modal = btn.closest('.modal');
-      modal.classList.toggle('fullscreen');
+      modal.classList.add('fullscreen');
+    });
+  });
+
+  // Back button - closes modal and returns to work page
+  backButtons.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closeAllModals();
     });
   });
 
