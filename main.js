@@ -1,23 +1,14 @@
 // Portfolio main JavaScript file
 document.addEventListener('DOMContentLoaded', () => {
-  // Navigation button handling
-  const navButtons = document.querySelectorAll('.nav-btn');
-  navButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      navButtons.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-    });
-  });
-
   // Modal functionality
   const modalOverlay = document.getElementById('modal-overlay');
-  const projectCards = document.querySelectorAll('.project-card');
+  const caseStudyCards = document.querySelectorAll('.case-study-card');
   const modals = document.querySelectorAll('.modal');
   const fullscreenButtons = document.querySelectorAll('.modal-fullscreen');
   const backButtons = document.querySelectorAll('.modal-back');
 
-  // Open modal when clicking project card
-  projectCards.forEach(card => {
+  // Open modal when clicking case study card
+  caseStudyCards.forEach(card => {
     card.addEventListener('click', () => {
       const projectId = card.dataset.project;
       const modal = document.getElementById(`modal-${projectId}`);
