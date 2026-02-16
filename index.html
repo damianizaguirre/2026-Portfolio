@@ -8,37 +8,82 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <header class="top-nav">
+    <a href="#" class="nav-brand">damian izaguirre</a>
+    <nav class="nav-links">
+      <a href="#work" class="nav-link active">Work</a>
+      <a href="#sandbox" class="nav-link">Sandbox</a>
+      <a href="#about" class="nav-link">About</a>
+    </nav>
+  </header>
+
   <main>
     <section class="hero">
       <div class="hero-content">
-        <h1 class="hero-title">damian izaguirre</h1>
-        <p class="hero-tagline">Designing impactful products by giving life through meaningful design.</p>
+        <h1 class="hero-tagline">Designing impactful products by giving life through meaningful design.</h1>
         <p class="hero-subtitle">Currently building <strong>Mismo</strong>, the future of safe driving.</p>
-        <nav class="hero-nav">
-          <button class="nav-btn active" data-section="work">Work</button>
-          <button class="nav-btn" data-section="sandbox">Sandbox</button>
-          <button class="nav-btn" data-section="about">About</button>
-        </nav>
       </div>
     </section>
 
-    <section class="work" id="work">
-      <div class="work-grid">
-        <article class="project-card" data-project="carfully">
-          <div class="project-image project-carfully"></div>
-          <p class="project-description">Creating a transparent auto-financing tool to reduce anxiety for first-time car buyers.</p>
+    <section class="case-studies" id="work">
+      <div class="section-header">
+        <h2 class="section-title">Case Studies <span class="section-count">(4)</span></h2>
+      </div>
+      <div class="case-studies-list">
+        <article class="case-study-card" data-project="carfully">
+          <div class="case-study-thumbnail">
+            <img src="images/carfully.png" alt="Carfully project thumbnail">
+          </div>
+          <div class="case-study-info">
+            <h3 class="case-study-title">Carfully</h3>
+            <p class="case-study-description">Creating a transparent auto-financing tool to reduce anxiety for first-time car buyers.</p>
+            <div class="case-study-tags">
+              <span class="tag">Product Design</span>
+              <span class="tag">2025</span>
+            </div>
+          </div>
         </article>
-        <article class="project-card" data-project="cbre">
-          <div class="project-image project-cbre"></div>
-          <p class="project-description">Where employee-centered solutions meets business needs.</p>
+        <article class="case-study-card" data-project="cbre">
+          <div class="case-study-thumbnail">
+            <img src="images/cbre-integra.png" alt="CBRE Integra project thumbnail">
+          </div>
+          <div class="case-study-info">
+            <h3 class="case-study-title">CBRE Integra</h3>
+            <p class="case-study-description">Where employee-centered solutions meets business needs.</p>
+            <div class="case-study-tags">
+              <span class="tag">Design & Research</span>
+              <span class="tag">Hackathon</span>
+              <span class="tag">2nd Place</span>
+            </div>
+          </div>
         </article>
-        <article class="project-card" data-project="mismo">
-          <div class="project-image project-mismo"></div>
-          <p class="project-description">Building a driver centered solution from 0-1</p>
+        <article class="case-study-card" data-project="mismo">
+          <div class="case-study-thumbnail">
+            <img src="images/mismo.png" alt="Mismo project thumbnail">
+          </div>
+          <div class="case-study-info">
+            <h3 class="case-study-title">Mismo</h3>
+            <p class="case-study-description">Building a driver centered solution from 0-1.</p>
+            <div class="case-study-tags">
+              <span class="tag">Product Design</span>
+              <span class="tag">0 → 1</span>
+              <span class="tag">2026</span>
+            </div>
+          </div>
         </article>
-        <article class="project-card" data-project="sancorda">
-          <div class="project-image project-sancorda"></div>
-          <p class="project-description">Designing an interactive 3D coronary artery visualization and planning platform.</p>
+        <article class="case-study-card" data-project="sancorda">
+          <div class="case-study-thumbnail">
+            <img src="images/sancorda.png" alt="Sancorda Medical project thumbnail">
+          </div>
+          <div class="case-study-info">
+            <h3 class="case-study-title">Sancorda Medical</h3>
+            <p class="case-study-description">Designing an interactive 3D coronary artery visualization and planning platform.</p>
+            <div class="case-study-tags">
+              <span class="tag">UX Design</span>
+              <span class="tag">Medical</span>
+              <span class="tag">2025</span>
+            </div>
+          </div>
         </article>
       </div>
     </section>
@@ -123,7 +168,7 @@
             </div>
             <div>
               <p>Secured 2nd place out of 30 teams (100+ participants) in the <strong>CBRE Company Track</strong> at the UT Dallas Design-a-thon Challenge. My team and I conducted rapid UX <strong>research, prototyping, and design</strong> for a real-world CBRE business problem.</p>
-              <p>It was an intense, fun, and rewarding experience of rapid research, design, and presenting! Huge kudos to my teammates Dung Nguyen and Ajith Anand for their amazing work and dedication. 👏</p>
+              <p>It was an intense, fun, and rewarding experience of rapid research, design, and presenting! Huge kudos to my teammates Dung Nguyen and Ajith Anand for their amazing work and dedication.</p>
               <p>Thank you to <u>CBRE</u>, the <u>UX Club at UT Dallas</u>, and everyone involved in hosting this amazing event!</p>
             </div>
           </div>
@@ -184,7 +229,7 @@
         </nav>
         <button class="modal-fullscreen" aria-label="Toggle fullscreen">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2 2h3"/>
           </svg>
         </button>
       </div>
