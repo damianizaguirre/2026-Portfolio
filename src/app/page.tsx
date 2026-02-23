@@ -1,7 +1,17 @@
+import Navbar from "@/components/Navbar";
+import Hero from "@/components/Hero";
+import Projects from "@/components/Projects";
+import Footer from "@/components/Footer";
+
 export default function Home() {
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <h1 className="text-4xl font-bold">Portfolio</h1>
-    </div>
+    <>
+      <Navbar />
+      <main>
+        <Hero />
+        <Projects />
+      </main>
+      <Footer />
+    </>
   );
 }
