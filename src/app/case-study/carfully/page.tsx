@@ -197,7 +197,7 @@ export default function CarfullyCaseStudy() {
                 style={{ fontSize: "var(--text-nav)" }}
               >
                 Hold negative or wary impressions of salespeople, viewing them
-                as untruthful and difficult to trust.
+                as untruthful and difficult to trust
               </p>
             </div>
           </div>
