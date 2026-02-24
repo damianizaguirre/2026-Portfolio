@@ -22,23 +22,23 @@ export default function ProjectCard({
     <div className="group">
       <Link href={href} className="block">
         <div
-          className={`${bgColor} rounded-md overflow-hidden transition-transform duration-300 group-hover:scale-[1.01]`}
+          className={`${bgColor} overflow-hidden transition-all duration-300 group-hover:shadow-lg`}
         >
           <Image
             src={imageSrc}
             alt={imageAlt}
             width={888}
-            height={546}
-            className="w-full h-auto object-cover"
+            height={609}
+            className="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-[1.02]"
             priority
           />
         </div>
       </Link>
-      <div className="flex items-center justify-between mt-3 px-0.5">
-        <p className="text-[16px] md:text-[20px] lg:text-[24px] font-normal text-black">
+      <div className="flex items-baseline justify-between mt-2.5 gap-4">
+        <p className="text-[16px] md:text-[20px] lg:text-[24px] font-normal text-black leading-snug">
           {title}
         </p>
-        <p className="text-[14px] md:text-[18px] lg:text-[24px] font-normal text-black text-right whitespace-nowrap ml-4">
+        <p className="text-[14px] md:text-[18px] lg:text-[24px] font-normal text-black whitespace-nowrap">
           {meta}
         </p>
       </div>
