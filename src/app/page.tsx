@@ -89,10 +89,7 @@ export default function Home() {
           </div>
           <div
             className="flex flex-col"
-            style={{
-              gap: "clamp(28px, 3.1vw, 60px)",
-              marginTop: "var(--col-offset)",
-            }}
+            style={{ gap: "clamp(28px, 3.1vw, 60px)" }}
           >
             <ProjectCard {...projects[1]} />
             <ProjectCard {...projects[3]} />
