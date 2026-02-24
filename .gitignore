@@ -8,5 +8,12 @@ Thumbs.db
 
 # Node
 node_modules/
+
+# Next.js
+.next/
+out/
 dist/
 build/
+
+# Vercel
+.vercel
