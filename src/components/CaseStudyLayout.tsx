@@ -50,6 +50,17 @@ export default function CaseStudyLayout({
             width: "clamp(140px, 16.5vw, 317px)",
           }}
         >
+          <Link
+            href="/"
+            className="font-normal text-black hover:text-muted transition-colors inline-block"
+            style={{
+              fontSize: "var(--text-nav)",
+              marginBottom: "clamp(16px, 2.1vw, 40px)",
+            }}
+          >
+            &larr; Back
+          </Link>
+
           <nav
             className="sticky flex flex-col"
             style={{
@@ -70,6 +81,17 @@ export default function CaseStudyLayout({
           </nav>
         </aside>
 
+        {/* Mobile: just a back link, no sidebar */}
+        <div className="lg:hidden" style={{ padding: "0 var(--px-side)", marginBottom: "clamp(16px, 2.1vw, 40px)" }}>
+          <Link
+            href="/"
+            className="font-normal text-black hover:text-muted transition-colors inline-block"
+            style={{ fontSize: "var(--text-nav)" }}
+          >
+            &larr; Back
+          </Link>
+        </div>
+
         {/* Central Content — centered */}
         <div
           className="mx-auto"
@@ -78,16 +100,6 @@ export default function CaseStudyLayout({
             maxWidth: "calc(100% - var(--px-side) * 2)",
           }}
         >
-          <Link
-            href="/"
-            className="font-normal text-black hover:text-muted transition-colors inline-block"
-            style={{
-              fontSize: "var(--text-nav)",
-              marginBottom: "clamp(16px, 2.1vw, 40px)",
-            }}
-          >
-            &larr; Back
-          </Link>
 
           <header style={{ marginBottom: "clamp(32px, 4.2vw, 80px)" }}>
             <p
