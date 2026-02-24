@@ -41,7 +41,7 @@ export default function CaseStudyLayout({
       <Navbar />
 
       <div className="relative" style={{ padding: "clamp(24px, 2.6vw, 50px) 0" }}>
-        {/* Sidebar — absolutely positioned on the left on large screens */}
+        {/* Sidebar — only visible on large screens */}
         <aside
           className="hidden lg:block absolute"
           style={{
@@ -50,18 +50,6 @@ export default function CaseStudyLayout({
             width: "clamp(140px, 16.5vw, 317px)",
           }}
         >
-          <Link
-            href="/"
-            className="font-normal text-black hover:text-muted transition-colors inline-block"
-            style={{
-              fontSize: "var(--text-nav)",
-              marginBottom: "clamp(16px, 2.1vw, 40px)",
-              marginLeft: "clamp(20px, 2.3vw, 44px)",
-            }}
-          >
-            &larr; Back
-          </Link>
-
           <nav
             className="sticky flex flex-col"
             style={{
@@ -82,8 +70,14 @@ export default function CaseStudyLayout({
           </nav>
         </aside>
 
-        {/* Mobile: back button + horizontal nav */}
-        <div className="lg:hidden" style={{ padding: "0 var(--px-side)" }}>
+        {/* Central Content — centered */}
+        <div
+          className="mx-auto"
+          style={{
+            width: "clamp(340px, 51.2vw, 983px)",
+            maxWidth: "calc(100% - var(--px-side) * 2)",
+          }}
+        >
           <Link
             href="/"
             className="font-normal text-black hover:text-muted transition-colors inline-block"
@@ -94,34 +88,7 @@ export default function CaseStudyLayout({
           >
             &larr; Back
           </Link>
-          <nav
-            className="flex flex-row flex-wrap"
-            style={{
-              gap: "clamp(6px, 0.8vw, 14px)",
-              marginBottom: "clamp(16px, 2.1vw, 40px)",
-            }}
-          >
-            {sideNav.map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                className="font-normal text-black hover:text-muted transition-colors"
-                style={{ fontSize: "var(--text-nav)" }}
-              >
-                {item.label}
-              </a>
-            ))}
-          </nav>
-        </div>
 
-        {/* Central Content — centered */}
-        <div
-          className="mx-auto"
-          style={{
-            width: "clamp(340px, 51.2vw, 983px)",
-            maxWidth: "calc(100% - var(--px-side) * 2)",
-          }}
-        >
           <header style={{ marginBottom: "clamp(32px, 4.2vw, 80px)" }}>
             <p
               className="font-normal text-muted"
