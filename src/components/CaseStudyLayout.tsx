@@ -43,10 +43,10 @@ export default function CaseStudyLayout({
       <div className="relative" style={{ padding: "clamp(24px, 2.6vw, 50px) 0" }}>
         {/* Sidebar — only visible on large screens */}
         <aside
-          className="hidden lg:block absolute"
+          className="hidden lg:block fixed"
           style={{
             left: "var(--px-side)",
-            top: "clamp(24px, 2.6vw, 50px)",
+            top: "calc(var(--nav-h) + clamp(24px, 2.6vw, 50px))",
             width: "clamp(140px, 16.5vw, 317px)",
           }}
         >
@@ -62,11 +62,8 @@ export default function CaseStudyLayout({
           </Link>
 
           <nav
-            className="sticky flex flex-col"
-            style={{
-              top: "calc(var(--nav-h) + clamp(12px, 1.3vw, 24px))",
-              gap: "clamp(4px, 0.42vw, 8px)",
-            }}
+            className="flex flex-col"
+            style={{ gap: "clamp(4px, 0.42vw, 8px)" }}
           >
             {sideNav.map((item) => (
               <a
