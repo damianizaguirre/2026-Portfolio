@@ -28,16 +28,17 @@ export default function CarfullyCaseStudy() {
         { name: "Maya Poduval" },
       ]}
       skills={["Product Design", "User Research", "Prototyping"]}
+      heroImage={
+        <Image
+          src="/images/carfully-thumbnail.png"
+          alt="Carfully auto-financing tool on laptop"
+          width={888}
+          height={546}
+          className="w-full h-auto rounded-md"
+          priority
+        />
+      }
     >
-      <Image
-        src="/images/carfully-thumbnail.png"
-        alt="Carfully auto-financing tool on laptop"
-        width={888}
-        height={546}
-        className="w-full h-auto rounded-md mb-16"
-        priority
-      />
-
       <CaseStudySection
         id="challenge"
         label="CHALLENGE"

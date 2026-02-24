@@ -15,6 +15,7 @@ interface TeamMember {
 
 interface CaseStudyLayoutProps {
   children: React.ReactNode;
+  heroImage: React.ReactNode;
   title: string;
   subtitle: string;
   sideNav: SideNavItem[];
@@ -26,6 +27,7 @@ interface CaseStudyLayoutProps {
 
 export default function CaseStudyLayout({
   children,
+  heroImage,
   title,
   subtitle,
   sideNav,
@@ -74,7 +76,8 @@ export default function CaseStudyLayout({
                 {title}
               </h1>
 
-              {/* Project details */}
+              <div className="mb-10">{heroImage}</div>
+
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 border-t border-black/10 pt-8">
                 <div>
                   <p className="text-[20px] md:text-[24px] font-light text-black mb-1">

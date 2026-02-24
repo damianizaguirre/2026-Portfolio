@@ -23,16 +23,17 @@ export default function SancordaCaseStudy() {
       role="Product Designer Intern"
       team={[{ name: "Jeremy Warren" }, { name: "John Woo" }]}
       skills={["Product Design", "Product Research", "Prototyping"]}
+      heroImage={
+        <Image
+          src="/images/sancorda-thumbnail.png"
+          alt="Sancorda Medical planning platform with 3D visualization"
+          width={887}
+          height={546}
+          className="w-full h-auto rounded-md"
+          priority
+        />
+      }
     >
-      <Image
-        src="/images/sancorda-thumbnail.png"
-        alt="Sancorda Medical planning platform with 3D visualization"
-        width={887}
-        height={546}
-        className="w-full h-auto rounded-md mb-16"
-        priority
-      />
-
       <CaseStudySection
         id="challenge"
         label="OVERVIEW"

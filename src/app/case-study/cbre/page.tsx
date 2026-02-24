@@ -27,16 +27,17 @@ export default function CBRECaseStudy() {
         { name: "Jack Morgan" },
       ]}
       skills={["Product Design", "User Research", "Prototyping"]}
+      heroImage={
+        <Image
+          src="/images/cbre-thumbnail.png"
+          alt="CBRE Integra dashboard and virtual office"
+          width={888}
+          height={609}
+          className="w-full h-auto rounded-md"
+          priority
+        />
+      }
     >
-      <Image
-        src="/images/cbre-thumbnail.png"
-        alt="CBRE Integra dashboard and virtual office"
-        width={888}
-        height={609}
-        className="w-full h-auto rounded-md mb-16"
-        priority
-      />
-
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mb-20">
         <div className="bg-surface rounded-lg p-8 text-center">
           <h3 className="text-[28px] md:text-[32px] font-medium text-black mb-2">
