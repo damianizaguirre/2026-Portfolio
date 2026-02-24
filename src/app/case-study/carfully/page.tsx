@@ -145,56 +145,61 @@ export default function CarfullyCaseStudy() {
         </p>
 
         <div
-          className="grid grid-cols-1 sm:grid-cols-3"
+          className="bg-surface rounded-sm"
           style={{
-            gap: "clamp(24px, 2.8vw, 54px)",
             marginTop: "clamp(16px, 2.1vw, 40px)",
+            padding: "clamp(24px, 2.6vw, 50px) clamp(28px, 3vw, 58px)",
           }}
         >
-          <div className="flex flex-col" style={{ gap: "clamp(6px, 0.625vw, 12px)" }}>
-            <h3
-              className="font-normal text-black"
-              style={{ fontSize: "clamp(22px, 1.67vw, 32px)" }}
-            >
-              3/5 participants
-            </h3>
-            <p
-              className="font-light text-black"
-              style={{ fontSize: "var(--text-nav)" }}
-            >
-              Would rely/prefer word of mouth, or peer-sourced information
-              (i.e forums)
-            </p>
-          </div>
-          <div className="flex flex-col" style={{ gap: "clamp(6px, 0.625vw, 12px)" }}>
-            <h3
-              className="font-normal text-black"
-              style={{ fontSize: "clamp(22px, 1.67vw, 32px)" }}
-            >
-              4/5 participants
-            </h3>
-            <p
-              className="font-light text-black"
-              style={{ fontSize: "var(--text-nav)" }}
-            >
-              Plan to use a down payment and monthly payments to fully own the
-              car
-            </p>
-          </div>
-          <div className="flex flex-col" style={{ gap: "clamp(6px, 0.625vw, 12px)" }}>
-            <h3
-              className="font-normal text-black"
-              style={{ fontSize: "clamp(22px, 1.67vw, 32px)" }}
-            >
-              4/5 participants
-            </h3>
-            <p
-              className="font-light text-black"
-              style={{ fontSize: "var(--text-nav)" }}
-            >
-              Hold negative or wary impressions of salespeople, viewing them
-              as untruthful and difficult to trust.
-            </p>
+          <div
+            className="grid grid-cols-1 sm:grid-cols-3"
+            style={{ gap: "clamp(24px, 2.8vw, 54px)" }}
+          >
+            <div className="flex flex-col" style={{ gap: "clamp(6px, 0.625vw, 12px)" }}>
+              <h3
+                className="font-medium text-black"
+                style={{ fontSize: "clamp(22px, 1.67vw, 32px)" }}
+              >
+                3/5 participants
+              </h3>
+              <p
+                className="font-light text-black"
+                style={{ fontSize: "var(--text-nav)" }}
+              >
+                Would rely/prefer word of mouth, or peer-sourced information
+                (i.e forums)
+              </p>
+            </div>
+            <div className="flex flex-col" style={{ gap: "clamp(6px, 0.625vw, 12px)" }}>
+              <h3
+                className="font-medium text-black"
+                style={{ fontSize: "clamp(22px, 1.67vw, 32px)" }}
+              >
+                4/5 participants
+              </h3>
+              <p
+                className="font-light text-black"
+                style={{ fontSize: "var(--text-nav)" }}
+              >
+                Plan to use a down payment and monthly payments to fully own
+                the car.
+              </p>
+            </div>
+            <div className="flex flex-col" style={{ gap: "clamp(6px, 0.625vw, 12px)" }}>
+              <h3
+                className="font-medium text-black"
+                style={{ fontSize: "clamp(22px, 1.67vw, 32px)" }}
+              >
+                4/5 participants
+              </h3>
+              <p
+                className="font-light text-black"
+                style={{ fontSize: "var(--text-nav)" }}
+              >
+                Hold negative or wary impressions of salespeople, viewing them
+                as untruthful and difficult to trust.
+              </p>
+            </div>
           </div>
         </div>
       </CaseStudySection>
