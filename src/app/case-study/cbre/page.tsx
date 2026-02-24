@@ -41,57 +41,48 @@ export default function CBRECaseStudy() {
       <div
         className="grid grid-cols-1 sm:grid-cols-3"
         style={{
-          gap: "clamp(16px, 2.1vw, 40px)",
+          gap: "clamp(24px, 2.8vw, 54px)",
           marginBottom: "clamp(40px, 5.2vw, 100px)",
         }}
       >
-        <div
-          className="bg-surface rounded-lg text-center"
-          style={{ padding: "clamp(16px, 2.1vw, 40px)" }}
-        >
+        <div className="flex flex-col" style={{ gap: "clamp(6px, 0.625vw, 12px)" }}>
           <h3
-            className="font-medium text-black mb-2"
+            className="font-normal text-black"
             style={{ fontSize: "clamp(22px, 1.67vw, 32px)" }}
           >
             Product Strategy
           </h3>
           <p
-            className="font-light text-black/70"
+            className="font-light text-black"
             style={{ fontSize: "var(--text-nav)" }}
           >
             Researching and thinking broadly of current solutions and user
             sentiment.
           </p>
         </div>
-        <div
-          className="bg-surface rounded-lg text-center"
-          style={{ padding: "clamp(16px, 2.1vw, 40px)" }}
-        >
+        <div className="flex flex-col" style={{ gap: "clamp(6px, 0.625vw, 12px)" }}>
           <h3
-            className="font-medium text-black mb-2"
+            className="font-normal text-black"
             style={{ fontSize: "clamp(22px, 1.67vw, 32px)" }}
           >
             Prototyping
           </h3>
           <p
-            className="font-light text-black/70"
+            className="font-light text-black"
             style={{ fontSize: "var(--text-nav)" }}
           >
             Narrowing down with ideation and rapidly designing.
           </p>
         </div>
-        <div
-          className="bg-surface rounded-lg text-center"
-          style={{ padding: "clamp(16px, 2.1vw, 40px)" }}
-        >
+        <div className="flex flex-col" style={{ gap: "clamp(6px, 0.625vw, 12px)" }}>
           <h3
-            className="font-medium text-black mb-2"
+            className="font-normal text-black"
             style={{ fontSize: "clamp(22px, 1.67vw, 32px)" }}
           >
             Presenting
           </h3>
           <p
-            className="font-light text-black/70"
+            className="font-light text-black"
             style={{ fontSize: "var(--text-nav)" }}
           >
             Gathering our research, final demo, and present our solution.
