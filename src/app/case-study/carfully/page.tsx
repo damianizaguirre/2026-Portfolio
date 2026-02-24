@@ -79,7 +79,7 @@ export default function CarfullyCaseStudy() {
           style={{ gap: "clamp(40px, 5.2vw, 100px)" }}
         >
           {/* Home Page */}
-          <div className="grid grid-cols-1 md:grid-cols-2 items-start" style={{ gap: "clamp(20px, 2.6vw, 50px)" }}>
+          <div className="grid grid-cols-1 md:grid-cols-2 items-end" style={{ gap: "clamp(20px, 2.6vw, 50px)" }}>
             <Image
               src="/images/carfully/home-page.png"
               alt="Carfully home page after initial quiz"
@@ -108,7 +108,7 @@ export default function CarfullyCaseStudy() {
           </div>
 
           {/* Learning Modules */}
-          <div className="grid grid-cols-1 md:grid-cols-2 items-start" style={{ gap: "clamp(20px, 2.6vw, 50px)" }}>
+          <div className="grid grid-cols-1 md:grid-cols-2 items-end" style={{ gap: "clamp(20px, 2.6vw, 50px)" }}>
             <Image
               src="/images/carfully/learning-modules.png"
               alt="Carfully learning modules screen"
@@ -137,7 +137,7 @@ export default function CarfullyCaseStudy() {
           </div>
 
           {/* Financial Help */}
-          <div className="grid grid-cols-1 md:grid-cols-2 items-start" style={{ gap: "clamp(20px, 2.6vw, 50px)" }}>
+          <div className="grid grid-cols-1 md:grid-cols-2 items-end" style={{ gap: "clamp(20px, 2.6vw, 50px)" }}>
             <Image
               src="/images/carfully/financial-help.png"
               alt="Carfully financial help screen"
