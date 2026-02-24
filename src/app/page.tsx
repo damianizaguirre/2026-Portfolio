@@ -42,12 +42,19 @@ export default function Home() {
       <section
         className="bg-surface"
         style={{
-          padding: "clamp(60px, 7.8vw, 150px) var(--px-side) clamp(50px, 6.5vw, 125px)",
+          paddingTop: "var(--hero-pt)",
+          paddingBottom: "var(--hero-pb)",
+          paddingLeft: "var(--px-side)",
+          paddingRight: "var(--px-side)",
         }}
       >
         <h1
-          className="font-medium leading-[1.2] text-black"
-          style={{ fontSize: "var(--text-hero)", maxWidth: "var(--hero-max)" }}
+          className="font-medium text-black"
+          style={{
+            fontSize: "var(--text-hero)",
+            lineHeight: 1.19,
+            maxWidth: "var(--hero-max)",
+          }}
         >
           I&apos;m Damian, a product designer giving data{" "}
           <em className="italic">life</em> through{" "}
@@ -58,7 +65,7 @@ export default function Home() {
           style={{
             fontSize: "var(--text-hero-sub)",
             maxWidth: "var(--hero-max)",
-            marginTop: "clamp(10px, 1vw, 20px)",
+            marginTop: "var(--hero-gap)",
           }}
         >
           Currently studying at The University of Texas at Dallas.
