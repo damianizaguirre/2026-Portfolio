@@ -32,8 +32,8 @@ export default function CarfullyCaseStudy() {
         <Image
           src="/images/carfully-thumbnail.png"
           alt="Carfully auto-financing tool on laptop"
-          width={888}
-          height={546}
+          width={983}
+          height={604}
           className="w-full h-auto rounded-md"
           priority
         />
@@ -56,67 +56,116 @@ export default function CarfullyCaseStudy() {
         label="SOLUTION"
         title="Carfully: a guided learning tool and resource hub for first-time car buyers"
       >
-        <p className="mb-6">
+        <p>
           A web application designed to break down the car-buying journey into
           manageable steps through structured, interactive modules.
+        </p>
+      </CaseStudySection>
+
+      {/* Core Flows */}
+      <section id="process" style={{ marginBottom: "clamp(40px, 5.2vw, 100px)" }}>
+        <p
+          className="font-light text-muted uppercase tracking-wide"
+          style={{
+            fontSize: "var(--text-nav)",
+            marginBottom: "clamp(12px, 1.56vw, 30px)",
+          }}
+        >
+          CORE FLOWS
         </p>
 
         <div
           className="flex flex-col"
-          style={{
-            gap: "clamp(24px, 3.1vw, 60px)",
-            marginTop: "clamp(20px, 2.6vw, 50px)",
-          }}
+          style={{ gap: "clamp(40px, 5.2vw, 100px)" }}
         >
-          <div>
-            <h3
-              className="font-normal text-black"
-              style={{
-                fontSize: "clamp(20px, 1.67vw, 32px)",
-                marginBottom: "clamp(6px, 0.78vw, 15px)",
-              }}
-            >
-              Home Page
-            </h3>
-            <p>
-              After completing an onboarding questionnaire, the user is placed
-              in 1 of 3 tracks.
-            </p>
+          {/* Home Page */}
+          <div className="grid grid-cols-1 md:grid-cols-2 items-start" style={{ gap: "clamp(20px, 2.6vw, 50px)" }}>
+            <Image
+              src="/images/carfully/home-page.png"
+              alt="Carfully home page after initial quiz"
+              width={511}
+              height={404}
+              className="w-full h-auto"
+            />
+            <div>
+              <h3
+                className="font-normal text-black"
+                style={{
+                  fontSize: "clamp(22px, 1.67vw, 32px)",
+                  marginBottom: "clamp(6px, 0.625vw, 12px)",
+                }}
+              >
+                Home Page
+              </h3>
+              <p
+                className="font-light text-black"
+                style={{ fontSize: "var(--text-nav)" }}
+              >
+                After completing an onboarding questionnaire, the user is placed
+                in 1 of 3 tracks.
+              </p>
+            </div>
           </div>
 
-          <div>
-            <h3
-              className="font-normal text-black"
-              style={{
-                fontSize: "clamp(20px, 1.67vw, 32px)",
-                marginBottom: "clamp(6px, 0.78vw, 15px)",
-              }}
-            >
-              Learning Modules
-            </h3>
-            <p>
-              The user can navigate through different modules regarding
-              different aspects of purchasing a vehicle.
-            </p>
+          {/* Learning Modules */}
+          <div className="grid grid-cols-1 md:grid-cols-2 items-start" style={{ gap: "clamp(20px, 2.6vw, 50px)" }}>
+            <Image
+              src="/images/carfully/learning-modules.png"
+              alt="Carfully learning modules screen"
+              width={511}
+              height={404}
+              className="w-full h-auto"
+            />
+            <div>
+              <h3
+                className="font-normal text-black"
+                style={{
+                  fontSize: "clamp(22px, 1.67vw, 32px)",
+                  marginBottom: "clamp(6px, 0.625vw, 12px)",
+                }}
+              >
+                Learning Modules
+              </h3>
+              <p
+                className="font-light text-black"
+                style={{ fontSize: "var(--text-nav)" }}
+              >
+                The user can navigate through different modules regarding
+                different aspects of purchasing a vehicle.
+              </p>
+            </div>
           </div>
 
-          <div>
-            <h3
-              className="font-normal text-black"
-              style={{
-                fontSize: "clamp(20px, 1.67vw, 32px)",
-                marginBottom: "clamp(6px, 0.78vw, 15px)",
-              }}
-            >
-              Financial Help
-            </h3>
-            <p>
-              When deciding on a vehicle to purchase, Carfully also provides
-              statistics to help the user find the right financial fit.
-            </p>
+          {/* Financial Help */}
+          <div className="grid grid-cols-1 md:grid-cols-2 items-start" style={{ gap: "clamp(20px, 2.6vw, 50px)" }}>
+            <Image
+              src="/images/carfully/financial-help.png"
+              alt="Carfully financial help screen"
+              width={511}
+              height={537}
+              className="w-full h-auto"
+            />
+            <div>
+              <h3
+                className="font-normal text-black"
+                style={{
+                  fontSize: "clamp(22px, 1.67vw, 32px)",
+                  marginBottom: "clamp(6px, 0.625vw, 12px)",
+                }}
+              >
+                Financial Help
+              </h3>
+              <p
+                className="font-light text-black"
+                style={{ fontSize: "var(--text-nav)" }}
+              >
+                When deciding on a vehicle to purchase, Carfully also provides
+                statistics to help the user find the right financial fit.
+              </p>
+            </div>
           </div>
         </div>
-      </CaseStudySection>
+      </section>
 
       <CaseStudySection
         id="analysis"
@@ -125,20 +174,36 @@ export default function CarfullyCaseStudy() {
       >
         <p>
           Conducting a competitive analysis on 4 other car-selling websites and
-          found 3 key issues within them: Confusion about affordability, Lack of
-          educational resources, and Overwhelming financial jargon.
+          found 3 key issues within them, these being: Confusion about
+          affordability, Lack of transparency, and Limited Financial Literacy.
         </p>
+        <Image
+          src="/images/carfully/survey-results.png"
+          alt="Competitive analysis survey results"
+          width={983}
+          height={433}
+          className="w-full h-auto"
+          style={{ marginTop: "clamp(20px, 2.6vw, 50px)" }}
+        />
       </CaseStudySection>
 
       <CaseStudySection id="sentiment" title="Surveying First-Time Car Buyers">
-        <p className="mb-8">
+        <p>
           With over 100+ survey respondents, my team and I better understood the
           unique needs and challenges of first-time car buyers.
         </p>
+        <Image
+          src="/images/carfully/competitive-analysis.png"
+          alt="Survey data analysis"
+          width={983}
+          height={562}
+          className="w-full h-auto"
+          style={{ marginTop: "clamp(20px, 2.6vw, 50px)" }}
+        />
       </CaseStudySection>
 
-      <CaseStudySection id="concepts" title="Interviewing target users">
-        <p className="mb-8">
+      <CaseStudySection id="current-solutions" title="Interviewing target users">
+        <p>
           After conducting a broad survey, we continued our research sprint with
           an in-depth interview process with 5 people who fit within our target
           demographic.
@@ -182,7 +247,7 @@ export default function CarfullyCaseStudy() {
                 style={{ fontSize: "var(--text-nav)" }}
               >
                 Plan to use a down payment and monthly payments to fully own
-                the car.
+                the car
               </p>
             </div>
             <div className="flex flex-col" style={{ gap: "clamp(6px, 0.625vw, 12px)" }}>
@@ -204,12 +269,52 @@ export default function CarfullyCaseStudy() {
         </div>
       </CaseStudySection>
 
-      <CaseStudySection id="demo" label="REFLECTION" title="Takeaways">
+      <CaseStudySection id="concepts" title="Initial Wireframe&apos;s">
         <p>
-          Through this challenge, our team gained valuable insights into
-          designing for financial literacy and user empowerment. The project
-          reinforced the importance of user-centered design in creating
-          accessible financial tools.
+          Mapping out the whole user journey, my team and I designed the
+          different types of pages we wanted to include.
+        </p>
+        <Image
+          src="/images/carfully/initial-wireframes.png"
+          alt="Initial wireframe designs"
+          width={983}
+          height={553}
+          className="w-full h-auto"
+          style={{ marginTop: "clamp(20px, 2.6vw, 50px)" }}
+        />
+      </CaseStudySection>
+
+      <CaseStudySection id="demo" title="Brand Identity">
+        <p>
+          We concluded by finalizing the website&apos;s brand kit and color
+          scheme, choosing professional tones that mirror Capital One&apos;s
+          identity to establish a foundation of trust and transparency.
+        </p>
+        <Image
+          src="/images/carfully/brand-identity.png"
+          alt="Brand identity and logo design"
+          width={992}
+          height={638}
+          className="w-full h-auto"
+          style={{ marginTop: "clamp(20px, 2.6vw, 50px)" }}
+        />
+        <Image
+          src="/images/carfully/brand-colors.png"
+          alt="Brand color palette"
+          width={991}
+          height={338}
+          className="w-full h-auto"
+          style={{ marginTop: "clamp(16px, 1.6vw, 30px)" }}
+        />
+      </CaseStudySection>
+
+      <CaseStudySection label="REFLECTION" id="takeaways" title="Takeaways">
+        <p>
+          Throughout working on this semester long project, I realized how much I
+          had learned regarding design and other aspects I didn&apos;t expect to
+          learn such as conducting a competitive analysis, interviewing, and
+          working with a client. This project taught me how to design for
+          financial literacy and user empowerment in a real-world context.
         </p>
       </CaseStudySection>
     </CaseStudyLayout>
