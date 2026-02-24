@@ -12,16 +12,31 @@ export default function CaseStudySection({
   children,
 }: CaseStudySectionProps) {
   return (
-    <section id={id} className="mb-20">
+    <section id={id} style={{ marginBottom: "clamp(40px, 5.2vw, 100px)" }}>
       {label && (
-        <p className="text-[18px] md:text-[24px] font-light text-muted mb-2 uppercase tracking-wide">
+        <p
+          className="font-light text-muted uppercase tracking-wide"
+          style={{
+            fontSize: "var(--text-nav)",
+            marginBottom: "clamp(4px, 0.42vw, 8px)",
+          }}
+        >
           {label}
         </p>
       )}
-      <h2 className="text-[28px] md:text-[40px] font-normal leading-[1.2] text-black mb-6">
+      <h2
+        className="font-normal leading-[1.2] text-black"
+        style={{
+          fontSize: "clamp(22px, 2.08vw, 40px)",
+          marginBottom: "clamp(12px, 1.56vw, 30px)",
+        }}
+      >
         {title}
       </h2>
-      <div className="text-[18px] md:text-[24px] font-light leading-relaxed text-black/80">
+      <div
+        className="font-light leading-relaxed text-black/80"
+        style={{ fontSize: "var(--text-nav)" }}
+      >
         {children}
       </div>
     </section>

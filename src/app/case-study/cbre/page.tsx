@@ -38,29 +38,62 @@ export default function CBRECaseStudy() {
         />
       }
     >
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mb-20">
-        <div className="bg-surface rounded-lg p-8 text-center">
-          <h3 className="text-[28px] md:text-[32px] font-medium text-black mb-2">
+      <div
+        className="grid grid-cols-1 sm:grid-cols-3"
+        style={{
+          gap: "clamp(16px, 2.1vw, 40px)",
+          marginBottom: "clamp(40px, 5.2vw, 100px)",
+        }}
+      >
+        <div
+          className="bg-surface rounded-lg text-center"
+          style={{ padding: "clamp(16px, 2.1vw, 40px)" }}
+        >
+          <h3
+            className="font-medium text-black mb-2"
+            style={{ fontSize: "clamp(22px, 1.67vw, 32px)" }}
+          >
             Product Strategy
           </h3>
-          <p className="text-[18px] md:text-[24px] font-light text-black/70">
+          <p
+            className="font-light text-black/70"
+            style={{ fontSize: "var(--text-nav)" }}
+          >
             Researching and thinking broadly of current solutions and user
             sentiment.
           </p>
         </div>
-        <div className="bg-surface rounded-lg p-8 text-center">
-          <h3 className="text-[28px] md:text-[32px] font-medium text-black mb-2">
+        <div
+          className="bg-surface rounded-lg text-center"
+          style={{ padding: "clamp(16px, 2.1vw, 40px)" }}
+        >
+          <h3
+            className="font-medium text-black mb-2"
+            style={{ fontSize: "clamp(22px, 1.67vw, 32px)" }}
+          >
             Prototyping
           </h3>
-          <p className="text-[18px] md:text-[24px] font-light text-black/70">
+          <p
+            className="font-light text-black/70"
+            style={{ fontSize: "var(--text-nav)" }}
+          >
             Narrowing down with ideation and rapidly designing.
           </p>
         </div>
-        <div className="bg-surface rounded-lg p-8 text-center">
-          <h3 className="text-[28px] md:text-[32px] font-medium text-black mb-2">
+        <div
+          className="bg-surface rounded-lg text-center"
+          style={{ padding: "clamp(16px, 2.1vw, 40px)" }}
+        >
+          <h3
+            className="font-medium text-black mb-2"
+            style={{ fontSize: "clamp(22px, 1.67vw, 32px)" }}
+          >
             Presenting
           </h3>
-          <p className="text-[18px] md:text-[24px] font-light text-black/70">
+          <p
+            className="font-light text-black/70"
+            style={{ fontSize: "var(--text-nav)" }}
+          >
             Gathering our research, final demo, and present our solution.
           </p>
         </div>
@@ -92,9 +125,21 @@ export default function CBRECaseStudy() {
           interactions, and real-time collaboration tools.
         </p>
 
-        <div className="space-y-12 mt-10">
+        <div
+          className="flex flex-col"
+          style={{
+            gap: "clamp(24px, 3.1vw, 60px)",
+            marginTop: "clamp(20px, 2.6vw, 50px)",
+          }}
+        >
           <div>
-            <h3 className="text-[24px] md:text-[32px] font-normal text-black mb-3">
+            <h3
+              className="font-normal text-black"
+              style={{
+                fontSize: "clamp(20px, 1.67vw, 32px)",
+                marginBottom: "clamp(6px, 0.78vw, 15px)",
+              }}
+            >
               Home Page
             </h3>
             <p>
@@ -105,7 +150,13 @@ export default function CBRECaseStudy() {
           </div>
 
           <div>
-            <h3 className="text-[24px] md:text-[32px] font-normal text-black mb-3">
+            <h3
+              className="font-normal text-black"
+              style={{
+                fontSize: "clamp(20px, 1.67vw, 32px)",
+                marginBottom: "clamp(6px, 0.78vw, 15px)",
+              }}
+            >
               Virtual Room
             </h3>
             <p>
@@ -115,7 +166,13 @@ export default function CBRECaseStudy() {
           </div>
 
           <div>
-            <h3 className="text-[24px] md:text-[32px] font-normal text-black mb-3">
+            <h3
+              className="font-normal text-black"
+              style={{
+                fontSize: "clamp(20px, 1.67vw, 32px)",
+                marginBottom: "clamp(6px, 0.78vw, 15px)",
+              }}
+            >
               Analytics for Team Manager
             </h3>
             <p>
@@ -150,10 +207,7 @@ export default function CBRECaseStudy() {
         </p>
       </CaseStudySection>
 
-      <CaseStudySection
-        id="sentiment"
-        title="User Journey & Sentiment"
-      >
+      <CaseStudySection id="sentiment" title="User Journey & Sentiment">
         <p>
           We mapped out the typical employee journey to identify key pain points
           and opportunities for improving workplace wellbeing through digital
@@ -161,26 +215,19 @@ export default function CBRECaseStudy() {
         </p>
       </CaseStudySection>
 
-      <CaseStudySection
-        id="concepts"
-        title="Early Explorations"
-      >
+      <CaseStudySection id="concepts" title="Early Explorations">
         <p>
           As a team we brainstormed the main set of features and the possible
           layouts the product could have.
         </p>
       </CaseStudySection>
 
-      <CaseStudySection
-        id="demo"
-        title="Final Thoughts & Looking Forward"
-      >
+      <CaseStudySection id="demo" title="Final Thoughts & Looking Forward">
         <p>
           Throughout the design-a-thon my team and I learned how to blend social
           interaction, performance tracking, and wellbeing into a cohesive
           digital workspace experience. Once visualized, we decided to go for a
-          solution that has a medium to low-engagement and is more leader
-          driven.
+          solution that has a medium to low-engagement and is more leader driven.
         </p>
       </CaseStudySection>
     </CaseStudyLayout>

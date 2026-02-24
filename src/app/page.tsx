@@ -39,24 +39,54 @@ export default function Home() {
     <main className="min-h-screen bg-white">
       <Navbar />
 
-      <section className="bg-surface px-8 md:px-14 lg:px-[58px] pt-20 md:pt-28 lg:pt-36 pb-16 md:pb-24 lg:pb-32">
-        <h1 className="text-[32px] md:text-[40px] lg:text-[48px] font-medium leading-[1.2] text-black max-w-[860px]">
+      <section
+        className="bg-surface"
+        style={{
+          padding: "clamp(60px, 7.8vw, 150px) var(--px-side) clamp(50px, 6.5vw, 125px)",
+        }}
+      >
+        <h1
+          className="font-medium leading-[1.2] text-black"
+          style={{ fontSize: "var(--text-hero)", maxWidth: "var(--hero-max)" }}
+        >
           I&apos;m Damian, a product designer giving data{" "}
           <em className="italic">life</em> through{" "}
           <em className="italic">meaningful</em> design.
         </h1>
-        <p className="text-[22px] md:text-[28px] lg:text-[32px] font-normal text-black mt-5 max-w-[860px]">
+        <p
+          className="font-normal text-black"
+          style={{
+            fontSize: "var(--text-hero-sub)",
+            maxWidth: "var(--hero-max)",
+            marginTop: "clamp(10px, 1vw, 20px)",
+          }}
+        >
           Currently studying at The University of Texas at Dallas.
         </p>
       </section>
 
-      <section id="work" className="bg-white px-8 md:px-14 lg:px-[58px] py-8 md:py-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-7 gap-y-10 lg:gap-y-12 items-start">
-          <div className="flex flex-col gap-10 lg:gap-12">
+      <section
+        id="work"
+        style={{ padding: "clamp(24px, 2.6vw, 50px) var(--px-side)" }}
+      >
+        <div
+          className="grid grid-cols-1 lg:grid-cols-2 items-start"
+          style={{
+            columnGap: "var(--grid-gap)",
+            rowGap: "clamp(28px, 3.1vw, 60px)",
+          }}
+        >
+          <div className="flex flex-col" style={{ gap: "clamp(28px, 3.1vw, 60px)" }}>
             <ProjectCard {...projects[0]} />
             <ProjectCard {...projects[2]} />
           </div>
-          <div className="flex flex-col gap-10 lg:gap-12 lg:mt-20">
+          <div
+            className="flex flex-col"
+            style={{
+              gap: "clamp(28px, 3.1vw, 60px)",
+              marginTop: "var(--col-offset)",
+            }}
+          >
             <ProjectCard {...projects[1]} />
             <ProjectCard {...projects[3]} />
           </div>

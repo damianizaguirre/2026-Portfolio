@@ -40,24 +40,39 @@ export default function CaseStudyLayout({
     <main className="min-h-screen bg-white">
       <Navbar />
 
-      <div className="px-8 md:px-14 py-10 md:py-14">
-        {/* Back button */}
+      <div style={{ padding: "clamp(24px, 2.6vw, 50px) var(--px-side)" }}>
         <Link
           href="/"
-          className="text-[24px] font-normal text-black hover:text-muted transition-colors inline-block mb-10"
+          className="font-normal text-black hover:text-muted transition-colors inline-block"
+          style={{
+            fontSize: "var(--text-nav)",
+            marginBottom: "clamp(24px, 2.6vw, 50px)",
+          }}
         >
           &larr; Back
         </Link>
 
-        <div className="flex flex-col lg:flex-row gap-14">
-          {/* Sidebar navigation */}
-          <aside className="lg:w-52 shrink-0">
-            <nav className="lg:sticky lg:top-28 flex flex-row lg:flex-col gap-3 flex-wrap">
+        <div
+          className="flex flex-col lg:flex-row"
+          style={{ gap: "clamp(24px, 3.6vw, 70px)" }}
+        >
+          <aside
+            className="shrink-0"
+            style={{ width: "clamp(140px, 10.8vw, 208px)" }}
+          >
+            <nav
+              className="lg:sticky flex flex-row lg:flex-col flex-wrap"
+              style={{
+                top: "calc(var(--nav-h) + clamp(12px, 1.3vw, 24px))",
+                gap: "clamp(4px, 0.42vw, 8px)",
+              }}
+            >
               {sideNav.map((item) => (
                 <a
                   key={item.href}
                   href={item.href}
-                  className="text-[18px] md:text-[24px] font-normal text-black hover:text-muted transition-colors"
+                  className="font-normal text-black hover:text-muted transition-colors"
+                  style={{ fontSize: "var(--text-nav)" }}
                 >
                   {item.label}
                 </a>
@@ -65,57 +80,95 @@ export default function CaseStudyLayout({
             </nav>
           </aside>
 
-          {/* Main content */}
           <div className="flex-1 max-w-4xl">
-            {/* Header */}
-            <header className="mb-16">
-              <p className="text-[18px] md:text-[24px] font-normal text-muted mb-2">
+            <header style={{ marginBottom: "clamp(32px, 4.2vw, 80px)" }}>
+              <p
+                className="font-normal text-muted"
+                style={{
+                  fontSize: "var(--text-nav)",
+                  marginBottom: "clamp(4px, 0.42vw, 8px)",
+                }}
+              >
                 {subtitle}
               </p>
-              <h1 className="text-[32px] md:text-[48px] font-normal leading-[1.15] text-black mb-10">
+              <h1
+                className="font-normal leading-[1.15] text-black"
+                style={{
+                  fontSize: "var(--text-hero)",
+                  marginBottom: "clamp(20px, 2.6vw, 50px)",
+                }}
+              >
                 {title}
               </h1>
 
-              <div className="mb-10">{heroImage}</div>
+              <div style={{ marginBottom: "clamp(20px, 2.6vw, 50px)" }}>
+                {heroImage}
+              </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 border-t border-black/10 pt-8">
+              <div
+                className="grid grid-cols-2 sm:grid-cols-4 border-t border-black/10"
+                style={{
+                  gap: "clamp(16px, 2.1vw, 40px)",
+                  paddingTop: "clamp(16px, 2.1vw, 40px)",
+                }}
+              >
                 <div>
-                  <p className="text-[20px] md:text-[24px] font-light text-black mb-1">
+                  <p
+                    className="font-light text-black mb-1"
+                    style={{ fontSize: "var(--text-nav)" }}
+                  >
                     Timeline
                   </p>
-                  <p className="text-[18px] md:text-[24px] font-light text-muted">
+                  <p
+                    className="font-light text-muted"
+                    style={{ fontSize: "var(--text-nav)" }}
+                  >
                     {timeline}
                   </p>
                 </div>
                 <div>
-                  <p className="text-[20px] md:text-[24px] font-light text-black mb-1">
+                  <p
+                    className="font-light text-black mb-1"
+                    style={{ fontSize: "var(--text-nav)" }}
+                  >
                     Role
                   </p>
-                  <p className="text-[18px] md:text-[24px] font-light text-muted">
+                  <p
+                    className="font-light text-muted"
+                    style={{ fontSize: "var(--text-nav)" }}
+                  >
                     {role}
                   </p>
                 </div>
                 <div>
-                  <p className="text-[20px] md:text-[24px] font-light text-black mb-1">
+                  <p
+                    className="font-light text-black mb-1"
+                    style={{ fontSize: "var(--text-nav)" }}
+                  >
                     With
                   </p>
                   {team.map((m) => (
                     <p
                       key={m.name}
-                      className="text-[18px] md:text-[24px] font-light text-muted"
+                      className="font-light text-muted"
+                      style={{ fontSize: "var(--text-nav)" }}
                     >
                       {m.name}
                     </p>
                   ))}
                 </div>
                 <div>
-                  <p className="text-[20px] md:text-[24px] font-light text-black mb-1">
+                  <p
+                    className="font-light text-black mb-1"
+                    style={{ fontSize: "var(--text-nav)" }}
+                  >
                     Skills
                   </p>
                   {skills.map((s) => (
                     <p
                       key={s}
-                      className="text-[18px] md:text-[24px] font-light text-muted"
+                      className="font-light text-muted"
+                      style={{ fontSize: "var(--text-nav)" }}
                     >
                       {s}
                     </p>

@@ -18,25 +18,36 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="sticky top-0 z-50 flex items-center justify-between bg-white/90 backdrop-blur-md px-8 md:px-14 lg:px-[58px] h-[67px] border-b border-black/[0.04]">
-        <div className="flex items-center gap-5">
+      <nav
+        className="sticky top-0 z-50 flex items-center justify-between bg-white/90 backdrop-blur-md border-b border-black/[0.04]"
+        style={{ height: "var(--nav-h)", padding: "0 var(--px-side)" }}
+      >
+        <div className="flex items-center" style={{ gap: "clamp(12px, 1.3vw, 24px)" }}>
           <Link
             href="/"
-            className="text-[20px] md:text-[24px] font-medium tracking-[-0.01em] text-black"
+            className="font-medium tracking-[-0.01em] text-black"
+            style={{ fontSize: "var(--text-nav)" }}
           >
             DAMIAN IZAGUIRRE
           </Link>
-          <span className="hidden sm:inline text-[20px] md:text-[24px] font-medium text-muted">
+          <span
+            className="hidden sm:inline font-medium text-muted"
+            style={{ fontSize: "var(--text-nav)" }}
+          >
             Product Designer
           </span>
         </div>
 
-        <div className="hidden md:flex items-center gap-10 lg:gap-14">
+        <div
+          className="hidden md:flex items-center"
+          style={{ gap: "clamp(24px, 2.6vw, 50px)" }}
+        >
           {navLinks.map((link) => (
             <Link
               key={link.label}
               href={isHome ? link.href : `/${link.href}`}
-              className="text-[20px] md:text-[24px] font-light text-black hover:text-muted transition-colors"
+              className="font-light text-black hover:text-muted transition-colors"
+              style={{ fontSize: "var(--text-nav)" }}
             >
               {link.label}
             </Link>
@@ -61,7 +72,10 @@ export default function Navbar() {
       </nav>
 
       {mobileOpen && (
-        <div className="md:hidden fixed inset-0 top-[67px] z-40 bg-white/95 backdrop-blur-md">
+        <div
+          className="md:hidden fixed inset-0 z-40 bg-white/95 backdrop-blur-md"
+          style={{ top: "var(--nav-h)" }}
+        >
           <div className="flex flex-col items-center gap-8 pt-16">
             {navLinks.map((link) => (
               <Link

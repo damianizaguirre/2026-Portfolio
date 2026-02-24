@@ -34,11 +34,23 @@ export default function ProjectCard({
           />
         </div>
       </Link>
-      <div className="flex items-baseline justify-between mt-2.5 gap-4">
-        <p className="text-[16px] md:text-[20px] lg:text-[24px] font-normal text-black leading-snug">
+      <div
+        className="flex items-baseline justify-between"
+        style={{
+          marginTop: "clamp(6px, 0.52vw, 10px)",
+          gap: "clamp(8px, 1vw, 20px)",
+        }}
+      >
+        <p
+          className="font-normal text-black leading-snug"
+          style={{ fontSize: "var(--text-card)" }}
+        >
           {title}
         </p>
-        <p className="text-[14px] md:text-[18px] lg:text-[24px] font-normal text-black whitespace-nowrap">
+        <p
+          className="font-normal text-black whitespace-nowrap"
+          style={{ fontSize: "var(--text-card)" }}
+        >
           {meta}
         </p>
       </div>

@@ -61,9 +61,21 @@ export default function CarfullyCaseStudy() {
           manageable steps through structured, interactive modules.
         </p>
 
-        <div className="space-y-12 mt-10">
+        <div
+          className="flex flex-col"
+          style={{
+            gap: "clamp(24px, 3.1vw, 60px)",
+            marginTop: "clamp(20px, 2.6vw, 50px)",
+          }}
+        >
           <div>
-            <h3 className="text-[24px] md:text-[32px] font-normal text-black mb-3">
+            <h3
+              className="font-normal text-black"
+              style={{
+                fontSize: "clamp(20px, 1.67vw, 32px)",
+                marginBottom: "clamp(6px, 0.78vw, 15px)",
+              }}
+            >
               Home Page
             </h3>
             <p>
@@ -73,7 +85,13 @@ export default function CarfullyCaseStudy() {
           </div>
 
           <div>
-            <h3 className="text-[24px] md:text-[32px] font-normal text-black mb-3">
+            <h3
+              className="font-normal text-black"
+              style={{
+                fontSize: "clamp(20px, 1.67vw, 32px)",
+                marginBottom: "clamp(6px, 0.78vw, 15px)",
+              }}
+            >
               Learning Modules
             </h3>
             <p>
@@ -83,7 +101,13 @@ export default function CarfullyCaseStudy() {
           </div>
 
           <div>
-            <h3 className="text-[24px] md:text-[32px] font-normal text-black mb-3">
+            <h3
+              className="font-normal text-black"
+              style={{
+                fontSize: "clamp(20px, 1.67vw, 32px)",
+                marginBottom: "clamp(6px, 0.78vw, 15px)",
+              }}
+            >
               Financial Help
             </h3>
             <p>
@@ -106,60 +130,83 @@ export default function CarfullyCaseStudy() {
         </p>
       </CaseStudySection>
 
-      <CaseStudySection
-        id="sentiment"
-        title="Surveying First-Time Car Buyers"
-      >
+      <CaseStudySection id="sentiment" title="Surveying First-Time Car Buyers">
         <p className="mb-8">
           With over 100+ survey respondents, my team and I better understood the
           unique needs and challenges of first-time car buyers.
         </p>
       </CaseStudySection>
 
-      <CaseStudySection
-        id="concepts"
-        title="Interviewing target users"
-      >
+      <CaseStudySection id="concepts" title="Interviewing target users">
         <p className="mb-8">
           After conducting a broad survey, we continued our research sprint with
           an in-depth interview process with 5 people who fit within our target
           demographic.
         </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-8">
-          <div className="bg-surface rounded-lg p-6">
-            <h3 className="text-[24px] md:text-[32px] font-medium text-black mb-2">
+        <div
+          className="grid grid-cols-1 sm:grid-cols-3"
+          style={{
+            gap: "clamp(12px, 1.56vw, 30px)",
+            marginTop: "clamp(16px, 2.1vw, 40px)",
+          }}
+        >
+          <div
+            className="bg-surface rounded-lg"
+            style={{ padding: "clamp(12px, 1.56vw, 30px)" }}
+          >
+            <h3
+              className="font-medium text-black mb-2"
+              style={{ fontSize: "clamp(20px, 1.67vw, 32px)" }}
+            >
               3/5 participants
             </h3>
-            <p className="text-[16px] md:text-[24px] font-light text-black/70">
+            <p
+              className="font-light text-black/70"
+              style={{ fontSize: "var(--text-nav)" }}
+            >
               Would rely/prefer word of mouth, or peer-sourced information
             </p>
           </div>
-          <div className="bg-surface rounded-lg p-6">
-            <h3 className="text-[24px] md:text-[32px] font-medium text-black mb-2">
+          <div
+            className="bg-surface rounded-lg"
+            style={{ padding: "clamp(12px, 1.56vw, 30px)" }}
+          >
+            <h3
+              className="font-medium text-black mb-2"
+              style={{ fontSize: "clamp(20px, 1.67vw, 32px)" }}
+            >
               4/5 participants
             </h3>
-            <p className="text-[16px] md:text-[24px] font-light text-black/70">
+            <p
+              className="font-light text-black/70"
+              style={{ fontSize: "var(--text-nav)" }}
+            >
               Plan to use a down payment and monthly payments to fully own the
               car
             </p>
           </div>
-          <div className="bg-surface rounded-lg p-6">
-            <h3 className="text-[24px] md:text-[32px] font-medium text-black mb-2">
+          <div
+            className="bg-surface rounded-lg"
+            style={{ padding: "clamp(12px, 1.56vw, 30px)" }}
+          >
+            <h3
+              className="font-medium text-black mb-2"
+              style={{ fontSize: "clamp(20px, 1.67vw, 32px)" }}
+            >
               4/5 participants
             </h3>
-            <p className="text-[16px] md:text-[24px] font-light text-black/70">
+            <p
+              className="font-light text-black/70"
+              style={{ fontSize: "var(--text-nav)" }}
+            >
               Hold negative or wary impressions of salespeople
             </p>
           </div>
         </div>
       </CaseStudySection>
 
-      <CaseStudySection
-        id="demo"
-        label="REFLECTION"
-        title="Takeaways"
-      >
+      <CaseStudySection id="demo" label="REFLECTION" title="Takeaways">
         <p>
           Through this challenge, our team gained valuable insights into
           designing for financial literacy and user empowerment. The project
