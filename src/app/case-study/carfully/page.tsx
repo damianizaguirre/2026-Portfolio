@@ -7,7 +7,7 @@ const sideNav = [
   { label: "Our Solution", href: "#solution" },
   { label: "Design Process", href: "#process" },
   { label: "Analysis", href: "#analysis" },
-  { label: "Current Solutions", href: "#current-solutions" },
+  { label: "Current Solutions and Problems", href: "#current-solutions" },
   { label: "User Sentiment", href: "#sentiment" },
   { label: "Early Concepts", href: "#concepts" },
   { label: "Final Demo", href: "#demo" },
