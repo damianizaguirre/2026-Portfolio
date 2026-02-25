@@ -307,16 +307,6 @@ export default function CarfullyCaseStudy() {
           style={{ marginTop: "clamp(16px, 1.6vw, 30px)" }}
         />
       </CaseStudySection>
-
-      <CaseStudySection label="REFLECTION" id="takeaways" title="Takeaways">
-        <p>
-          Throughout working on this semester long project, I realized how much I
-          had learned regarding design and other aspects I didn&apos;t expect to
-          learn such as conducting a competitive analysis, interviewing, and
-          working with a client. This project taught me how to design for
-          financial literacy and user empowerment in a real-world context.
-        </p>
-      </CaseStudySection>
     </CaseStudyLayout>
   );
 }
