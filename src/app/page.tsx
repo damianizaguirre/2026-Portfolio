@@ -1,6 +1,7 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ProjectCard from "@/components/ProjectCard";
+import PasswordProtectedCard from "@/components/PasswordProtectedCard";
 
 const projects = [
   {
@@ -17,13 +18,6 @@ const projects = [
     title: "An employee centered digital solution",
     meta: "CBRE \u00b7 CHALLENGE WINNER 2025",
     bgColor: "bg-surface-alt",
-  },
-  {
-    href: "/case-study/sancorda",
-    imageSrc: "/images/sancorda-thumbnail.png",
-    imageAlt: "Sancorda Medical - Interactive medical planning platform",
-    title: "Interactive medical planning platform",
-    meta: "Sancorda Medical \u00b7 2025",
   },
   {
     href: "#",
@@ -85,14 +79,21 @@ export default function Home() {
         >
           <div className="flex flex-col" style={{ gap: "clamp(28px, 3.1vw, 60px)" }}>
             <ProjectCard {...projects[0]} />
-            <ProjectCard {...projects[2]} />
+            <PasswordProtectedCard
+              href="/case-study/sancorda"
+              imageSrc="/images/sancorda-thumbnail.png"
+              imageAlt="Sancorda Medical - Interactive medical planning platform"
+              title="Interactive medical planning platform"
+              meta="Sancorda Medical &middot; 2025"
+              password="ReconST"
+            />
           </div>
           <div
             className="flex flex-col"
             style={{ gap: "clamp(28px, 3.1vw, 60px)" }}
           >
             <ProjectCard {...projects[1]} />
-            <ProjectCard {...projects[3]} />
+            <ProjectCard {...projects[2]} />
           </div>
         </div>
       </section>
