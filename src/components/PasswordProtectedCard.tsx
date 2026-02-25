@@ -80,21 +80,9 @@ export default function PasswordProtectedCard({
                 width: "clamp(260px, 20.3vw, 390px)",
               }}
             >
-              <div className="flex" style={{ gap: "clamp(4px, 0.31vw, 6px)" }}>
+              <div>
                 <div
-                  className="flex flex-col shrink-0"
-                  style={{ gap: "clamp(4px, 0.31vw, 6px)" }}
-                >
-                  <p
-                    className="font-medium text-black/50"
-                    style={{ fontSize: "clamp(10px, 0.68vw, 13px)" }}
-                  >
-                    Password:
-                  </p>
-                </div>
-
-                <div
-                  className="flex-1 flex flex-col"
+                  className="flex flex-col"
                   style={{ gap: "clamp(4px, 0.31vw, 6px)" }}
                 >
                   <p
