@@ -28,10 +28,9 @@ function DallasTime() {
   const p: Record<string, string> = {};
   for (const part of dallas) p[part.type] = part.value;
 
-  const h   = parseInt(p.hour);
-  const m   = parseInt(p.minute);
-  const s   = parseInt(p.second);
-  // dayPeriod key (capital P) is the Intl standard
+  const h    = parseInt(p.hour);
+  const m    = parseInt(p.minute);
+  const s    = parseInt(p.second);
   const ampm = p.dayPeriod ?? p.dayperiod ?? "";
   const isPM = ampm.toUpperCase() === "PM";
   const h24  = isPM ? (h === 12 ? 12 : h + 12) : h === 12 ? 0 : h;
@@ -60,7 +59,7 @@ function DallasTime() {
   );
 }
 
-// ── Tools Card – gravity + AABB collision + drag ───────────────────────────────
+// ── Tools Card – floating physics + AABB collision + drag ────────────────────────
 const TOOLS = [
   { id: "xcode",  name: "Xcode",  src: "/icons/xcode.png",  radius: 22 },
   { id: "cursor", name: "Cursor", src: "/icons/cursor.png", radius: 20 },
@@ -70,10 +69,10 @@ const TOOLS = [
 ];
 
 const ICON_SIZE = 78;
-const GRAVITY   = 0.6;
-const BOUNCE    = 0.40;
-const FRICTION  = 0.982;
-const COL_DAMP  = 0.72; // velocity kept after icon-icon collision
+const GRAVITY   = 0.08;  // very low — slow dreamy fall
+const BOUNCE    = 0.55;  // higher bounce so they stay lively
+const FRICTION  = 0.994; // barely any friction — long lazy glide
+const COL_DAMP  = 0.80;  // keep more energy through collisions
 
 interface IState {
   id: string;
@@ -81,49 +80,40 @@ interface IState {
   y: number;
   vx: number;
   vy: number;
+  // per-icon phase offset for the drift sine wave
+  phase: number;
   dragging: boolean;
 }
 
-/** Resolve all AABB icon-icon collisions for one frame. */
 function resolveCollisions(icons: IState[], W: number, H: number) {
   const floor = H - ICON_SIZE;
   const wall  = W - ICON_SIZE;
-
   for (let i = 0; i < icons.length; i++) {
     for (let j = i + 1; j < icons.length; j++) {
       const a = icons[i];
       const b = icons[j];
-
       const dx = b.x - a.x;
       const dy = b.y - a.y;
-      const ox = ICON_SIZE - Math.abs(dx); // overlap x
-      const oy = ICON_SIZE - Math.abs(dy); // overlap y
-
-      if (ox <= 0 || oy <= 0) continue; // no overlap
-
+      const ox = ICON_SIZE - Math.abs(dx);
+      const oy = ICON_SIZE - Math.abs(dy);
+      if (ox <= 0 || oy <= 0) continue;
       if (ox < oy) {
-        // Separate horizontally
         const half = ox / 2;
         const sign = dx > 0 ? 1 : -1;
         if (!a.dragging) a.x -= sign * half;
         if (!b.dragging) b.x += sign * half;
-        // Clamp to walls
         a.x = Math.max(0, Math.min(a.x, wall));
         b.x = Math.max(0, Math.min(b.x, wall));
-        // Exchange x-velocity
         const avx = a.vx; const bvx = b.vx;
         if (!a.dragging) a.vx = bvx * COL_DAMP;
         if (!b.dragging) b.vx = avx * COL_DAMP;
       } else {
-        // Separate vertically
         const half = oy / 2;
         const sign = dy > 0 ? 1 : -1;
         if (!a.dragging) a.y -= sign * half;
         if (!b.dragging) b.y += sign * half;
-        // Clamp to floor/ceiling
         a.y = Math.max(-ICON_SIZE, Math.min(a.y, floor));
         b.y = Math.max(-ICON_SIZE, Math.min(b.y, floor));
-        // Exchange y-velocity
         const avy = a.vy; const bvy = b.vy;
         if (!a.dragging) a.vy = bvy * COL_DAMP;
         if (!b.dragging) b.vy = avy * COL_DAMP;
@@ -139,27 +129,29 @@ function ToolsCard() {
   const dragRef      = useRef<{ id: string; ox: number; oy: number } | null>(null);
   const [, bump]     = useState(0);
   const ready        = useRef(false);
+  const frameRef     = useRef(0); // increments every RAF for drift sine
 
   useEffect(() => {
     const el = containerRef.current;
     if (!el || ready.current) return;
     ready.current = true;
-
     const W = el.offsetWidth;
 
-    // Drop icons from random x positions, staggered above the top
-    stateRef.current = TOOLS.map((t, i) => ({
-      id: t.id,
+    stateRef.current = TOOLS.map((_, i) => ({
+      id: TOOLS[i].id,
       x:  Math.random() * Math.max(0, W - ICON_SIZE),
-      y:  -(ICON_SIZE * (i + 1) + Math.random() * 40 + 20),
-      vx: (Math.random() - 0.5) * 5,
-      vy: Math.random() * 1.5,
+      y:  -(ICON_SIZE * (i + 1) + Math.random() * 60 + 30),
+      vx: (Math.random() - 0.5) * 1.5,  // gentler horizontal entry
+      vy: Math.random() * 0.5,
+      phase: Math.random() * Math.PI * 2, // unique drift phase per icon
       dragging: false,
     }));
 
     const loop = () => {
       const el2 = containerRef.current;
       if (!el2) return;
+      frameRef.current++;
+      const t     = frameRef.current;
       const W2    = el2.offsetWidth;
       const H2    = el2.offsetHeight;
       const floor = H2 - ICON_SIZE;
@@ -167,6 +159,10 @@ function ToolsCard() {
 
       for (const ic of stateRef.current) {
         if (ic.dragging) continue;
+
+        // Tiny sinusoidal lateral drift — gives the floating feel
+        ic.vx += Math.sin(t * 0.018 + ic.phase) * 0.012;
+
         ic.vy += GRAVITY;
         ic.vx *= FRICTION;
         ic.x  += ic.vx;
@@ -175,12 +171,12 @@ function ToolsCard() {
         if (ic.y >= floor) {
           ic.y   = floor;
           ic.vy *= -BOUNCE;
-          ic.vx *= 0.85;
-          if (Math.abs(ic.vy) < 0.5) ic.vy = 0;
+          ic.vx *= 0.92;
+          if (Math.abs(ic.vy) < 0.3) ic.vy = 0;
         }
         if (ic.y < -ICON_SIZE) { ic.y = -ICON_SIZE; ic.vy = Math.abs(ic.vy) * 0.3; }
-        if (ic.x < 0)   { ic.x = 0;    ic.vx =  Math.abs(ic.vx) * BOUNCE; }
-        if (ic.x > wall){ ic.x = wall; ic.vx = -Math.abs(ic.vx) * BOUNCE; }
+        if (ic.x < 0)    { ic.x = 0;    ic.vx =  Math.abs(ic.vx) * BOUNCE; }
+        if (ic.x > wall) { ic.x = wall; ic.vx = -Math.abs(ic.vx) * BOUNCE; }
       }
 
       // Dragged icon pushes others
@@ -194,11 +190,11 @@ function ToolsCard() {
           const oy = ICON_SIZE - Math.abs(dy);
           if (ox > 0 && oy > 0) {
             if (ox < oy) {
-              other.x += (dx > 0 ? ox : -ox);
-              other.vx += (dx > 0 ? 3 : -3);
+              other.x += dx > 0 ? ox : -ox;
+              other.vx += dx > 0 ? 2.5 : -2.5;
             } else {
-              other.y += (dy > 0 ? oy : -oy);
-              other.vy += (dy > 0 ? 3 : -3);
+              other.y += dy > 0 ? oy : -oy;
+              other.vy += dy > 0 ? 2.5 : -2.5;
             }
             other.x = Math.max(0, Math.min(other.x, wall));
             other.y = Math.max(-ICON_SIZE, Math.min(other.y, floor));
@@ -206,9 +202,7 @@ function ToolsCard() {
         }
       }
 
-      // Icon-icon collisions (non-dragged)
       resolveCollisions(stateRef.current, W2, H2);
-
       bump((n) => n + 1);
       rafRef.current = requestAnimationFrame(loop);
     };
@@ -230,7 +224,7 @@ function ToolsCard() {
     const onUp = () => {
       if (!dragRef.current) return;
       const ic = stateRef.current.find((s) => s.id === dragRef.current!.id);
-      if (ic) { ic.dragging = false; ic.vy = 2; }
+      if (ic) { ic.dragging = false; ic.vy = 0.5; } // gentle release
       dragRef.current = null;
     };
     window.addEventListener("mousemove", onMove);
@@ -264,7 +258,7 @@ function ToolsCard() {
       <div
         ref={containerRef}
         className="flex-1 relative"
-        style={{ userSelect: "none", minHeight: 300, cursor: "default" }}
+        style={{ userSelect: "none", minHeight: 300 }}
       >
         {TOOLS.map((tool, i) => {
           const s = stateRef.current[i];
@@ -295,7 +289,7 @@ function ToolsCard() {
   );
 }
 
-// ── Connect Card ───────────────────────────────────────────────────────────────
+// ── Connect Card ──────────────────────────────────────────────────────────────
 function ConnectCard() {
   const links = [
     {
@@ -346,9 +340,7 @@ function ConnectCard() {
       className="bg-white rounded-[40px] flex flex-col p-8"
       style={{ flex: "0 0 auto", width: "clamp(300px,29.7vw,570px)", minHeight: 443, boxShadow: "0 0 8px rgba(0,0,0,0.18)" }}
     >
-      <h2 className="font-normal text-black mb-6" style={{ fontSize: "clamp(24px,1.875vw,36px)" }}>
-        Connect.
-      </h2>
+      <h2 className="font-normal text-black mb-6" style={{ fontSize: "clamp(24px,1.875vw,36px)" }}>Connect.</h2>
       <div className="flex flex-col gap-3">
         {links.map((link) => (
           <a
@@ -370,7 +362,7 @@ function ConnectCard() {
   );
 }
 
-// ── Education Card ─────────────────────────────────────────────────────────────
+// ── Education Card ────────────────────────────────────────────────────────────
 function EducationCard() {
   return (
     <div
@@ -388,9 +380,7 @@ function EducationCard() {
           Bachelor&apos;s in Arts, Technology, and Emerging Communication
         </p>
         <p className="font-light text-black" style={{ fontSize: "clamp(13px,1.04vw,20px)", lineHeight: 1.5 }}>
-          The University of Texas at Dallas
-          <br />
-          2022–2026
+          The University of Texas at Dallas<br />2022–2026
         </p>
       </div>
     </div>
@@ -412,17 +402,11 @@ export default function About() {
           paddingRight:  "var(--px-side)",
         }}
       >
-        <h1
-          className="font-normal text-black"
-          style={{ fontSize: "var(--text-hero)", marginBottom: "clamp(14px,1.25vw,24px)" }}
-        >
+        <h1 className="font-normal text-black" style={{ fontSize: "var(--text-hero)", marginBottom: "clamp(14px,1.25vw,24px)" }}>
           Hi, I&apos;m Damian Izaguirre!
         </h1>
 
-        {/* Tags row */}
         <div className="flex flex-wrap items-center gap-x-8 gap-y-3 mb-10">
-
-          {/* Location pin */}
           <div className="flex items-center gap-2">
             <svg width="16" height="20" viewBox="0 0 18 22" fill="rgba(0,0,0,0.5)">
               <path d="M9 0C4.48 0 1 3.48 1 8c0 5.25 8 14 8 14s8-8.75 8-14c0-4.52-3.48-8-8-8zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6z" />
@@ -430,27 +414,19 @@ export default function About() {
             <span className="text-black/50 font-light" style={{ fontSize: "var(--text-nav)" }}>Dallas, TX</span>
           </div>
 
-          {/* Live Dallas clock */}
           <DallasTime />
 
-          {/* Graduation cap (UTD) */}
           <div className="flex items-center gap-2">
             <svg width="22" height="18" viewBox="0 0 24 20" fill="rgba(0,0,0,0.5)">
-              {/* mortarboard board */}
               <polygon points="12,0 24,7 12,14 0,7" />
-              {/* brim / base */}
               <path d="M4 9.5v6.5c0 0 2.5 4 8 4s8-4 8-4V9.5L12 14 4 9.5z" />
-              {/* tassel stem */}
               <line x1="24" y1="7" x2="24" y2="14" stroke="rgba(0,0,0,0.5)" strokeWidth="2" strokeLinecap="round" />
-              {/* tassel ball */}
               <circle cx="24" cy="15" r="1.5" />
             </svg>
             <span className="text-black/50 font-light" style={{ fontSize: "var(--text-nav)" }}>UTD</span>
           </div>
-
         </div>
 
-        {/* Bio */}
         <p
           className="text-black/70 font-normal"
           style={{ fontSize: "var(--text-nav)", maxWidth: "clamp(320px,52.3vw,1004px)", lineHeight: 1.6 }}
