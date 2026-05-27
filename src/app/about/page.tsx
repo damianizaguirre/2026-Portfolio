@@ -4,7 +4,31 @@ import { useState, useEffect, useRef } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
-// ── Dallas Live Clock ──────────────────────────────────────────────────────────
+// ── Static clock icon (no animation) ─────────────────────────────────────────────
+const ClockIcon = () => (
+  <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+    <circle cx="11" cy="11" r="9.5" stroke="rgba(0,0,0,0.5)" strokeWidth="1.5" />
+    {/* hour hand ~10 o’clock */}
+    <line x1="11" y1="11" x2="7.1"  y2="8.75" stroke="rgba(0,0,0,0.5)" strokeWidth="2"   strokeLinecap="round" />
+    {/* minute hand ~2 o’clock */}
+    <line x1="11" y1="11" x2="17.1" y2="7.5"  stroke="rgba(0,0,0,0.5)" strokeWidth="1.5" strokeLinecap="round" />
+    <circle cx="11" cy="11" r="1.2" fill="rgba(0,0,0,0.5)" />
+  </svg>
+);
+
+// ── Exact grad cap from Figma (node 558:1343) ─────────────────────────────────
+const GradCapIcon = () => (
+  <svg width="25" height="20" viewBox="0 0 25 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M10.5618 2.62964L2.68835 6.00398C2.57828 6.05114 2.48446 6.12957 2.41853 6.22954C2.35261 6.32951 2.31746 6.44662 2.31746 6.56637C2.31746 6.68613 2.35261 6.80324 2.41853 6.90321C2.48446 7.00318 2.57828 7.08161 2.68835 7.12877L10.5618 10.5031C11.0427 10.7091 11.5605 10.8153 12.0837 10.8152H12.6368C13.16 10.8153 13.6777 10.7091 14.1586 10.5031L22.0321 7.12877C22.1422 7.08161 22.236 7.00318 22.3019 6.90321C22.3679 6.80324 22.403 6.68613 22.403 6.56637C22.403 6.44662 22.3679 6.32951 22.3019 6.22954C22.236 6.12957 22.1422 6.05114 22.0321 6.00398L14.1586 2.62964C13.6777 2.42361 13.16 2.31744 12.6368 2.31754H12.0837C11.5605 2.31744 11.0427 2.42361 10.5618 2.62964ZM2.31754 9.48957L4.63509 10.4846V15.4719C4.63511 16.0459 4.79499 16.6085 5.09681 17.0967C5.39863 17.5849 5.83046 17.9794 6.34389 18.236L7.58918 18.8586C9.0733 19.6005 10.7082 19.991 12.3674 19.9998C14.0266 20.0087 15.6656 19.6357 17.1576 18.9096L18.562 18.2267C19.083 17.9732 19.5223 17.5783 19.8296 17.0871C20.137 16.5959 20.3 16.0282 20.3001 15.4487V10.3919L22.9452 9.25782C23.4715 9.03168 23.92 8.65619 24.2351 8.17783C24.5502 7.69946 24.7182 7.1392 24.7182 6.56637C24.7182 5.99355 24.5502 5.43329 24.2351 4.95492C23.92 4.47656 23.4715 4.10107 22.9452 3.87493L15.0718 0.499045C14.3023 0.169509 13.4739 -0.000272223 12.6368 3.27623e-07H12.0837C11.2466 -0.000272223 10.4182 0.169509 9.64871 0.499045L1.77678 3.87493C1.25024 4.10115 0.801421 4.47654 0.485689 4.95481C0.169957 5.43307 0.0011192 5.99329 0 6.56637L0 13.519C0 13.8263 0.122085 14.1211 0.339396 14.3384C0.556708 14.5557 0.851447 14.6778 1.15877 14.6778C1.4661 14.6778 1.76084 14.5557 1.97815 14.3384C2.19546 14.1211 2.31754 13.8263 2.31754 13.519V9.48957ZM6.95263 15.4719V11.478L9.64871 12.6337C10.4182 12.9632 11.2466 13.133 12.0837 13.1327H12.6368C13.4739 13.133 14.3023 12.9632 15.0718 12.6337L17.9826 11.3853V15.4487C17.9826 15.5939 17.9417 15.736 17.8647 15.859C17.7876 15.982 17.6775 16.0807 17.5469 16.144L16.1425 16.8269C14.9703 17.3969 13.6827 17.6896 12.3793 17.6823C11.0759 17.6751 9.79168 17.3681 8.6259 16.7852L7.37906 16.1626C7.2509 16.0983 7.14315 15.9997 7.06784 15.8778C6.99253 15.7558 6.95264 15.6153 6.95263 15.4719Z"
+      fill="rgba(0,0,0,0.5)"
+    />
+  </svg>
+);
+
+// ── Dallas time display (static icon, live text) ──────────────────────────────
 function DallasTime() {
   const [time, setTime] = useState<Date | null>(null);
 
@@ -27,31 +51,12 @@ function DallasTime() {
 
   const p: Record<string, string> = {};
   for (const part of dallas) p[part.type] = part.value;
-
-  const h    = parseInt(p.hour);
-  const m    = parseInt(p.minute);
-  const s    = parseInt(p.second);
-  const ampm = p.dayPeriod ?? p.dayperiod ?? "";
-  const isPM = ampm.toUpperCase() === "PM";
-  const h24  = isPM ? (h === 12 ? 12 : h + 12) : h === 12 ? 0 : h;
-
-  const minuteDeg = m * 6 + s * 0.1;
-  const hourDeg   = (h24 % 12) * 30 + m * 0.5;
-  const secondDeg = s * 6;
-  const timeStr   = `${p.hour}:${p.minute}:${p.second} ${ampm}`;
-
-  const sinD = (d: number) => Math.sin((d * Math.PI) / 180);
-  const cosD = (d: number) => Math.cos((d * Math.PI) / 180);
+  const ampm    = p.dayPeriod ?? p.dayperiod ?? "";
+  const timeStr = `${p.hour}:${p.minute}:${p.second} ${ampm}`;
 
   return (
     <div className="flex items-center gap-2">
-      <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-        <circle cx="11" cy="11" r="9.5" stroke="rgba(0,0,0,0.5)" strokeWidth="1.5" />
-        <line x1="11" y1="11" x2={11 + 4.5 * sinD(hourDeg)}   y2={11 - 4.5 * cosD(hourDeg)}   stroke="rgba(0,0,0,0.5)"  strokeWidth="2.5" strokeLinecap="round" />
-        <line x1="11" y1="11" x2={11 + 7   * sinD(minuteDeg)} y2={11 - 7   * cosD(minuteDeg)} stroke="rgba(0,0,0,0.5)"  strokeWidth="1.5" strokeLinecap="round" />
-        <line x1="11" y1="11" x2={11 + 7.5 * sinD(secondDeg)} y2={11 - 7.5 * cosD(secondDeg)} stroke="rgba(0,0,0,0.35)" strokeWidth="1"   strokeLinecap="round" />
-        <circle cx="11" cy="11" r="1.2" fill="rgba(0,0,0,0.5)" />
-      </svg>
+      <ClockIcon />
       <span className="text-black/50 font-light" style={{ fontSize: "var(--text-nav)" }}>
         {timeStr}
       </span>
@@ -59,7 +64,7 @@ function DallasTime() {
   );
 }
 
-// ── Tools Card – floating physics + AABB collision + drag ────────────────────────
+// ── Tools Card – floating + tilt/spin + AABB collision + drag ─────────────────────
 const TOOLS = [
   { id: "xcode",  name: "Xcode",  src: "/icons/xcode.png",  radius: 22 },
   { id: "cursor", name: "Cursor", src: "/icons/cursor.png", radius: 20 },
@@ -69,10 +74,10 @@ const TOOLS = [
 ];
 
 const ICON_SIZE = 78;
-const GRAVITY   = 0.08;  // very low — slow dreamy fall
-const BOUNCE    = 0.55;  // higher bounce so they stay lively
-const FRICTION  = 0.994; // barely any friction — long lazy glide
-const COL_DAMP  = 0.80;  // keep more energy through collisions
+const GRAVITY   = 0.08;
+const BOUNCE    = 0.55;
+const FRICTION  = 0.994;
+const COL_DAMP  = 0.80;
 
 interface IState {
   id: string;
@@ -80,8 +85,8 @@ interface IState {
   y: number;
   vx: number;
   vy: number;
-  // per-icon phase offset for the drift sine wave
-  phase: number;
+  rotation: number;   // degrees
+  angularVel: number; // degrees / frame
   dragging: boolean;
 }
 
@@ -90,33 +95,25 @@ function resolveCollisions(icons: IState[], W: number, H: number) {
   const wall  = W - ICON_SIZE;
   for (let i = 0; i < icons.length; i++) {
     for (let j = i + 1; j < icons.length; j++) {
-      const a = icons[i];
-      const b = icons[j];
-      const dx = b.x - a.x;
-      const dy = b.y - a.y;
+      const a = icons[i], b = icons[j];
+      const dx = b.x - a.x, dy = b.y - a.y;
       const ox = ICON_SIZE - Math.abs(dx);
       const oy = ICON_SIZE - Math.abs(dy);
       if (ox <= 0 || oy <= 0) continue;
       if (ox < oy) {
-        const half = ox / 2;
-        const sign = dx > 0 ? 1 : -1;
-        if (!a.dragging) a.x -= sign * half;
-        if (!b.dragging) b.x += sign * half;
-        a.x = Math.max(0, Math.min(a.x, wall));
-        b.x = Math.max(0, Math.min(b.x, wall));
-        const avx = a.vx; const bvx = b.vx;
-        if (!a.dragging) a.vx = bvx * COL_DAMP;
-        if (!b.dragging) b.vx = avx * COL_DAMP;
+        const half = ox / 2, sign = dx > 0 ? 1 : -1;
+        if (!a.dragging) { a.x -= sign * half; a.x = Math.max(0, Math.min(a.x, wall)); }
+        if (!b.dragging) { b.x += sign * half; b.x = Math.max(0, Math.min(b.x, wall)); }
+        const avx = a.vx, bvx = b.vx;
+        if (!a.dragging) { a.vx = bvx * COL_DAMP; a.angularVel += a.vx * 0.3; }
+        if (!b.dragging) { b.vx = avx * COL_DAMP; b.angularVel += b.vx * 0.3; }
       } else {
-        const half = oy / 2;
-        const sign = dy > 0 ? 1 : -1;
-        if (!a.dragging) a.y -= sign * half;
-        if (!b.dragging) b.y += sign * half;
-        a.y = Math.max(-ICON_SIZE, Math.min(a.y, floor));
-        b.y = Math.max(-ICON_SIZE, Math.min(b.y, floor));
-        const avy = a.vy; const bvy = b.vy;
-        if (!a.dragging) a.vy = bvy * COL_DAMP;
-        if (!b.dragging) b.vy = avy * COL_DAMP;
+        const half = oy / 2, sign = dy > 0 ? 1 : -1;
+        if (!a.dragging) { a.y -= sign * half; a.y = Math.max(-ICON_SIZE, Math.min(a.y, floor)); }
+        if (!b.dragging) { b.y += sign * half; b.y = Math.max(-ICON_SIZE, Math.min(b.y, floor)); }
+        const avy = a.vy, bvy = b.vy;
+        if (!a.dragging) { a.vy = bvy * COL_DAMP; a.angularVel += a.vx * 0.2; }
+        if (!b.dragging) { b.vy = avy * COL_DAMP; b.angularVel += b.vx * 0.2; }
       }
     }
   }
@@ -126,10 +123,9 @@ function ToolsCard() {
   const containerRef = useRef<HTMLDivElement>(null);
   const stateRef     = useRef<IState[]>([]);
   const rafRef       = useRef<number>(0);
-  const dragRef      = useRef<{ id: string; ox: number; oy: number } | null>(null);
+  const dragRef      = useRef<{ id: string; ox: number; oy: number; lastX: number; lastY: number } | null>(null);
   const [, bump]     = useState(0);
   const ready        = useRef(false);
-  const frameRef     = useRef(0); // increments every RAF for drift sine
 
   useEffect(() => {
     const el = containerRef.current;
@@ -137,21 +133,20 @@ function ToolsCard() {
     ready.current = true;
     const W = el.offsetWidth;
 
-    stateRef.current = TOOLS.map((_, i) => ({
-      id: TOOLS[i].id,
-      x:  Math.random() * Math.max(0, W - ICON_SIZE),
-      y:  -(ICON_SIZE * (i + 1) + Math.random() * 60 + 30),
-      vx: (Math.random() - 0.5) * 1.5,  // gentler horizontal entry
-      vy: Math.random() * 0.5,
-      phase: Math.random() * Math.PI * 2, // unique drift phase per icon
-      dragging: false,
+    stateRef.current = TOOLS.map((t, i) => ({
+      id:         t.id,
+      x:          Math.random() * Math.max(0, W - ICON_SIZE),
+      y:          -(ICON_SIZE * (i + 1) + Math.random() * 60 + 30),
+      vx:         (Math.random() - 0.5) * 1.5,
+      vy:         Math.random() * 0.5,
+      rotation:   (Math.random() - 0.5) * 40,   // random initial tilt
+      angularVel: (Math.random() - 0.5) * 3,    // random initial spin
+      dragging:   false,
     }));
 
     const loop = () => {
       const el2 = containerRef.current;
       if (!el2) return;
-      frameRef.current++;
-      const t     = frameRef.current;
       const W2    = el2.offsetWidth;
       const H2    = el2.offsetHeight;
       const floor = H2 - ICON_SIZE;
@@ -160,23 +155,28 @@ function ToolsCard() {
       for (const ic of stateRef.current) {
         if (ic.dragging) continue;
 
-        // Tiny sinusoidal lateral drift — gives the floating feel
-        ic.vx += Math.sin(t * 0.018 + ic.phase) * 0.012;
-
+        // Linear physics
         ic.vy += GRAVITY;
         ic.vx *= FRICTION;
         ic.x  += ic.vx;
         ic.y  += ic.vy;
 
+        // Rotation driven by horizontal velocity — tilt in direction of travel
+        ic.angularVel += ic.vx * 0.18;   // gain spin from lateral movement
+        ic.angularVel *= 0.96;            // damping
+        ic.rotation   += ic.angularVel;
+
+        // Wall / floor bounces
         if (ic.y >= floor) {
           ic.y   = floor;
           ic.vy *= -BOUNCE;
           ic.vx *= 0.92;
+          ic.angularVel *= 0.7;           // scrub some spin on landing
           if (Math.abs(ic.vy) < 0.3) ic.vy = 0;
         }
         if (ic.y < -ICON_SIZE) { ic.y = -ICON_SIZE; ic.vy = Math.abs(ic.vy) * 0.3; }
-        if (ic.x < 0)    { ic.x = 0;    ic.vx =  Math.abs(ic.vx) * BOUNCE; }
-        if (ic.x > wall) { ic.x = wall; ic.vx = -Math.abs(ic.vx) * BOUNCE; }
+        if (ic.x < 0)    { ic.x = 0;    ic.vx =  Math.abs(ic.vx) * BOUNCE; ic.angularVel *= -0.6; }
+        if (ic.x > wall) { ic.x = wall; ic.vx = -Math.abs(ic.vx) * BOUNCE; ic.angularVel *= -0.6; }
       }
 
       // Dragged icon pushes others
@@ -184,17 +184,17 @@ function ToolsCard() {
       if (dragged) {
         for (const other of stateRef.current) {
           if (other.dragging) continue;
-          const dx = other.x - dragged.x;
-          const dy = other.y - dragged.y;
-          const ox = ICON_SIZE - Math.abs(dx);
-          const oy = ICON_SIZE - Math.abs(dy);
+          const dx = other.x - dragged.x, dy = other.y - dragged.y;
+          const ox = ICON_SIZE - Math.abs(dx), oy = ICON_SIZE - Math.abs(dy);
           if (ox > 0 && oy > 0) {
             if (ox < oy) {
-              other.x += dx > 0 ? ox : -ox;
+              other.x  += dx > 0 ? ox : -ox;
               other.vx += dx > 0 ? 2.5 : -2.5;
+              other.angularVel += other.vx * 0.4;
             } else {
-              other.y += dy > 0 ? oy : -oy;
+              other.y  += dy > 0 ? oy : -oy;
               other.vy += dy > 0 ? 2.5 : -2.5;
+              other.angularVel += other.vx * 0.3;
             }
             other.x = Math.max(0, Math.min(other.x, wall));
             other.y = Math.max(-ICON_SIZE, Math.min(other.y, floor));
@@ -216,15 +216,27 @@ function ToolsCard() {
       const rect = containerRef.current.getBoundingClientRect();
       const ic   = stateRef.current.find((s) => s.id === dragRef.current!.id);
       if (!ic) return;
-      const maxX = containerRef.current.offsetWidth  - ICON_SIZE;
-      const maxY = containerRef.current.offsetHeight - ICON_SIZE;
-      ic.x = Math.max(0, Math.min(e.clientX - rect.left - dragRef.current.ox, maxX));
-      ic.y = Math.max(0, Math.min(e.clientY - rect.top  - dragRef.current.oy, maxY));
+      const newX = Math.max(0, Math.min(e.clientX - rect.left - dragRef.current.ox, containerRef.current.offsetWidth  - ICON_SIZE));
+      const newY = Math.max(0, Math.min(e.clientY - rect.top  - dragRef.current.oy, containerRef.current.offsetHeight - ICON_SIZE));
+      // Track velocity from drag movement
+      const driftVx = newX - ic.x;
+      dragRef.current.lastX = driftVx;
+      ic.x = newX;
+      ic.y = newY;
+      // Tilt while dragging based on movement direction
+      ic.angularVel += driftVx * 0.25;
+      ic.rotation   += ic.angularVel * 0.5;
+      ic.angularVel *= 0.85;
     };
     const onUp = () => {
       if (!dragRef.current) return;
       const ic = stateRef.current.find((s) => s.id === dragRef.current!.id);
-      if (ic) { ic.dragging = false; ic.vy = 0.5; } // gentle release
+      if (ic) {
+        ic.dragging   = false;
+        ic.vy         = 0.5;
+        ic.vx         = dragRef.current.lastX * 0.4; // carry throw momentum
+        ic.angularVel = ic.vx * 0.5;                 // spin on throw
+      }
       dragRef.current = null;
     };
     window.addEventListener("mousemove", onMove);
@@ -239,10 +251,9 @@ function ToolsCard() {
     e.preventDefault();
     const ic = stateRef.current.find((s) => s.id === id);
     if (!ic) return;
-    ic.dragging = true;
-    ic.vx = 0;
-    ic.vy = 0;
-    dragRef.current = { id, ox: ICON_SIZE / 2, oy: ICON_SIZE / 2 };
+    ic.dragging   = true;
+    ic.vx = 0; ic.vy = 0;
+    dragRef.current = { id, ox: ICON_SIZE / 2, oy: ICON_SIZE / 2, lastX: 0, lastY: 0 };
   };
 
   return (
@@ -251,15 +262,9 @@ function ToolsCard() {
       style={{ flex: "1 1 340px", minHeight: 443, boxShadow: "0 0 8px rgba(0,0,0,0.18)" }}
     >
       <div className="px-8 pt-8 pb-2 shrink-0">
-        <h2 className="font-normal text-black" style={{ fontSize: "clamp(24px,1.875vw,36px)" }}>
-          Tools.
-        </h2>
+        <h2 className="font-normal text-black" style={{ fontSize: "clamp(24px,1.875vw,36px)" }}>Tools.</h2>
       </div>
-      <div
-        ref={containerRef}
-        className="flex-1 relative"
-        style={{ userSelect: "none", minHeight: 300 }}
-      >
+      <div ref={containerRef} className="flex-1 relative" style={{ userSelect: "none", minHeight: 300 }}>
         {TOOLS.map((tool, i) => {
           const s = stateRef.current[i];
           if (!s) return null;
@@ -271,15 +276,17 @@ function ToolsCard() {
               onMouseDown={(e) => onMouseDown(e, tool.id)}
               draggable={false}
               style={{
-                position:      "absolute",
-                left:          Math.round(s.x),
-                top:           Math.round(s.y),
-                width:         ICON_SIZE,
-                height:        ICON_SIZE,
-                borderRadius:  tool.radius,
-                cursor:        s.dragging ? "grabbing" : "grab",
-                objectFit:     "cover",
-                pointerEvents: "auto",
+                position:        "absolute",
+                left:            Math.round(s.x),
+                top:             Math.round(s.y),
+                width:           ICON_SIZE,
+                height:          ICON_SIZE,
+                borderRadius:    tool.radius,
+                cursor:          s.dragging ? "grabbing" : "grab",
+                objectFit:       "cover",
+                transform:       `rotate(${s.rotation.toFixed(1)}deg)`,
+                transformOrigin: "center center",
+                pointerEvents:   "auto",
               }}
             />
           );
@@ -393,7 +400,6 @@ export default function About() {
     <main className="min-h-screen flex flex-col" style={{ background: "rgb(247,247,247)" }}>
       <Navbar />
 
-      {/* Bio */}
       <section
         style={{
           paddingTop:    "clamp(80px,8.33vw,160px)",
@@ -417,12 +423,7 @@ export default function About() {
           <DallasTime />
 
           <div className="flex items-center gap-2">
-            <svg width="22" height="18" viewBox="0 0 24 20" fill="rgba(0,0,0,0.5)">
-              <polygon points="12,0 24,7 12,14 0,7" />
-              <path d="M4 9.5v6.5c0 0 2.5 4 8 4s8-4 8-4V9.5L12 14 4 9.5z" />
-              <line x1="24" y1="7" x2="24" y2="14" stroke="rgba(0,0,0,0.5)" strokeWidth="2" strokeLinecap="round" />
-              <circle cx="24" cy="15" r="1.5" />
-            </svg>
+            <GradCapIcon />
             <span className="text-black/50 font-light" style={{ fontSize: "var(--text-nav)" }}>UTD</span>
           </div>
         </div>
@@ -439,7 +440,6 @@ export default function About() {
         </p>
       </section>
 
-      {/* Cards */}
       <div
         className="flex flex-wrap gap-5 pb-24"
         style={{ paddingLeft: "var(--px-side)", paddingRight: "var(--px-side)" }}
