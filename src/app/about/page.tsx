@@ -25,49 +25,32 @@ function DallasTime() {
     hour12: true,
   }).formatToParts(time);
 
-  const p = Object.fromEntries(dallas.map((d) => [d.type, d.value]));
-  const h = parseInt(p.hour);
-  const m = parseInt(p.minute);
-  const s = parseInt(p.second);
-  const isPM = p.dayperiod === "PM";
-  const h24 = isPM ? (h === 12 ? 12 : h + 12) : h === 12 ? 0 : h;
+  const p: Record<string, string> = {};
+  for (const part of dallas) p[part.type] = part.value;
+
+  const h   = parseInt(p.hour);
+  const m   = parseInt(p.minute);
+  const s   = parseInt(p.second);
+  // dayPeriod key (capital P) is the Intl standard
+  const ampm = p.dayPeriod ?? p.dayperiod ?? "";
+  const isPM = ampm.toUpperCase() === "PM";
+  const h24  = isPM ? (h === 12 ? 12 : h + 12) : h === 12 ? 0 : h;
 
   const minuteDeg = m * 6 + s * 0.1;
   const hourDeg   = (h24 % 12) * 30 + m * 0.5;
   const secondDeg = s * 6;
+  const timeStr   = `${p.hour}:${p.minute}:${p.second} ${ampm}`;
 
-  const timeStr = `${p.hour}:${p.minute}:${p.second} ${p.dayperiod}`;
-
-  const sin = (deg: number) => Math.sin((deg * Math.PI) / 180);
-  const cos = (deg: number) => Math.cos((deg * Math.PI) / 180);
+  const sinD = (d: number) => Math.sin((d * Math.PI) / 180);
+  const cosD = (d: number) => Math.cos((d * Math.PI) / 180);
 
   return (
     <div className="flex items-center gap-2">
       <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-        {/* Clock face */}
         <circle cx="11" cy="11" r="9.5" stroke="rgba(0,0,0,0.5)" strokeWidth="1.5" />
-        {/* Hour hand */}
-        <line
-          x1="11" y1="11"
-          x2={11 + 4.5 * sin(hourDeg)}
-          y2={11 - 4.5 * cos(hourDeg)}
-          stroke="rgba(0,0,0,0.5)" strokeWidth="2.5" strokeLinecap="round"
-        />
-        {/* Minute hand */}
-        <line
-          x1="11" y1="11"
-          x2={11 + 7 * sin(minuteDeg)}
-          y2={11 - 7 * cos(minuteDeg)}
-          stroke="rgba(0,0,0,0.5)" strokeWidth="1.5" strokeLinecap="round"
-        />
-        {/* Second hand */}
-        <line
-          x1="11" y1="11"
-          x2={11 + 7.5 * sin(secondDeg)}
-          y2={11 - 7.5 * cos(secondDeg)}
-          stroke="rgba(0,0,0,0.35)" strokeWidth="1" strokeLinecap="round"
-        />
-        {/* Center dot */}
+        <line x1="11" y1="11" x2={11 + 4.5 * sinD(hourDeg)}   y2={11 - 4.5 * cosD(hourDeg)}   stroke="rgba(0,0,0,0.5)"  strokeWidth="2.5" strokeLinecap="round" />
+        <line x1="11" y1="11" x2={11 + 7   * sinD(minuteDeg)} y2={11 - 7   * cosD(minuteDeg)} stroke="rgba(0,0,0,0.5)"  strokeWidth="1.5" strokeLinecap="round" />
+        <line x1="11" y1="11" x2={11 + 7.5 * sinD(secondDeg)} y2={11 - 7.5 * cosD(secondDeg)} stroke="rgba(0,0,0,0.35)" strokeWidth="1"   strokeLinecap="round" />
         <circle cx="11" cy="11" r="1.2" fill="rgba(0,0,0,0.5)" />
       </svg>
       <span className="text-black/50 font-light" style={{ fontSize: "var(--text-nav)" }}>
@@ -77,7 +60,7 @@ function DallasTime() {
   );
 }
 
-// ── Tools Card – gravity physics + drag ───────────────────────────────────────
+// ── Tools Card – gravity + AABB collision + drag ───────────────────────────────
 const TOOLS = [
   { id: "xcode",  name: "Xcode",  src: "/icons/xcode.png",  radius: 22 },
   { id: "cursor", name: "Cursor", src: "/icons/cursor.png", radius: 20 },
@@ -87,9 +70,10 @@ const TOOLS = [
 ];
 
 const ICON_SIZE = 78;
-const GRAVITY   = 0.55;
-const BOUNCE    = 0.42;
-const FRICTION  = 0.985;
+const GRAVITY   = 0.6;
+const BOUNCE    = 0.40;
+const FRICTION  = 0.982;
+const COL_DAMP  = 0.72; // velocity kept after icon-icon collision
 
 interface IState {
   id: string;
@@ -100,6 +84,54 @@ interface IState {
   dragging: boolean;
 }
 
+/** Resolve all AABB icon-icon collisions for one frame. */
+function resolveCollisions(icons: IState[], W: number, H: number) {
+  const floor = H - ICON_SIZE;
+  const wall  = W - ICON_SIZE;
+
+  for (let i = 0; i < icons.length; i++) {
+    for (let j = i + 1; j < icons.length; j++) {
+      const a = icons[i];
+      const b = icons[j];
+
+      const dx = b.x - a.x;
+      const dy = b.y - a.y;
+      const ox = ICON_SIZE - Math.abs(dx); // overlap x
+      const oy = ICON_SIZE - Math.abs(dy); // overlap y
+
+      if (ox <= 0 || oy <= 0) continue; // no overlap
+
+      if (ox < oy) {
+        // Separate horizontally
+        const half = ox / 2;
+        const sign = dx > 0 ? 1 : -1;
+        if (!a.dragging) a.x -= sign * half;
+        if (!b.dragging) b.x += sign * half;
+        // Clamp to walls
+        a.x = Math.max(0, Math.min(a.x, wall));
+        b.x = Math.max(0, Math.min(b.x, wall));
+        // Exchange x-velocity
+        const avx = a.vx; const bvx = b.vx;
+        if (!a.dragging) a.vx = bvx * COL_DAMP;
+        if (!b.dragging) b.vx = avx * COL_DAMP;
+      } else {
+        // Separate vertically
+        const half = oy / 2;
+        const sign = dy > 0 ? 1 : -1;
+        if (!a.dragging) a.y -= sign * half;
+        if (!b.dragging) b.y += sign * half;
+        // Clamp to floor/ceiling
+        a.y = Math.max(-ICON_SIZE, Math.min(a.y, floor));
+        b.y = Math.max(-ICON_SIZE, Math.min(b.y, floor));
+        // Exchange y-velocity
+        const avy = a.vy; const bvy = b.vy;
+        if (!a.dragging) a.vy = bvy * COL_DAMP;
+        if (!b.dragging) b.vy = avy * COL_DAMP;
+      }
+    }
+  }
+}
+
 function ToolsCard() {
   const containerRef = useRef<HTMLDivElement>(null);
   const stateRef     = useRef<IState[]>([]);
@@ -108,7 +140,6 @@ function ToolsCard() {
   const [, bump]     = useState(0);
   const ready        = useRef(false);
 
-  // Init + physics loop
   useEffect(() => {
     const el = containerRef.current;
     if (!el || ready.current) return;
@@ -116,21 +147,23 @@ function ToolsCard() {
 
     const W = el.offsetWidth;
 
+    // Drop icons from random x positions, staggered above the top
     stateRef.current = TOOLS.map((t, i) => ({
       id: t.id,
-      x: 16 + (i * (W - ICON_SIZE - 32)) / (TOOLS.length - 1),
-      y: -(ICON_SIZE + i * 60 + Math.random() * 20),
-      vx: (Math.random() - 0.5) * 4,
-      vy: Math.random() * 2,
+      x:  Math.random() * Math.max(0, W - ICON_SIZE),
+      y:  -(ICON_SIZE * (i + 1) + Math.random() * 40 + 20),
+      vx: (Math.random() - 0.5) * 5,
+      vy: Math.random() * 1.5,
       dragging: false,
     }));
 
-    const tick = () => {
+    const loop = () => {
       const el2 = containerRef.current;
       if (!el2) return;
-      const floorY = el2.offsetHeight - ICON_SIZE;
-      const wallX  = el2.offsetWidth  - ICON_SIZE;
-      let dirty = false;
+      const W2    = el2.offsetWidth;
+      const H2    = el2.offsetHeight;
+      const floor = H2 - ICON_SIZE;
+      const wall  = W2 - ICON_SIZE;
 
       for (const ic of stateRef.current) {
         if (ic.dragging) continue;
@@ -139,25 +172,50 @@ function ToolsCard() {
         ic.x  += ic.vx;
         ic.y  += ic.vy;
 
-        if (ic.y >= floorY) {
-          ic.y   = floorY;
+        if (ic.y >= floor) {
+          ic.y   = floor;
           ic.vy *= -BOUNCE;
-          ic.vx *= 0.88;
-          if (Math.abs(ic.vy) < 0.8) ic.vy = 0;
+          ic.vx *= 0.85;
+          if (Math.abs(ic.vy) < 0.5) ic.vy = 0;
         }
-        if (ic.y < -ICON_SIZE) { ic.y = -ICON_SIZE; ic.vy *= -BOUNCE; }
-        if (ic.x < 0)          { ic.x = 0;          ic.vx *= -BOUNCE; }
-        if (ic.x > wallX)      { ic.x = wallX;       ic.vx *= -BOUNCE; }
-        dirty = true;
+        if (ic.y < -ICON_SIZE) { ic.y = -ICON_SIZE; ic.vy = Math.abs(ic.vy) * 0.3; }
+        if (ic.x < 0)   { ic.x = 0;    ic.vx =  Math.abs(ic.vx) * BOUNCE; }
+        if (ic.x > wall){ ic.x = wall; ic.vx = -Math.abs(ic.vx) * BOUNCE; }
       }
-      if (dirty) bump((n) => n + 1);
-      rafRef.current = requestAnimationFrame(tick);
+
+      // Dragged icon pushes others
+      const dragged = stateRef.current.find((s) => s.dragging);
+      if (dragged) {
+        for (const other of stateRef.current) {
+          if (other.dragging) continue;
+          const dx = other.x - dragged.x;
+          const dy = other.y - dragged.y;
+          const ox = ICON_SIZE - Math.abs(dx);
+          const oy = ICON_SIZE - Math.abs(dy);
+          if (ox > 0 && oy > 0) {
+            if (ox < oy) {
+              other.x += (dx > 0 ? ox : -ox);
+              other.vx += (dx > 0 ? 3 : -3);
+            } else {
+              other.y += (dy > 0 ? oy : -oy);
+              other.vy += (dy > 0 ? 3 : -3);
+            }
+            other.x = Math.max(0, Math.min(other.x, wall));
+            other.y = Math.max(-ICON_SIZE, Math.min(other.y, floor));
+          }
+        }
+      }
+
+      // Icon-icon collisions (non-dragged)
+      resolveCollisions(stateRef.current, W2, H2);
+
+      bump((n) => n + 1);
+      rafRef.current = requestAnimationFrame(loop);
     };
-    rafRef.current = requestAnimationFrame(tick);
+    rafRef.current = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(rafRef.current);
   }, []);
 
-  // Global mouse drag handlers
   useEffect(() => {
     const onMove = (e: MouseEvent) => {
       if (!dragRef.current || !containerRef.current) return;
@@ -168,7 +226,6 @@ function ToolsCard() {
       const maxY = containerRef.current.offsetHeight - ICON_SIZE;
       ic.x = Math.max(0, Math.min(e.clientX - rect.left - dragRef.current.ox, maxX));
       ic.y = Math.max(0, Math.min(e.clientY - rect.top  - dragRef.current.oy, maxY));
-      bump((n) => n + 1);
     };
     const onUp = () => {
       if (!dragRef.current) return;
@@ -204,11 +261,10 @@ function ToolsCard() {
           Tools.
         </h2>
       </div>
-
       <div
         ref={containerRef}
         className="flex-1 relative"
-        style={{ userSelect: "none", minHeight: 300 }}
+        style={{ userSelect: "none", minHeight: 300, cursor: "default" }}
       >
         {TOOLS.map((tool, i) => {
           const s = stateRef.current[i];
@@ -239,7 +295,7 @@ function ToolsCard() {
   );
 }
 
-// ── Connect Card ──────────────────────────────────────────────────────────────
+// ── Connect Card ───────────────────────────────────────────────────────────────
 function ConnectCard() {
   const links = [
     {
@@ -304,10 +360,7 @@ function ConnectCard() {
             style={{ borderColor: "rgba(213,211,211,1)", borderRadius: 32 }}
           >
             <span className="text-black shrink-0">{link.icon}</span>
-            <span
-              className="text-black/70 font-light truncate"
-              style={{ fontSize: "clamp(14px,1.25vw,24px)" }}
-            >
+            <span className="text-black/70 font-light truncate" style={{ fontSize: "clamp(14px,1.25vw,24px)" }}>
               {link.label}
             </span>
           </a>
@@ -317,7 +370,7 @@ function ConnectCard() {
   );
 }
 
-// ── Education Card ────────────────────────────────────────────────────────────
+// ── Education Card ─────────────────────────────────────────────────────────────
 function EducationCard() {
   return (
     <div
@@ -331,16 +384,10 @@ function EducationCard() {
         Education.
       </h2>
       <div>
-        <p
-          className="font-medium text-black"
-          style={{ fontSize: "clamp(14px,1.25vw,24px)", lineHeight: 1.25, marginBottom: 24 }}
-        >
+        <p className="font-medium text-black" style={{ fontSize: "clamp(14px,1.25vw,24px)", lineHeight: 1.25, marginBottom: 24 }}>
           Bachelor&apos;s in Arts, Technology, and Emerging Communication
         </p>
-        <p
-          className="font-light text-black"
-          style={{ fontSize: "clamp(13px,1.04vw,20px)", lineHeight: 1.5 }}
-        >
+        <p className="font-light text-black" style={{ fontSize: "clamp(13px,1.04vw,20px)", lineHeight: 1.5 }}>
           The University of Texas at Dallas
           <br />
           2022–2026
@@ -350,13 +397,13 @@ function EducationCard() {
   );
 }
 
-// ── Main Page ─────────────────────────────────────────────────────────────────
+// ── Main Page ──────────────────────────────────────────────────────────────────
 export default function About() {
   return (
     <main className="min-h-screen flex flex-col" style={{ background: "rgb(247,247,247)" }}>
       <Navbar />
 
-      {/* ── Bio ── */}
+      {/* Bio */}
       <section
         style={{
           paddingTop:    "clamp(80px,8.33vw,160px)",
@@ -372,40 +419,41 @@ export default function About() {
           Hi, I&apos;m Damian Izaguirre!
         </h1>
 
-        {/* Meta tags row */}
+        {/* Tags row */}
         <div className="flex flex-wrap items-center gap-x-8 gap-y-3 mb-10">
-          {/* Location */}
+
+          {/* Location pin */}
           <div className="flex items-center gap-2">
             <svg width="16" height="20" viewBox="0 0 18 22" fill="rgba(0,0,0,0.5)">
               <path d="M9 0C4.48 0 1 3.48 1 8c0 5.25 8 14 8 14s8-8.75 8-14c0-4.52-3.48-8-8-8zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6z" />
             </svg>
-            <span className="text-black/50 font-light" style={{ fontSize: "var(--text-nav)" }}>
-              Dallas, TX
-            </span>
+            <span className="text-black/50 font-light" style={{ fontSize: "var(--text-nav)" }}>Dallas, TX</span>
           </div>
 
           {/* Live Dallas clock */}
           <DallasTime />
 
-          {/* UTD */}
+          {/* Graduation cap (UTD) */}
           <div className="flex items-center gap-2">
-            <svg width="22" height="18" viewBox="0 0 25 20" fill="rgba(0,0,0,0.5)">
-              <path d="M12.5 0L25 7v2H0V7L12.5 0zM2 11h3v6H2v-6zm5.5 0h3v6h-3v-6zm6 0h3v6h-3v-6zm5.5 0h3v6h-3v-6zM0 18h25v2H0v-2z" />
+            <svg width="22" height="18" viewBox="0 0 24 20" fill="rgba(0,0,0,0.5)">
+              {/* mortarboard board */}
+              <polygon points="12,0 24,7 12,14 0,7" />
+              {/* brim / base */}
+              <path d="M4 9.5v6.5c0 0 2.5 4 8 4s8-4 8-4V9.5L12 14 4 9.5z" />
+              {/* tassel stem */}
+              <line x1="24" y1="7" x2="24" y2="14" stroke="rgba(0,0,0,0.5)" strokeWidth="2" strokeLinecap="round" />
+              {/* tassel ball */}
+              <circle cx="24" cy="15" r="1.5" />
             </svg>
-            <span className="text-black/50 font-light" style={{ fontSize: "var(--text-nav)" }}>
-              UTD
-            </span>
+            <span className="text-black/50 font-light" style={{ fontSize: "var(--text-nav)" }}>UTD</span>
           </div>
+
         </div>
 
-        {/* Bio paragraph */}
+        {/* Bio */}
         <p
           className="text-black/70 font-normal"
-          style={{
-            fontSize:   "var(--text-nav)",
-            maxWidth:   "clamp(320px,52.3vw,1004px)",
-            lineHeight: 1.6,
-          }}
+          style={{ fontSize: "var(--text-nav)", maxWidth: "clamp(320px,52.3vw,1004px)", lineHeight: 1.6 }}
         >
           I design products where design, software, and story meet.
           <br /><br />
@@ -415,13 +463,10 @@ export default function About() {
         </p>
       </section>
 
-      {/* ── Cards ── */}
+      {/* Cards */}
       <div
         className="flex flex-wrap gap-5 pb-24"
-        style={{
-          paddingLeft:  "var(--px-side)",
-          paddingRight: "var(--px-side)",
-        }}
+        style={{ paddingLeft: "var(--px-side)", paddingRight: "var(--px-side)" }}
       >
         <ConnectCard />
         <ToolsCard />
