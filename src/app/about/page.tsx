@@ -57,7 +57,15 @@ function DallasTime() {
   return (
     <div className="flex items-center gap-2">
       <ClockIcon />
-      <span className="text-black/50 font-light" style={{ fontSize: "var(--text-nav)" }}>
+      <span
+        className="text-black/50 font-light"
+        style={{
+          fontSize: "var(--text-nav)",
+          fontVariantNumeric: "tabular-nums",
+          minWidth: "7.5em",
+          display: "inline-block",
+        }}
+      >
         {timeStr}
       </span>
     </div>
