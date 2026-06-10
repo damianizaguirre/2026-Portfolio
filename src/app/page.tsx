@@ -3,72 +3,51 @@ import Footer from "@/components/Footer";
 import Link from "next/link";
 import Image from "next/image";
 
-const projects = [
-  {
-    href: "/case-study/carfully",
-    imageSrc: "/images/carfully-card.jpg",
-    imageAlt: "Carfully - Auto-financing tool for first time car buyers",
-    title: "Auto-Financing tool for first time car buyers",
-    meta: "Capital One x UTD · 2025",
-  },
-  {
-    href: "#",
-    imageSrc: "/images/mismo-card.jpg",
-    imageAlt: "Mismo - Giving voice memos more power",
-    title: "Giving voice memos more power",
-    meta: "CAPSTONE APP 2026",
-  },
-  {
-    href: "/case-study/cbre",
-    imageSrc: "/images/cbre-card.jpg",
-    imageAlt: "CBRE - An employee centered digital solution",
-    title: "An employee centered digital solution",
-    meta: "CBRE · CHALLENGE WINNER 2025",
-  },
-];
-
 function ProjectCard({
   href,
   imageSrc,
   imageAlt,
   title,
   meta,
+  cardHeight,
 }: {
   href: string;
   imageSrc: string;
   imageAlt: string;
   title: string;
   meta: string;
+  cardHeight: string;
 }) {
   return (
-    <div>
+    <div className="flex flex-col" style={{ gap: "clamp(12px, 1.25vw, 24px)" }}>
       <Link
         href={href}
-        className="block overflow-hidden rounded-[20px] border border-[#cdcdcd] bg-white w-full h-full"
+        className="block overflow-hidden rounded-[20px] border border-[#cdcdcd] bg-white flex-shrink-0"
+        style={{ height: cardHeight }}
       >
         <Image
           src={imageSrc}
           alt={imageAlt}
-          width={1400}
-          height={800}
+          width={1600}
+          height={900}
           className="w-full h-full object-cover"
           priority
         />
       </Link>
       <div
-        className="flex justify-between items-baseline mt-[24px]"
+        className="flex justify-between items-baseline"
         style={{ fontSize: "var(--text-card)" }}
       >
         <p className="text-[rgba(0,0,0,0.9)] font-normal">{title}</p>
-        <p className="text-[rgba(0,0,0,0.65)] font-normal whitespace-nowrap ml-4">{meta}</p>
+        <p className="text-[rgba(0,0,0,0.65)] font-normal whitespace-nowrap ml-6">{meta}</p>
       </div>
     </div>
   );
 }
 
 export default function Home() {
-  const cardH = "clamp(320px, 38.23vw, 734px)";
-  const bottomH = "clamp(260px, 30.16vw, 579px)";
+  const topH = "clamp(300px, 38.23vw, 734px)";
+  const botH = "clamp(220px, 30.16vw, 579px)";
 
   return (
     <main className="min-h-screen">
@@ -116,7 +95,7 @@ export default function Home() {
           paddingBottom: "clamp(60px, 6vw, 115px)",
         }}
       >
-        {/* Top row: large left + small right (≈2:1) */}
+        {/* Top row — large left (~2fr) + portrait right (~1fr) */}
         <div
           className="grid"
           style={{
@@ -124,22 +103,34 @@ export default function Home() {
             gap: "var(--grid-gap)",
           }}
         >
-          <div style={{ height: cardH }}>
-            <ProjectCard {...projects[0]} />
-          </div>
-          <div style={{ height: cardH }}>
-            <ProjectCard {...projects[1]} />
-          </div>
+          <ProjectCard
+            href="/case-study/carfully"
+            imageSrc="/images/carfully-card.jpg"
+            imageAlt="Carfully — auto-financing tool for first time car buyers"
+            title="Auto-Financing tool for first time car buyers"
+            meta="Capital One x UTD · 2025"
+            cardHeight={topH}
+          />
+          <ProjectCard
+            href="#"
+            imageSrc="/images/mismo-card.jpg"
+            imageAlt="Mismo — giving voice memos more power"
+            title="Giving voice memos more power"
+            meta="CAPSTONE APP 2026"
+            cardHeight={topH}
+          />
         </div>
 
-        {/* Bottom row: full-width */}
-        <div
-          style={{
-            height: bottomH,
-            marginTop: "var(--grid-gap)",
-          }}
-        >
-          <ProjectCard {...projects[2]} />
+        {/* Bottom row — full width */}
+        <div style={{ marginTop: "var(--grid-gap)" }}>
+          <ProjectCard
+            href="/case-study/cbre"
+            imageSrc="/images/cbre-card.jpg"
+            imageAlt="CBRE — an employee centered digital solution"
+            title="An employee centered digital solution"
+            meta="CBRE · CHALLENGE WINNER 2025"
+            cardHeight={botH}
+          />
         </div>
       </section>
 
