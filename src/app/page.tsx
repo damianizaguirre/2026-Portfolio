@@ -1,38 +1,80 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import ProjectCard from "@/components/ProjectCard";
-import PasswordProtectedCard from "@/components/PasswordProtectedCard";
+import Link from "next/link";
+import Image from "next/image";
 
 const projects = [
   {
     href: "/case-study/carfully",
-    imageSrc: "/images/carfully-thumbnail.png",
-    imageAlt: "Carfully - Auto-financing tool interface on a laptop",
+    imageSrc: "/images/carfully-card.jpg",
+    imageAlt: "Carfully - Auto-financing tool for first time car buyers",
     title: "Auto-Financing tool for first time car buyers",
     meta: "Capital One x UTD · 2025",
   },
   {
-    href: "/case-study/cbre",
-    imageSrc: "/images/cbre-thumbnail.png",
-    imageAlt: "CBRE Integra - Employee centered digital solution dashboard",
-    title: "An employee centered digital solution",
-    meta: "CBRE · CHALLENGE WINNER 2025",
-    bgColor: "bg-surface-alt",
+    href: "#",
+    imageSrc: "/images/mismo-card.jpg",
+    imageAlt: "Mismo - Giving voice memos more power",
+    title: "Giving voice memos more power",
+    meta: "CAPSTONE APP 2026",
   },
   {
-    href: "#",
-    imageSrc: "/images/mismo-thumbnail.png",
-    imageAlt: "The future of safe driving - phone displaying app",
-    title: "The future of safe driving",
-    meta: "UTD · CONCEPT 2026",
+    href: "/case-study/cbre",
+    imageSrc: "/images/cbre-card.jpg",
+    imageAlt: "CBRE - An employee centered digital solution",
+    title: "An employee centered digital solution",
+    meta: "CBRE · CHALLENGE WINNER 2025",
   },
 ];
 
+function ProjectCard({
+  href,
+  imageSrc,
+  imageAlt,
+  title,
+  meta,
+}: {
+  href: string;
+  imageSrc: string;
+  imageAlt: string;
+  title: string;
+  meta: string;
+}) {
+  return (
+    <div>
+      <Link
+        href={href}
+        className="block overflow-hidden rounded-[20px] border border-[#cdcdcd] bg-white w-full h-full"
+      >
+        <Image
+          src={imageSrc}
+          alt={imageAlt}
+          width={1400}
+          height={800}
+          className="w-full h-full object-cover"
+          priority
+        />
+      </Link>
+      <div
+        className="flex justify-between items-baseline mt-[24px]"
+        style={{ fontSize: "var(--text-card)" }}
+      >
+        <p className="text-[rgba(0,0,0,0.9)] font-normal">{title}</p>
+        <p className="text-[rgba(0,0,0,0.65)] font-normal whitespace-nowrap ml-4">{meta}</p>
+      </div>
+    </div>
+  );
+}
+
 export default function Home() {
+  const cardH = "clamp(320px, 38.23vw, 734px)";
+  const bottomH = "clamp(260px, 30.16vw, 579px)";
+
   return (
     <main className="min-h-screen">
       <Navbar />
 
+      {/* Hero */}
       <section
         style={{
           paddingTop: "var(--hero-pt)",
@@ -42,7 +84,7 @@ export default function Home() {
         }}
       >
         <h1
-          className="font-medium text-black"
+          className="font-medium text-[rgba(0,0,0,0.9)]"
           style={{
             fontSize: "var(--text-hero)",
             lineHeight: 1.19,
@@ -65,35 +107,39 @@ export default function Home() {
         </p>
       </section>
 
+      {/* Work grid */}
       <section
         id="work"
-        style={{ padding: "clamp(24px, 2.6vw, 50px) var(--px-side)" }}
+        style={{
+          paddingLeft: "var(--px-side)",
+          paddingRight: "var(--px-side)",
+          paddingBottom: "clamp(60px, 6vw, 115px)",
+        }}
       >
+        {/* Top row: large left + small right (≈2:1) */}
         <div
-          className="grid grid-cols-1 lg:grid-cols-2 items-start"
+          className="grid"
           style={{
-            columnGap: "var(--grid-gap)",
-            rowGap: "clamp(28px, 3.1vw, 60px)",
+            gridTemplateColumns: "minmax(0, 2fr) minmax(0, 1fr)",
+            gap: "var(--grid-gap)",
           }}
         >
-          <div className="flex flex-col" style={{ gap: "clamp(28px, 3.1vw, 60px)" }}>
+          <div style={{ height: cardH }}>
             <ProjectCard {...projects[0]} />
-            <PasswordProtectedCard
-              href="/case-study/sancorda"
-              imageSrc="/images/sancorda-thumbnail.png"
-              imageAlt="Sancorda Medical - Interactive medical planning platform"
-              title="Interactive medical planning platform"
-              meta="Sancorda Medical &middot; 2025"
-              password="ReconST"
-            />
           </div>
-          <div
-            className="flex flex-col"
-            style={{ gap: "clamp(28px, 3.1vw, 60px)" }}
-          >
+          <div style={{ height: cardH }}>
             <ProjectCard {...projects[1]} />
-            <ProjectCard {...projects[2]} />
           </div>
+        </div>
+
+        {/* Bottom row: full-width */}
+        <div
+          style={{
+            height: bottomH,
+            marginTop: "var(--grid-gap)",
+          }}
+        >
+          <ProjectCard {...projects[2]} />
         </div>
       </section>
 
