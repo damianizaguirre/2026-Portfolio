@@ -9,14 +9,14 @@ const projects = [
     imageSrc: "/images/carfully-thumbnail.png",
     imageAlt: "Carfully - Auto-financing tool interface on a laptop",
     title: "Auto-Financing tool for first time car buyers",
-    meta: "Capital One x UTD \u00b7 2025",
+    meta: "Capital One x UTD · 2025",
   },
   {
     href: "/case-study/cbre",
     imageSrc: "/images/cbre-thumbnail.png",
     imageAlt: "CBRE Integra - Employee centered digital solution dashboard",
     title: "An employee centered digital solution",
-    meta: "CBRE \u00b7 CHALLENGE WINNER 2025",
+    meta: "CBRE · CHALLENGE WINNER 2025",
     bgColor: "bg-surface-alt",
   },
   {
@@ -24,17 +24,16 @@ const projects = [
     imageSrc: "/images/mismo-thumbnail.png",
     imageAlt: "The future of safe driving - phone displaying app",
     title: "The future of safe driving",
-    meta: "UTD \u00b7 CONCEPT 2026",
+    meta: "UTD · CONCEPT 2026",
   },
 ];
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-white">
+    <main className="min-h-screen">
       <Navbar />
 
       <section
-        className="bg-surface"
         style={{
           paddingTop: "var(--hero-pt)",
           paddingBottom: "var(--hero-pb)",
