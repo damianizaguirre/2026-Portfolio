@@ -2,6 +2,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Link from "next/link";
 import Image from "next/image";
+import ParticleBackground from "@/components/ParticleBackground";
 
 function ProjectCard({
   href,
@@ -51,6 +52,7 @@ export default function Home() {
 
   return (
     <main className="min-h-screen">
+      <ParticleBackground />
       <Navbar />
 
       {/* Hero */}
@@ -95,7 +97,7 @@ export default function Home() {
           paddingBottom: "clamp(60px, 6vw, 115px)",
         }}
       >
-        {/* Top row — large left (~2fr) + portrait right (~1fr) */}
+        {/* Top row */}
         <div
           className="grid"
           style={{
@@ -121,7 +123,7 @@ export default function Home() {
           />
         </div>
 
-        {/* Bottom row — full width */}
+        {/* Bottom row */}
         <div style={{ marginTop: "var(--grid-gap)" }}>
           <ProjectCard
             href="/case-study/cbre"

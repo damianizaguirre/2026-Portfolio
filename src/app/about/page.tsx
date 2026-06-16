@@ -32,8 +32,6 @@ const experience = [
   { role: "Association of Computing Machinery at UTD — Designer",           period: "August 2025 – May 2026" },
 ];
 
-// Positions from Figma (1920px canvas), relative to content column at x=307
-// y values offset +40 so minimum y=0 (Figma has rows starting at y=-40)
 const moments = [
   { src: "/about/m1.jpg",       w: 189, h: 252, x: 50,   y: 40  },
   { src: "/about/m2.jpg",       w: 189, h: 252, x: 342,  y: 20  },
@@ -109,13 +107,11 @@ export default function About() {
         {/* Main content column */}
         <main className="flex-1 min-w-0" style={{ paddingRight: "clamp(20px, 2.97vw, 57px)" }}>
 
-          {/* Hero: banner + profile circle (position:relative so circle can overlap banner bottom) */}
           <section
             id="me"
             className="relative"
             style={{ paddingTop: "clamp(16px, 1.72vw, 33px)" }}
           >
-            {/* Banner image */}
             <div
               className="relative overflow-hidden"
               style={{ height: "clamp(160px, 19.9vw, 382px)", borderRadius: "15px" }}
@@ -129,7 +125,6 @@ export default function About() {
               />
             </div>
 
-            {/* Profile circle — absolute within section, overlaps banner bottom-right */}
             <div
               className="absolute overflow-hidden"
               style={{
@@ -146,7 +141,6 @@ export default function About() {
             </div>
           </section>
 
-          {/* Identity — name, tags, bio, social pills */}
           <section
             style={{
               paddingTop: "clamp(12px, 1.09vw, 21px)",
@@ -164,7 +158,7 @@ export default function About() {
               Damian Izaguirre
             </h1>
 
-            {/* Tags row: location / clock / UTD */}
+            {/* Tags row: location / clock / UTD — explicit w+h to fix SVG intrinsic-size issue */}
             <div
               className="flex flex-wrap items-center"
               style={{
@@ -176,22 +170,21 @@ export default function About() {
             >
               <span className="flex items-center" style={{ gap: "6px" }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/about/icon-location.svg" alt="" style={{ height: "1em", width: "auto" }} />
+                <img src="/about/icon-location.svg" alt="" style={{ height: "1em", width: "0.833em", flexShrink: 0 }} />
                 Dallas, TX
               </span>
               <span className="flex items-center" style={{ gap: "6px" }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/about/icon-clock.svg" alt="" style={{ height: "1em", width: "auto" }} />
+                <img src="/about/icon-clock.svg" alt="" style={{ height: "1em", width: "1em", flexShrink: 0 }} />
                 <DallasTime />
               </span>
               <span className="flex items-center" style={{ gap: "6px" }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/about/icon-utd.svg" alt="" style={{ height: "1em", width: "auto" }} />
+                <img src="/about/icon-utd.svg" alt="" style={{ height: "1em", width: "1.111em", flexShrink: 0 }} />
                 UTD
               </span>
             </div>
 
-            {/* Bio */}
             <p
               className="text-black"
               style={{
@@ -229,14 +222,13 @@ export default function About() {
                   }}
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={icon} alt="" style={{ height: "clamp(14px, 1.2vw, 23px)", width: "auto" }} />
+                  <img src={icon} alt="" style={{ height: "clamp(14px, 1.2vw, 23px)", width: "clamp(14px, 1.2vw, 23px)", flexShrink: 0 }} />
                   {label}
                 </a>
               ))}
             </div>
           </section>
 
-          {/* Experience */}
           <section id="experience" style={{ paddingBottom: "clamp(24px, 2.9vw, 56px)" }}>
             <SectionHeader title="Experience" />
             <div className="flex flex-col" style={{ gap: "clamp(16px, 1.35vw, 26px)" }}>
@@ -253,7 +245,6 @@ export default function About() {
             </div>
           </section>
 
-          {/* Education */}
           <section id="education" style={{ paddingBottom: "clamp(24px, 2.9vw, 56px)" }}>
             <SectionHeader title="Education" />
             <p className="text-black" style={{ fontSize: "clamp(13px, 1.04vw, 20px)", letterSpacing: "-0.02em" }}>
@@ -262,8 +253,6 @@ export default function About() {
             <p style={{ fontSize: "clamp(11px, 0.83vw, 16px)", color: "#a3a3a3", letterSpacing: "-0.02em", marginTop: "clamp(3px, 0.42vw, 8px)" }}>
               August 2022 – May 2026
             </p>
-
-            {/* Certifications */}
             <div style={{ marginTop: "clamp(20px, 1.98vw, 38px)" }}>
               <SectionHeader title="Certifications" />
               <p className="text-black" style={{ fontSize: "clamp(13px, 1.04vw, 20px)", letterSpacing: "-0.02em" }}>
@@ -275,11 +264,8 @@ export default function About() {
             </div>
           </section>
 
-          {/* Shelf */}
           <section id="shelf" style={{ paddingBottom: "clamp(28px, 2.9vw, 56px)" }}>
             <SectionHeader title="Shelf" />
-
-            {/* Spotify */}
             <p className="text-black" style={{ fontSize: "clamp(13px, 1.04vw, 20px)", letterSpacing: "-0.02em" }}>My recent listens.</p>
             <p style={{ fontSize: "clamp(11px, 0.83vw, 16px)", color: "#a3a3a3", letterSpacing: "-0.02em", marginTop: "clamp(2px, 0.2vw, 4px)", marginBottom: "clamp(12px, 1.25vw, 24px)" }}>
               Spotify
@@ -300,8 +286,6 @@ export default function About() {
                 ))}
               </div>
             </div>
-
-            {/* Letterboxd */}
             <p className="text-black" style={{ fontSize: "clamp(13px, 1.04vw, 20px)", letterSpacing: "-0.02em" }}>Some of my favorite movies.</p>
             <p style={{ fontSize: "clamp(11px, 0.83vw, 16px)", color: "#a3a3a3", letterSpacing: "-0.02em", marginTop: "clamp(2px, 0.2vw, 4px)", marginBottom: "clamp(12px, 1.25vw, 24px)" }}>
               Letterboxd
@@ -323,15 +307,12 @@ export default function About() {
             </div>
           </section>
 
-          {/* Moments */}
           <section id="moments" style={{ paddingBottom: "clamp(40px, 4vw, 80px)" }}>
             <SectionHeader title="Moments" />
             <p className="text-black" style={{ fontSize: "clamp(13px, 1.04vw, 20px)", letterSpacing: "-0.02em" }}>Taken on my iPhone</p>
             <p style={{ fontSize: "clamp(11px, 0.83vw, 16px)", color: "#a3a3a3", letterSpacing: "-0.02em", marginTop: "clamp(2px, 0.2vw, 4px)", marginBottom: "clamp(16px, 1.2vw, 23px)" }}>
               @legoskateboard
             </p>
-
-            {/* Scattered grid — pixel-accurate from Figma, scrolls horizontally on narrow screens */}
             <div
               className="relative"
               style={{ height: "820px", overflowX: "auto", overflowY: "visible" }}
