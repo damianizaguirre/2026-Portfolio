@@ -137,7 +137,13 @@ export default function About() {
                 zIndex: 10,
               }}
             >
-              <Image src="/about/profile.jpg" alt="Damian Izaguirre" fill className="object-cover" />
+              <Image
+                src="/about/profile.jpg"
+                alt="Damian Izaguirre"
+                fill
+                className="object-cover"
+                style={{ objectPosition: "left center" }}
+              />
             </div>
           </section>
 
