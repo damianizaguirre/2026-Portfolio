@@ -273,7 +273,7 @@ export default function About() {
           <section id="shelf" style={{ paddingBottom: "clamp(28px, 2.9vw, 56px)" }}>
             <SectionHeader title="Shelf" />
             <p className="text-black" style={{ fontSize: "clamp(13px, 1.04vw, 20px)", letterSpacing: "-0.02em" }}>My recent listens.</p>
-            <p style={{ fontSize: "clamp(11px, 0.83vw, 16px)", color: "#a3a3a3", letterSpacing: "-0.02em", marginTop: "clamp(2px, 0.2vw, 4px)", marginBottom: "clamp(12px, 1.25vw, 24px)" }}>
+            <p style={{ fontSize: "clamp(11px, 0.83vw, 16px)", color: "#a3a3a3", letterSpacing: "-0.02em", marginTop: "clamp(2px, 0.2vw, 4px)", marginBottom: "clamp(8px, 0.94vw, 18px)" }}>
               Spotify
             </p>
             <div
@@ -281,10 +281,10 @@ export default function About() {
               style={{
                 boxShadow: "0px 0px 4px 0px rgba(0,0,0,0.25)",
                 padding: "clamp(16px, 2.55vw, 49px) clamp(16px, 2.19vw, 42px)",
-                marginBottom: "clamp(24px, 2.08vw, 40px)",
+                marginBottom: "clamp(16px, 1.72vw, 33px)",
               }}
             >
-              <div className="grid grid-cols-4" style={{ gap: "clamp(8px, 1.04vw, 20px)" }}>
+              <div className="grid grid-cols-4" style={{ gap: "clamp(8px, 1.25vw, 24px)" }}>
                 {["/about/album1.jpg", "/about/album2.jpg", "/about/album3.jpg", "/about/album4.jpg"].map((src, i) => (
                   <div key={i} className="aspect-square overflow-hidden relative" style={{ borderRadius: "5px" }}>
                     <Image src={src} alt={`Album ${i + 1}`} fill className="object-cover" />
@@ -293,7 +293,7 @@ export default function About() {
               </div>
             </div>
             <p className="text-black" style={{ fontSize: "clamp(13px, 1.04vw, 20px)", letterSpacing: "-0.02em" }}>Some of my favorite movies.</p>
-            <p style={{ fontSize: "clamp(11px, 0.83vw, 16px)", color: "#a3a3a3", letterSpacing: "-0.02em", marginTop: "clamp(2px, 0.2vw, 4px)", marginBottom: "clamp(12px, 1.25vw, 24px)" }}>
+            <p style={{ fontSize: "clamp(11px, 0.83vw, 16px)", color: "#a3a3a3", letterSpacing: "-0.02em", marginTop: "clamp(2px, 0.2vw, 4px)", marginBottom: "clamp(8px, 0.94vw, 18px)" }}>
               Letterboxd
             </p>
             <div
@@ -303,7 +303,7 @@ export default function About() {
                 padding: "clamp(10px, 1.09vw, 21px) clamp(16px, 3.07vw, 59px)",
               }}
             >
-              <div className="grid grid-cols-4" style={{ gap: "clamp(8px, 1.04vw, 20px)" }}>
+              <div className="grid grid-cols-4" style={{ gap: "clamp(10px, 1.93vw, 37px)" }}>
                 {["/about/movie1.jpg", "/about/movie2.jpg", "/about/movie3.jpg", "/about/movie4.jpg"].map((src, i) => (
                   <div key={i} className="overflow-hidden relative" style={{ aspectRatio: "157/232", borderRadius: "5px" }}>
                     <Image src={src} alt={`Movie ${i + 1}`} fill className="object-cover" />
