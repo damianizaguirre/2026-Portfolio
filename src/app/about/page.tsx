@@ -142,7 +142,6 @@ export default function About() {
                 alt="Damian Izaguirre"
                 fill
                 className="object-cover"
-                style={{ objectPosition: "left center" }}
               />
             </div>
           </section>
