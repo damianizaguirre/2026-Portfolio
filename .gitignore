@@ -17,3 +17,7 @@ build/
 
 # Vercel
 .vercel
+
+# Local dev-only artifacts (never push)
+certificates/
+screenshots/

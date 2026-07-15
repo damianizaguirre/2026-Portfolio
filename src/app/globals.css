@@ -16,6 +16,8 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: var(--reflective-page-bg, #f9f9f9);
+  transition: background-color 360ms ease-out;
 }
 
 /*
@@ -37,4 +39,84 @@ body {
   --hero-gap: clamp(12px, 1.875vw, 36px);
   --grid-gap: clamp(14px, 1.46vw, 28px);
   --col-offset: clamp(40px, 4.17vw, 80px);
+
+  /* Reflective UI — set globally by ReflectiveProvider; these are just SSR-safe defaults */
+  --ambient-r: 242;
+  --ambient-g: 242;
+  --ambient-b: 242;
+  --ambient-color: rgb(242, 242, 242);
+  --ambient-surface: rgba(242, 242, 242, 1);
+  --ambient-text: rgba(25, 25, 25, 1);
+  --ambient-pill-fill: #f2f2f2;
+  --ambient-pill-border: transparent;
+  --ambient-pill-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
+  --ambient-text-fill: linear-gradient(112deg, #191919 0%, #191919 100%);
+  --reflective-page-bg: #f9f9f9;
+  --reflective-foreground: #191919;
+  --reflective-muted: #707070;
+  --reflective-nav-active: #191919;
+  --reflective-nav-muted: #707070;
+  --reflective-card-fill: #ffffff;
+  --reflective-card-border: #cdcdcd;
+  --reflective-activation: 0;
+}
+
+.reflective-mobile-page {
+  background: var(--reflective-page-bg);
+  color: var(--reflective-foreground);
+  transition: background-color 360ms ease-out, color 360ms ease-out;
+}
+
+.reflective-pill-fill {
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--ambient-pill-fill);
+  border: 1px solid var(--ambient-pill-border);
+  box-shadow: var(--ambient-pill-shadow);
+  -webkit-backdrop-filter: blur(22px) saturate(1.35) contrast(1.04);
+  backdrop-filter: blur(22px) saturate(1.35) contrast(1.04);
+}
+
+.reflective-pill-fill:not(.absolute) {
+  position: relative;
+}
+
+.reflective-pill-fill::before,
+.reflective-pill-fill::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.reflective-pill-fill::before {
+  background:
+    linear-gradient(158deg, rgba(255, 255, 255, 0.56), rgba(255, 255, 255, 0.16) 38%, rgba(255, 255, 255, 0.03) 100%),
+    radial-gradient(circle at 24% 10%, rgba(255, 255, 255, 0.6), transparent 36%);
+  opacity: calc(var(--reflective-activation) * 0.38);
+}
+
+.reflective-pill-fill::after {
+  background:
+    linear-gradient(104deg, rgba(255, 255, 255, 0.36), rgba(255, 255, 255, 0) 24%),
+    linear-gradient(285deg, rgba(var(--ambient-r), var(--ambient-g), var(--ambient-b), 0.34), transparent 50%);
+  opacity: calc(var(--reflective-activation) * 0.5);
+}
+
+.reflective-pill-fill > * {
+  position: relative;
+  z-index: 1;
+}
+
+.reflective-title-fill {
+  color: var(--reflective-foreground);
+  background-image: var(--ambient-text-fill);
+  background-size: 180% 180%;
+  background-position: 50% 50%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: background-image 300ms ease-out;
 }

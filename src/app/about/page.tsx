@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import MobileEmptyState from "@/components/MobileEmptyState";
 
 function DallasTime() {
   const [time, setTime] = useState<string>("");
@@ -73,6 +74,11 @@ export default function About() {
 
   return (
     <>
+      <div className="md:hidden">
+        <MobileEmptyState active="about" word="About" />
+      </div>
+
+      <div className="hidden md:block">
       <Navbar />
       <div className="flex min-h-screen">
 
@@ -337,6 +343,7 @@ export default function About() {
         </main>
       </div>
       <Footer />
+      </div>
     </>
   );
 }
