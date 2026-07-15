@@ -1,0 +1,72 @@
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 24px;
+  background: #fff;
+  color: #000;
+}
+
+.icon {
+  width: clamp(70px, 8.07vw, 155px);
+  height: auto;
+  overflow: visible;
+}
+
+.iconPart {
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0;
+  filter: blur(1px);
+  animation: formSparkle 5200ms cubic-bezier(0.2, 0.8, 0.2, 1) infinite both;
+  animation-delay: var(--delay);
+  will-change: opacity, transform, filter;
+}
+
+.message {
+  margin: clamp(14px, 2.13vw, 41px) 0 0;
+  font-size: clamp(20px, 2.08vw, 40px);
+  line-height: 1.1;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+@keyframes formSparkle {
+  0%,
+  18% {
+    opacity: 0;
+    filter: blur(1px);
+    transform: translate(var(--tx), var(--ty)) scale(0.08);
+  }
+
+  43% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translate(0, 0) scale(1.08);
+  }
+
+  55%,
+  84% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translate(0, 0) scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    filter: blur(0);
+    transform: translate(0, 0) scale(0.99);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .iconPart {
+    animation: none;
+    opacity: 1;
+    filter: none;
+    transform: none;
+  }
+}
