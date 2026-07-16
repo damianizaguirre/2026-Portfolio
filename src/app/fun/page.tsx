@@ -1,5 +1,5 @@
-import ReflectiveUI from "@/components/ReflectiveUI";
+import MobileEmptyState from "@/components/MobileEmptyState";
 
 export default function Fun() {
-  return <ReflectiveUI />;
+  return <MobileEmptyState active="fun" word="Fun" />;
 }

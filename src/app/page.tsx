@@ -3,6 +3,7 @@ import Footer from "@/components/Footer";
 import Link from "next/link";
 import Image from "next/image";
 import ParticleBackground from "@/components/ParticleBackground";
+import MobileNav from "@/components/MobileNav";
 
 function ProjectCard({
   href,
@@ -111,6 +112,7 @@ export default function Home() {
     <main className="min-h-screen">
       {/* ---------- Mobile (Figma: Portfolio Mobile Version - Home) ---------- */}
       <div className="reflective-mobile-page md:hidden min-h-screen">
+        <MobileNav active="home" />
         <div className="pl-[23px] pr-[23px] pt-9">
           <h1
             className="reflective-title-fill text-[32px] font-semibold leading-[1.15]"

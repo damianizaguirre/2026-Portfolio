@@ -1,6 +1,5 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
-import MobileNavShell from "@/components/MobileNavShell";
 import { ReflectiveProvider } from "@/context/ReflectiveContext";
 import "./globals.css";
 
@@ -13,6 +12,21 @@ export const metadata: Metadata = {
   title: "Damian Izaguirre - Product Designer",
   description:
     "Product designer giving data life through meaningful design. Currently studying at The University of Texas at Dallas.",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Damian Izaguirre",
+  },
+  other: {
+    "apple-mobile-web-app-capable": "yes",
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#f9f9f9",
 };
 
 export default function RootLayout({
@@ -23,10 +37,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.variable}>
       <body>
-        <ReflectiveProvider>
-          <MobileNavShell />
-          {children}
-        </ReflectiveProvider>
+        <ReflectiveProvider>{children}</ReflectiveProvider>
       </body>
     </html>
   );

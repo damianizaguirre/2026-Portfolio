@@ -9,8 +9,22 @@ import {
 } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useReflective } from "@/context/ReflectiveContext";
 
 export type NavKey = "home" | "fun" | "about" | "resume";
+
+function SunIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 18 18" fill="none" className={className}>
+      <path
+        d="M8.99962 1.5V3.00012M8.99962 15.0011V16.5012M3.69646 3.69744L4.75405 4.75503M13.2451 13.2461L14.3027 14.3036M1.49902 9.0006H2.99914M15.0001 9.0006H16.5002M4.75405 13.2461L3.69646 14.3036M14.3027 3.69744L13.2451 4.75503M11.9999 9.0006C11.9999 10.6576 10.6566 12.0008 8.99962 12.0008C7.34264 12.0008 5.99938 10.6576 5.99938 9.0006C5.99938 7.34361 7.34264 6.00036 8.99962 6.00036C10.6566 6.00036 11.9999 7.34361 11.9999 9.0006Z"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
 
 function HomeIcon({ className }: { className?: string }) {
   return (
@@ -63,9 +77,13 @@ const PILL_EASE = "cubic-bezier(0.2, 0.8, 0.2, 1)";
 const PILL_DURATION = "420ms";
 const HIGHLIGHT_DURATION_MS = 520;
 
+const NAV_TOP_PAD = "max(20px, calc(env(safe-area-inset-top) + 8px))";
+
 export default function MobileNav({ active: initialActive }: { active: NavKey }) {
   const router = useRouter();
+  const { mode, isActive: reflectiveActive, toggle } = useReflective();
   const [active, setActive] = useState<NavKey>(initialActive);
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const trackRef = useRef<HTMLDivElement>(null);
   const indicatorRef = useRef<HTMLDivElement>(null);
   const pillRefs = useRef<Partial<Record<NavKey, HTMLAnchorElement | null>>>({});
@@ -74,6 +92,7 @@ export default function MobileNav({ active: initialActive }: { active: NavKey })
 
   useEffect(() => {
     setActive(initialActive);
+    setSettingsOpen(false);
   }, [initialActive]);
 
   useEffect(() => {
@@ -126,7 +145,19 @@ export default function MobileNav({ active: initialActive }: { active: NavKey })
 
   return (
     <>
-      <div className="fixed inset-x-0 top-0 z-50 flex items-center justify-center pt-5">
+      {settingsOpen && (
+        <button
+          type="button"
+          aria-label="Close settings"
+          onClick={() => setSettingsOpen(false)}
+          className="fixed inset-0 z-40 bg-black/30 animate-[reflective-backdrop-in_200ms_ease-out]"
+          style={{ backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)" }}
+        />
+      )}
+      <div
+        className="fixed inset-x-0 top-0 z-50 flex flex-col items-center"
+        style={{ paddingTop: NAV_TOP_PAD }}
+      >
         <div ref={trackRef} className="relative flex items-center gap-[5px]">
           <div
             aria-hidden="true"
@@ -140,12 +171,17 @@ export default function MobileNav({ active: initialActive }: { active: NavKey })
               transition: "opacity 120ms ease-out",
             }}
           />
-          <div
-            className="relative z-10 flex items-center justify-center rounded-full bg-[#7cde85] text-white font-medium shadow-[0px_0px_4px_0px_rgba(0,0,0,0.25)] shrink-0"
+          <button
+            type="button"
+            onClick={() => setSettingsOpen((open) => !open)}
+            aria-expanded={settingsOpen}
+            aria-haspopup="dialog"
+            aria-label="Open settings"
+            className="relative z-10 flex items-center justify-center rounded-full bg-[#7cde85] text-white font-medium shadow-[0px_0px_4px_0px_rgba(0,0,0,0.25)] shrink-0 active:scale-[0.96] transition-transform duration-150"
             style={{ width: 45, height: 45, fontSize: 20 }}
           >
             D
-          </div>
+          </button>
           {NAV_ITEMS.map(({ key, label, href, Icon, iconClassName, labelPx, labelMaxWidth }) => {
             const isActive = active === key;
             const showOwnFill = !isActive || !indicatorReady;
@@ -193,6 +229,63 @@ export default function MobileNav({ active: initialActive }: { active: NavKey })
               </Link>
             );
           })}
+        </div>
+
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-hidden={!settingsOpen}
+          className="w-full flex justify-center px-[23px] overflow-hidden"
+          style={{
+            maxHeight: settingsOpen ? 96 : 0,
+            opacity: settingsOpen ? 1 : 0,
+            marginTop: settingsOpen ? 21 : 0,
+            transform: settingsOpen ? "translateY(0) scale(1)" : "translateY(-8px) scale(0.98)",
+            transformOrigin: "top center",
+            transition:
+              "max-height 260ms cubic-bezier(0.2,0.8,0.2,1), opacity 200ms ease-out, margin-top 260ms cubic-bezier(0.2,0.8,0.2,1), transform 260ms cubic-bezier(0.2,0.8,0.2,1)",
+            pointerEvents: settingsOpen ? "auto" : "none",
+          }}
+        >
+          <div
+            className="w-full max-w-[356px] rounded-[15px] bg-white flex items-center gap-4 shrink-0"
+            style={{ padding: "12px 14px", boxShadow: "0px 8px 24px 0px rgba(0,0,0,0.14)" }}
+          >
+            <div
+              className="flex items-center justify-center rounded-[10px] bg-[#7cde85] text-white shrink-0"
+              style={{ width: 36, height: 36 }}
+            >
+              <SunIcon className="w-[18px] h-[18px]" />
+            </div>
+            <span className="flex-1 text-[16px] font-medium text-[#191919]">
+              Reflective UI
+            </span>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={reflectiveActive}
+              disabled={mode === "requesting"}
+              onClick={toggle}
+              className="relative shrink-0 rounded-full transition-colors duration-200 disabled:opacity-60"
+              style={{
+                width: 44,
+                height: 24,
+                backgroundColor: reflectiveActive ? "#7cde85" : "#e5e7eb",
+              }}
+            >
+              <span
+                className="absolute top-1/2 rounded-full bg-white shadow-[0px_1px_3px_rgba(0,0,0,0.2)] transition-transform duration-200"
+                style={{
+                  width: 20,
+                  height: 20,
+                  left: 2,
+                  transform: reflectiveActive
+                    ? "translate(20px, -50%)"
+                    : "translate(0, -50%)",
+                }}
+              />
+            </button>
+          </div>
         </div>
       </div>
       <div aria-hidden="true" className="h-[65px]" />

@@ -87,6 +87,17 @@ function relativeLuminance({ r, g, b }: { r: number; g: number; b: number }) {
   );
 }
 
+function updateThemeColor(color: string) {
+  if (typeof document === "undefined") return;
+  let meta = document.querySelector('meta[name="theme-color"]');
+  if (!meta) {
+    meta = document.createElement("meta");
+    meta.setAttribute("name", "theme-color");
+    document.head.appendChild(meta);
+  }
+  meta.setAttribute("content", color);
+}
+
 function readableTextColor(background: { r: number; g: number; b: number }) {
   const luminance = relativeLuminance(background);
   const whiteContrast = 1.05 / (luminance + 0.05);
@@ -149,6 +160,7 @@ export function ReflectiveProvider({ children }: { children: React.ReactNode }) 
       root.style.setProperty("--ambient-pill-border", "transparent");
       root.style.setProperty("--ambient-pill-shadow", "0 0 4px rgba(0, 0, 0, 0.25)");
       root.style.setProperty("--ambient-text-fill", "linear-gradient(112deg, #191919 0%, #191919 100%)");
+      updateThemeColor("#f9f9f9");
       return;
     }
 
@@ -170,9 +182,11 @@ export function ReflectiveProvider({ children }: { children: React.ReactNode }) 
 
     const darkPage = mixColor({ r: 5, g: 4, b: 4 }, sampled, activation * 0.08);
     const pageBg = mixColor({ r: 249, g: 249, b: 249 }, darkPage, activation);
+    const pageBgColor = rgb(pageBg);
     const foreground = mixColor(TEXT_IDLE_BASE, sampled, activation * 0.88);
     const muted = mixColor({ r: 107, g: 107, b: 107 }, sampled, activation * 0.6);
-    root.style.setProperty("--reflective-page-bg", rgb(pageBg));
+    root.style.setProperty("--reflective-page-bg", pageBgColor);
+    updateThemeColor(pageBgColor);
     root.style.setProperty("--reflective-foreground", rgb(foreground));
     root.style.setProperty("--reflective-muted", rgba(muted, lerp(1, 0.82, activation)));
     root.style.setProperty(
@@ -296,8 +310,13 @@ export function ReflectiveProvider({ children }: { children: React.ReactNode }) 
     targetColorRef.current = { ...IDLE_COLOR };
     targetActivationRef.current = ACTIVATION_IDLE;
     setMode("idle");
-    window.setTimeout(() => stopEaseLoop(), 900);
-  }, [stopStream, stopEaseLoop]);
+    window.setTimeout(() => {
+      stopEaseLoop();
+      displayColorRef.current = { ...IDLE_COLOR };
+      displayActivationRef.current = ACTIVATION_IDLE;
+      applyToRoot(IDLE_COLOR.r, IDLE_COLOR.g, IDLE_COLOR.b, ACTIVATION_IDLE);
+    }, 900);
+  }, [stopStream, stopEaseLoop, applyToRoot]);
 
   const startDemoMode = useCallback(() => {
     setMode("demo");
