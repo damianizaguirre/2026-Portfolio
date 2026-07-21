@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dotted Map — Repel Hover</title>
+<script>
+  document.documentElement.dataset.embed = new URLSearchParams(window.location.search).has("embed")
+    ? "true"
+    : "false";
+</script>
+<style>
+  :root {
+    --card-bg: #1C1C1E;   /* card / map background */
+    --dot: #1566EB;       /* dot fill (exact from Figma) */
+    --home: #EB9D15;      /* Dallas marker fill (exact from Figma) */
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0f0f10;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .map-card {
+    width: 340px;
+    height: 200px;
+    background: var(--card-bg);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 22px;
+    overflow: hidden;
+  }
+  canvas { display: block; width: 100%; height: 100%; }
+
+  html[data-embed="true"],
+  html[data-embed="true"] body {
+    --card-bg: #ffffff;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+    background: transparent;
+  }
+
+  html[data-embed="true"] body {
+    display: block;
+  }
+
+  html[data-embed="true"] .map-card {
+    width: 100vw;
+    height: 100vh;
+    border: 0;
+    border-radius: 10px;
+    background: #ffffff;
+  }
+</style>
+</head>
+<body>
+
+<div class="map-card">
+  <canvas id="dotted-map"></canvas>
+</div>
+
+<script>
+/*
+  Dotted world map with "repel" hover physics.
+
+  Geometry extracted from Figma frame "dotted map" (2216x1241):
+  - 631 dots, radius 10, fill #1566EB
+  - DOTS = flat array of dot CENTER coords [x0,y0, x1,y1, ...] in frame space
+  - Dallas marker: center (509,459), radius 16.5, fill #EB9D15, 5px white stroke
+    (it replaces the blue dot at that position)
+
+  Behavior:
+  - Dots near the cursor get pushed away, then spring back (damped spring)
+  - Displaced dots brighten toward a light blue proportional to displacement
+  - Dallas marker is static, drawn on top, with a looping ping ring
+  - Map scales to whatever size .map-card is; all physics run in frame space
+    so the feel is identical at any card size
+*/
+
+const DOTS=[1194,170,1231,170,541,171,578,171,615,171,652,171,689,171,726,171,761,171,796,171,833,171,870,171,907,171,944,171,981,171,1018,171,1055,171,1441,206,1478,206,1515,206,1652,206,1689,206,1726,206,1763,206,1800,206,1947,206,1984,206,2021,206,358,207,395,207,432,207,469,207,506,207,543,207,579,207,615,207,687,207,724,207,761,207,796,207,833,207,870,207,907,207,944,207,981,207,1615,241,1652,241,1689,241,1726,241,1763,241,1800,241,1836,241,1872,241,1910,241,1947,241,1984,241,2021,241,2058,241,2095,241,2131,241,2167,241,1194,242,1231,242,1268,242,1305,242,1405,242,1441,242,1490,242,1527,242,1564,242,103,243,138,243,175,243,212,243,249,243,286,243,323,243,359,243,395,243,430,243,467,243,504,243,541,243,578,243,615,243,651,243,687,243,796,243,833,243,870,243,907,243,944,243,981,243,796,277,833,277,870,277,907,277,1194,277,1231,277,1268,277,1305,277,1342,277,1379,277,1415,277,1451,277,1489,277,1526,277,1563,277,1600,277,1635,277,1672,277,1709,277,1746,277,1783,277,1820,277,1856,277,1892,277,1930,277,1967,277,2004,277,2041,277,2078,277,2115,277,2151,277,2187,277,29,278,66,278,103,278,140,278,177,278,214,278,250,278,286,278,323,279,360,279,397,279,434,279,471,279,508,279,544,279,580,279,690,279,724,279,981,279,1018,279,1158,313,1195,313,1232,313,1269,313,1306,313,1343,313,1379,313,1415,313,1451,313,1488,313,1525,313,1562,313,1599,313,1636,313,1672,313,1708,313,1744,313,1781,313,1818,313,1855,313,1892,313,1929,313,1965,313,2001,313,2041,313,2078,313,2114,313,2150,313,103,315,140,315,177,315,214,315,251,315,288,315,324,315,360,315,397,315,434,315,471,315,508,315,544,315,654,315,690,315,724,315,833,315,870,315,1159,349,1196,349,1233,349,1270,349,1307,349,1344,349,1380,349,1416,349,1453,349,1490,349,1527,349,1564,349,1601,349,1638,349,1674,349,1710,349,1745,349,1782,349,1819,349,1856,349,1893,349,1930,349,1966,349,2002,349,2051,349,2087,349,1046,350,1083,350,66,351,103,351,287,351,324,351,361,351,398,351,435,351,472,351,508,351,544,351,578,351,654,351,690,351,724,351,760,351,1159,385,1196,385,1233,385,1270,385,1307,385,1344,385,1380,385,1416,385,1452,385,1489,385,1526,385,1563,385,1600,385,1637,385,1673,385,1709,385,1745,385,1782,385,1819,385,1856,385,1893,385,1930,385,1966,385,2002,385,2051,385,1083,386,1120,386,324,387,361,387,398,387,435,387,472,387,509,387,545,387,581,387,615,387,651,387,685,387,724,387,760,387,794,387,1379,421,1416,421,1453,421,1490,421,1527,421,1564,421,1600,421,1636,421,1672,421,1709,421,1746,421,1783,421,1820,421,1857,421,1893,421,1929,421,1046,422,1083,422,1120,422,1157,422,1194,422,1231,422,1267,422,361,423,398,423,435,423,472,423,509,423,546,423,582,423,618,423,651,423,687,423,721,423,760,423,1194,457,1231,457,1268,457,1305,457,1342,457,1379,457,1415,457,1451,457,1488,457,1525,457,1562,457,1599,457,1636,457,1673,457,1709,457,1745,457,1782,457,1818,457,1854,457,1882,457,1947,457,361,459,398,459,435,459,472,459,509,459,546,459,582,459,618,459,1046,459,1083,459,398,495,435,495,472,495,509,495,546,495,583,495,619,495,655,495,1083,495,1120,495,1157,495,1342,495,1379,495,1416,495,1453,495,1490,495,1527,495,1563,495,1599,495,1635,495,1672,495,1709,495,1745,495,1781,495,1817,495,1853,495,1909,495,1947,495,434,531,470,531,504,531,619,531,1046,531,1083,531,1120,531,1157,531,1194,531,1231,531,1267,531,1303,531,1342,531,1379,531,1416,531,1453,531,1490,531,1527,531,1563,531,1599,531,1635,531,1672,531,1709,531,1745,531,1781,531,1817,531,1010,564,1047,564,1084,564,1121,564,1158,564,1195,564,1231,564,1267,564,470,567,504,567,583,567,619,567,653,567,687,567,1303,567,1339,567,1375,567,1411,567,1442,567,1527,567,1563,567,1599,567,1635,567,1672,567,1710,567,1746,567,1782,567,1818,567,1010,601,1047,601,1084,601,1121,601,1158,601,1195,601,1231,601,1267,601,1303,601,1339,601,1375,601,1411,601,1442,601,1563,601,1599,601,1635,601,1709,601,1745,601,1781,601,504,603,540,603,574,603,1566,637,1602,637,1710,637,1746,637,1782,637,1845,637,1881,637,578,638,614,638,648,638,687,638,721,638,1010,638,1047,638,1084,638,1121,638,1158,638,1195,638,1231,638,1267,638,1303,638,1339,638,1375,638,1411,638,1710,673,1746,673,651,675,687,675,721,675,760,675,794,675,1046,675,1083,675,1120,675,1157,675,1194,675,1231,675,1267,675,1303,675,1339,675,1375,675,1411,675,1602,675,1845,675,1881,675,615,711,651,711,685,711,724,711,760,711,794,711,830,711,1709,711,1745,711,1781,711,1809,711,1845,711,1939,711,1157,712,1194,712,1231,712,1268,712,1304,712,1340,712,1375,712,615,747,652,747,689,747,726,747,763,747,800,747,836,747,872,747,903,747,1766,747,1809,747,1845,747,1939,747,1975,747,2003,747,1156,749,1193,749,1230,749,1267,749,1303,749,1339,749,615,783,652,783,689,783,726,783,763,783,800,783,836,783,872,783,903,783,1406,783,1903,783,1975,783,2003,783,1193,786,1230,786,1267,786,1303,786,1339,786,1193,818,1230,818,1267,818,1303,818,1339,818,1372,818,1406,818,652,819,688,819,722,819,760,819,796,819,830,819,866,819,1865,819,1901,819,1937,819,1965,819,688,855,724,855,758,855,794,855,830,855,864,855,1193,855,1230,855,1267,855,1303,855,1372,855,1767,855,1803,855,1839,855,1867,855,1903,855,1939,855,1967,855,2003,855,685,891,721,891,755,891,794,891,830,891,1801,891,1837,891,1873,891,1901,891,1937,891,1973,891,2001,891,1193,892,1230,892,1267,892,1303,892,685,927,721,927,755,927,794,927,1801,927,1837,927,1873,927,1901,927,1937,927,1973,927,2009,927,2163,927,1230,929,1267,929,685,963,721,963,755,963,1939,963,1975,963,2163,963,652,999,688,999,722,999,2126,999,2163,999,2126,1034,653,1035,689,1035,689,1071];
+
+const FRAME_W = 2216, FRAME_H = 1241, DOT_R = 10;
+const HOME = { x: 509, y: 459, r: 16.5, stroke: 5 };
+
+// ---- Tuning knobs ----
+const REPEL_RADIUS = 240;   // cursor influence radius, frame units
+const REPEL_FORCE  = 26;    // push strength
+const SPRING       = 0.12;  // pull back toward home position
+const DAMPING      = 0.82;  // velocity decay per frame (lower = calmer)
+const BRIGHTEN_MAX = 0.5;   // how far displaced dots shift toward light blue (0..1)
+const PING_PERIOD  = 2400;  // Dallas ping loop, ms
+
+const canvas = document.getElementById("dotted-map");
+const ctx = canvas.getContext("2d");
+const card = canvas.parentElement;
+
+const cssVar = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+// color lerp: #1566EB -> light blue
+const BLUE = [0x15, 0x66, 0xEB], LIGHT = [0xCF, 0xE2, 0xFF];
+const mix = (t) => `rgb(${BLUE.map((c, i) => Math.round(c + (LIGHT[i] - c) * t)).join(",")})`;
+
+// dot state: home position + physics offset/velocity
+const dots = [];
+for (let i = 0; i < DOTS.length; i += 2) {
+  if (DOTS[i] === HOME.x && DOTS[i + 1] === HOME.y) continue; // Dallas replaces this dot
+  dots.push({ x: DOTS[i], y: DOTS[i + 1], ox: 0, oy: 0, vx: 0, vy: 0 });
+}
+
+let scale, cx, cy, w, h, dpr;
+function resize() {
+  dpr = window.devicePixelRatio || 1;
+  w = card.clientWidth;
+  h = card.clientHeight;
+  canvas.width = w * dpr;
+  canvas.height = h * dpr;
+  scale = Math.min(w / FRAME_W, h / FRAME_H) * 1.08;
+  cx = FRAME_W / 2;
+  cy = FRAME_H * 0.46;
+}
+resize();
+window.addEventListener("resize", resize);
+
+const toScreen = (fx, fy) => [(fx - cx) * scale + w / 2, (fy - cy) * scale + h / 2];
+const toFrame  = (sx, sy) => [(sx - w / 2) / scale + cx, (sy - h / 2) / scale + cy];
+
+const pointer = { x: -1e9, y: -1e9 };
+canvas.addEventListener("pointermove", (e) => {
+  const r = canvas.getBoundingClientRect();
+  [pointer.x, pointer.y] = toFrame(e.clientX - r.left, e.clientY - r.top);
+});
+canvas.addEventListener("pointerleave", () => { pointer.x = pointer.y = -1e9; });
+
+const t0 = performance.now();
+
+function render(now) {
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.fillStyle = cssVar("--card-bg");
+  ctx.fillRect(0, 0, w, h);
+
+  const dotColor = cssVar("--dot");
+
+  for (const d of dots) {
+    const dx = d.x - pointer.x, dy = d.y - pointer.y;
+    const dist = Math.hypot(dx, dy);
+    const t = Math.max(0, 1 - dist / REPEL_RADIUS);
+
+    if (t > 0 && dist > 0.001) {
+      const f = t * t * REPEL_FORCE;
+      d.vx += (dx / dist) * f;
+      d.vy += (dy / dist) * f;
+    }
+    d.vx += -d.ox * SPRING;
+    d.vy += -d.oy * SPRING;
+    d.vx *= DAMPING;
+    d.vy *= DAMPING;
+    d.ox += d.vx;
+    d.oy += d.vy;
+
+    const disp = Math.hypot(d.ox, d.oy);
+    const color = disp > 0.5 ? mix(Math.min(1, disp / 60) * BRIGHTEN_MAX) : dotColor;
+
+    const [sx, sy] = toScreen(d.x + d.ox, d.y + d.oy);
+    ctx.beginPath();
+    ctx.arc(sx, sy, DOT_R * scale, 0, Math.PI * 2);
+    ctx.fillStyle = color;
+    ctx.fill();
+  }
+
+  // Dallas marker + ping, always on top
+  const [hx, hy] = toScreen(HOME.x, HOME.y);
+  const phase = ((now - t0) % PING_PERIOD) / PING_PERIOD;
+  ctx.beginPath();
+  ctx.arc(hx, hy, (HOME.r + phase * 70) * scale, 0, Math.PI * 2);
+  ctx.strokeStyle = cssVar("--home");
+  ctx.globalAlpha = (1 - phase) * 0.5;
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  ctx.globalAlpha = 1;
+
+  ctx.beginPath();
+  ctx.arc(hx, hy, Math.max(HOME.r * scale, 4.5), 0, Math.PI * 2);
+  ctx.fillStyle = cssVar("--home");
+  ctx.fill();
+  ctx.lineWidth = Math.max(HOME.stroke * scale, 1.5);
+  ctx.strokeStyle = "#fff";
+  ctx.stroke();
+
+  requestAnimationFrame(render);
+}
+requestAnimationFrame(render);
+</script>
+
+</body>
+</html>
