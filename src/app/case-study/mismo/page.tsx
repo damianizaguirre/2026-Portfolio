@@ -46,7 +46,9 @@ function useFrameScale() {
 
 export default function MismoCaseStudy() {
   const pageRef = useFrameScale();
+  const rulerHideTimerRef = useRef<number | null>(null);
   const [activeTickIndex, setActiveTickIndex] = useState(0);
+  const [isRulerCardVisible, setIsRulerCardVisible] = useState(false);
   const activeTick = rulerTicks[activeTickIndex] || rulerTicks[0];
 
   useEffect(() => {
@@ -92,6 +94,34 @@ export default function MismoCaseStudy() {
     };
   }, []);
 
+  useEffect(() => {
+    return () => {
+      if (rulerHideTimerRef.current) {
+        window.clearTimeout(rulerHideTimerRef.current);
+      }
+    };
+  }, []);
+
+  const showRulerCard = () => {
+    if (rulerHideTimerRef.current) {
+      window.clearTimeout(rulerHideTimerRef.current);
+      rulerHideTimerRef.current = null;
+    }
+
+    setIsRulerCardVisible(true);
+  };
+
+  const queueRulerCardHide = () => {
+    if (rulerHideTimerRef.current) {
+      window.clearTimeout(rulerHideTimerRef.current);
+    }
+
+    rulerHideTimerRef.current = window.setTimeout(() => {
+      setIsRulerCardVisible(false);
+      rulerHideTimerRef.current = null;
+    }, 1000);
+  };
+
   return (
     <main className={styles.page} ref={pageRef} aria-label="Mismo case study">
       <header className={styles.topNav} aria-label="Top Navigation Bar">
@@ -104,7 +134,12 @@ export default function MismoCaseStudy() {
       </header>
 
       <aside className={styles.rulerNav} aria-label="Case study section ruler">
-        <div className={styles.ruler} aria-hidden="true">
+        <div
+          className={styles.ruler}
+          aria-hidden="true"
+          onPointerEnter={showRulerCard}
+          onPointerLeave={queueRulerCardHide}
+        >
           {rulerTicks
             .map((tick, index) => (
               <span
@@ -120,7 +155,15 @@ export default function MismoCaseStudy() {
             ))}
           <span className={styles.activeTick} style={{ top: activeTick.y }} />
         </div>
-        <div className={styles.rulerCard}>
+        <div
+          className={[
+            styles.rulerCard,
+            isRulerCardVisible ? styles.rulerCardVisible : "",
+          ].join(" ")}
+          aria-hidden={!isRulerCardVisible}
+          onPointerEnter={showRulerCard}
+          onPointerLeave={queueRulerCardHide}
+        >
           <ol className={styles.rulerList}>
             {sectionLabels.map((label, index) => (
               <li className={activeTick.section === index ? styles.rulerListActive : ""} key={label}>

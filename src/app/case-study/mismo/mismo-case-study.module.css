@@ -269,6 +269,7 @@
   box-shadow: 0 0 2.5px rgba(0, 0, 0, 0.25);
   opacity: 0;
   pointer-events: none;
+  visibility: hidden;
   z-index: 2;
   transform: translateX(-4px) scale(0.985);
   transform-origin: left center;
@@ -304,13 +305,9 @@
   pointer-events: auto;
 }
 
-.rulerCard {
-  visibility: hidden;
-}
-
-.ruler:hover ~ .rulerCard,
-.ruler:focus-within ~ .rulerCard {
+.rulerCardVisible {
   opacity: 1;
+  pointer-events: auto;
   visibility: visible;
   transform: translateX(0) scale(1);
 }
