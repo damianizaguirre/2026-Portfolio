@@ -1,0 +1,600 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Fireworks Forming Animation Study</title>
+    <style>
+      :root {
+        --ink: #0b0b0b;
+        --muted: #777;
+        --paper: #fff;
+        --line: #e6e6e6;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: var(--paper);
+        color: var(--ink);
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .page {
+        width: min(1180px, calc(100vw - 32px));
+        margin: 0 auto;
+        padding: 32px 0 40px;
+      }
+
+      .topbar {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 24px;
+        margin-bottom: 24px;
+        border-bottom: 1px solid var(--line);
+        padding-bottom: 16px;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 500;
+        letter-spacing: 0;
+      }
+
+      .note {
+        margin: 0;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        border: 1px solid var(--line);
+      }
+
+      .variant {
+        min-height: 360px;
+        display: grid;
+        place-items: center;
+        position: relative;
+        overflow: hidden;
+        border-right: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+        background: #fff;
+      }
+
+      .variant:nth-child(2n) {
+        border-right: 0;
+      }
+
+      .variant:nth-last-child(-n + 2) {
+        border-bottom: 0;
+      }
+
+      .label {
+        position: absolute;
+        left: 18px;
+        top: 16px;
+        margin: 0;
+        color: var(--muted);
+        font-size: 12px;
+        letter-spacing: 0;
+      }
+
+      .composition {
+        display: grid;
+        justify-items: center;
+        transform: translateY(8px);
+      }
+
+      .stage {
+        position: relative;
+        width: 130px;
+        height: 123px;
+        color: var(--ink);
+        isolation: isolate;
+      }
+
+      .piece {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        width: 130px;
+        height: 123px;
+        color: var(--ink);
+        font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+        font-size: 101px;
+        line-height: 1;
+        opacity: 0;
+        will-change: transform, opacity, filter;
+        transform-origin: var(--origin-x) var(--origin-y);
+        animation-duration: var(--cycle);
+        animation-delay: var(--delay);
+        animation-timing-function: var(--ease);
+        animation-iteration-count: infinite;
+        animation-fill-mode: both;
+      }
+
+      .full {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        width: 130px;
+        height: 123px;
+        color: var(--ink);
+        font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+        font-size: 101px;
+        line-height: 1;
+        opacity: 0;
+        animation: full-lock var(--cycle) ease-out infinite both;
+      }
+
+      .piece.main {
+        clip-path: circle(31px at 39% 43%);
+        --origin-x: 39%;
+        --origin-y: 43%;
+        --from-x: 15px;
+        --from-y: 9px;
+      }
+
+      .piece.top-star {
+        clip-path: circle(18px at 61% 35%);
+        --origin-x: 61%;
+        --origin-y: 35%;
+        --from-x: -15px;
+        --from-y: 18px;
+      }
+
+      .piece.small {
+        clip-path: circle(25px at 58% 58%);
+        --origin-x: 58%;
+        --origin-y: 58%;
+        --from-x: -11px;
+        --from-y: -10px;
+      }
+
+      .piece.low-star {
+        clip-path: circle(15px at 43% 60%);
+        --origin-x: 43%;
+        --origin-y: 60%;
+        --from-x: 10px;
+        --from-y: -13px;
+      }
+
+      .piece.left-spark {
+        clip-path: circle(15px at 32% 72%);
+        --origin-x: 32%;
+        --origin-y: 72%;
+        --from-x: 24px;
+        --from-y: -28px;
+      }
+
+      .piece.bottom-spark {
+        clip-path: circle(18px at 43% 83%);
+        --origin-x: 43%;
+        --origin-y: 83%;
+        --from-x: 10px;
+        --from-y: -42px;
+      }
+
+      .piece.dots {
+        clip-path: polygon(36% 22%, 68% 22%, 72% 72%, 28% 74%);
+        --origin-x: 50%;
+        --origin-y: 49%;
+        --from-x: 0px;
+        --from-y: 0px;
+      }
+
+      .message {
+        margin: 12px 0 0;
+        font-size: 20px;
+        line-height: 1.1;
+        letter-spacing: 0;
+        white-space: nowrap;
+      }
+
+      .v1 .piece {
+        --cycle: 3200ms;
+        --ease: cubic-bezier(0.16, 1, 0.3, 1);
+        animation-name: form-soft;
+      }
+
+      .v1 .main {
+        --delay: 0ms;
+      }
+
+      .v1 .top-star {
+        --delay: 120ms;
+      }
+
+      .v1 .small {
+        --delay: 230ms;
+      }
+
+      .v1 .low-star {
+        --delay: 310ms;
+      }
+
+      .v1 .left-spark {
+        --delay: 470ms;
+      }
+
+      .v1 .bottom-spark {
+        --delay: 560ms;
+      }
+
+      .v1 .dots {
+        --delay: 680ms;
+      }
+
+      .v2 .piece {
+        --cycle: 2600ms;
+        --ease: cubic-bezier(0.22, 1.35, 0.36, 1);
+        animation-name: form-pop;
+      }
+
+      .v2 .main {
+        --delay: 0ms;
+      }
+
+      .v2 .top-star {
+        --delay: 55ms;
+      }
+
+      .v2 .small {
+        --delay: 140ms;
+      }
+
+      .v2 .low-star {
+        --delay: 210ms;
+      }
+
+      .v2 .left-spark {
+        --delay: 250ms;
+      }
+
+      .v2 .bottom-spark {
+        --delay: 360ms;
+      }
+
+      .v2 .dots {
+        --delay: 450ms;
+      }
+
+      .v3 .piece {
+        --cycle: 4750ms;
+        --ease: cubic-bezier(0.45, 0, 0.12, 1);
+        animation-name: form-draw;
+      }
+
+      .v3 .main {
+        --delay: 0ms;
+      }
+
+      .v3 .top-star {
+        --delay: 325ms;
+      }
+
+      .v3 .small {
+        --delay: 525ms;
+      }
+
+      .v3 .low-star {
+        --delay: 750ms;
+      }
+
+      .v3 .left-spark {
+        --delay: 913ms;
+      }
+
+      .v3 .bottom-spark {
+        --delay: 1100ms;
+      }
+
+      .v3 .dots {
+        --delay: 1300ms;
+      }
+
+      .v4 .piece {
+        --cycle: 3200ms;
+        --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+        animation-name: form-orbit;
+      }
+
+      .v4 .main {
+        --delay: 0ms;
+        --orbit: -8deg;
+      }
+
+      .v4 .top-star {
+        --delay: 180ms;
+        --orbit: 16deg;
+      }
+
+      .v4 .small {
+        --delay: 80ms;
+        --orbit: -18deg;
+      }
+
+      .v4 .low-star {
+        --delay: 360ms;
+        --orbit: 10deg;
+      }
+
+      .v4 .left-spark {
+        --delay: 520ms;
+        --orbit: -12deg;
+      }
+
+      .v4 .bottom-spark {
+        --delay: 660ms;
+        --orbit: 14deg;
+      }
+
+      .v4 .dots {
+        --delay: 760ms;
+        --orbit: 0deg;
+      }
+
+      .v1 .full,
+      .v4 .full {
+        --cycle: 3200ms;
+      }
+
+      .v2 .full {
+        --cycle: 2600ms;
+      }
+
+      .v3 .full {
+        --cycle: 4750ms;
+      }
+
+      @keyframes form-soft {
+        0%,
+        8% {
+          opacity: 0;
+          filter: blur(2px);
+          transform: translate(var(--from-x), var(--from-y)) scale(0.1);
+        }
+
+        36% {
+          opacity: 1;
+          filter: blur(0);
+          transform: translate(0, 0) scale(1.05);
+        }
+
+        52%,
+        82% {
+          opacity: 1;
+          transform: translate(0, 0) scale(1);
+        }
+
+        100% {
+          opacity: 0;
+          transform: translate(0, 0) scale(0.98);
+        }
+      }
+
+      @keyframes form-pop {
+        0%,
+        12% {
+          opacity: 0;
+          filter: blur(1px);
+          transform: translate(var(--from-x), var(--from-y)) scale(0.02);
+        }
+
+        28% {
+          opacity: 1;
+          filter: blur(0);
+          transform: translate(0, 0) scale(1.18);
+        }
+
+        42%,
+        78% {
+          opacity: 1;
+          transform: translate(0, 0) scale(1);
+        }
+
+        100% {
+          opacity: 0;
+          transform: translate(0, 0) scale(0.92);
+        }
+      }
+
+      @keyframes form-draw {
+        0%,
+        10% {
+          opacity: 0;
+          filter: blur(2px);
+          transform: translate(calc(var(--from-x) * 0.52), calc(var(--from-y) * 0.52)) scale(0.08);
+        }
+
+        48% {
+          opacity: 1;
+          filter: blur(0);
+          transform: translate(0, 0) scale(1);
+        }
+
+        84% {
+          opacity: 1;
+          transform: translate(0, 0) scale(1);
+        }
+
+        100% {
+          opacity: 0;
+          transform: translate(0, 0) scale(1);
+        }
+      }
+
+      @keyframes form-orbit {
+        0%,
+        10% {
+          opacity: 0;
+          filter: blur(2px);
+          transform: translate(var(--from-x), var(--from-y)) rotate(var(--orbit)) scale(0.08);
+        }
+
+        34% {
+          opacity: 1;
+          filter: blur(0);
+          transform: translate(0, 0) rotate(calc(var(--orbit) * -0.18)) scale(1.08);
+        }
+
+        50%,
+        82% {
+          opacity: 1;
+          transform: translate(0, 0) rotate(0deg) scale(1);
+        }
+
+        100% {
+          opacity: 0;
+          transform: translate(0, 0) rotate(0deg) scale(0.98);
+        }
+      }
+
+      @keyframes full-lock {
+        0%,
+        42% {
+          opacity: 0;
+          transform: scale(0.985);
+        }
+
+        52%,
+        82% {
+          opacity: 1;
+          transform: scale(1);
+        }
+
+        100% {
+          opacity: 0;
+          transform: scale(0.985);
+        }
+      }
+
+      @media (max-width: 760px) {
+        .page {
+          width: min(430px, calc(100vw - 24px));
+          padding-top: 20px;
+        }
+
+        .topbar {
+          display: block;
+        }
+
+        .note {
+          margin-top: 8px;
+        }
+
+        .grid {
+          grid-template-columns: 1fr;
+        }
+
+        .variant,
+        .variant:nth-child(2n),
+        .variant:nth-last-child(-n + 2) {
+          border-right: 0;
+          border-bottom: 1px solid var(--line);
+        }
+
+        .variant:last-child {
+          border-bottom: 0;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .piece {
+          animation: none;
+          opacity: 1;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <header class="topbar">
+        <h1>Fireworks icon forming study</h1>
+        <p class="note">Exact Figma glyph, clipped into pieces. Refresh to restart all loops.</p>
+      </header>
+
+      <section class="grid" aria-label="Animation variations">
+        <article class="variant v1">
+          <p class="label">A / soft stagger</p>
+          <div class="composition">
+            <div class="stage" aria-hidden="true">
+              <span class="piece main">&#x10205E;</span>
+              <span class="piece top-star">&#x10205E;</span>
+              <span class="piece small">&#x10205E;</span>
+              <span class="piece low-star">&#x10205E;</span>
+              <span class="piece left-spark">&#x10205E;</span>
+              <span class="piece bottom-spark">&#x10205E;</span>
+              <span class="piece dots">&#x10205E;</span>
+              <span class="full">&#x10205E;</span>
+            </div>
+            <p class="message">currently designing and building...</p>
+          </div>
+        </article>
+
+        <article class="variant v2">
+          <p class="label">B / quick pop</p>
+          <div class="composition">
+            <div class="stage" aria-hidden="true">
+              <span class="piece main">&#x10205E;</span>
+              <span class="piece top-star">&#x10205E;</span>
+              <span class="piece small">&#x10205E;</span>
+              <span class="piece low-star">&#x10205E;</span>
+              <span class="piece left-spark">&#x10205E;</span>
+              <span class="piece bottom-spark">&#x10205E;</span>
+              <span class="piece dots">&#x10205E;</span>
+              <span class="full">&#x10205E;</span>
+            </div>
+            <p class="message">currently designing and building...</p>
+          </div>
+        </article>
+
+        <article class="variant v3">
+          <p class="label">C / slower draw</p>
+          <div class="composition">
+            <div class="stage" aria-hidden="true">
+              <span class="piece main">&#x10205E;</span>
+              <span class="piece top-star">&#x10205E;</span>
+              <span class="piece small">&#x10205E;</span>
+              <span class="piece low-star">&#x10205E;</span>
+              <span class="piece left-spark">&#x10205E;</span>
+              <span class="piece bottom-spark">&#x10205E;</span>
+              <span class="piece dots">&#x10205E;</span>
+              <span class="full">&#x10205E;</span>
+            </div>
+            <p class="message">currently designing and building...</p>
+          </div>
+        </article>
+
+        <article class="variant v4">
+          <p class="label">D / slight orbit</p>
+          <div class="composition">
+            <div class="stage" aria-hidden="true">
+              <span class="piece main">&#x10205E;</span>
+              <span class="piece top-star">&#x10205E;</span>
+              <span class="piece small">&#x10205E;</span>
+              <span class="piece low-star">&#x10205E;</span>
+              <span class="piece left-spark">&#x10205E;</span>
+              <span class="piece bottom-spark">&#x10205E;</span>
+              <span class="piece dots">&#x10205E;</span>
+              <span class="full">&#x10205E;</span>
+            </div>
+            <p class="message">currently designing and building...</p>
+          </div>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Fireworks Icon Animation Prototype</title>
+    <style>
+      :root {
+        --ink: #000;
+        --paper: #fff;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+        background: var(--paper);
+        color: var(--ink);
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: geometricPrecision;
+      }
+
+      .scene {
+        display: grid;
+        justify-items: center;
+      }
+
+      .firework-stage {
+        position: relative;
+        display: grid;
+        place-items: center;
+        width: clamp(70px, 8.07vw, 155px);
+        height: clamp(66px, 7.63vw, 147px);
+        color: var(--ink);
+        isolation: isolate;
+      }
+
+      .icon {
+        position: relative;
+        z-index: 2;
+        display: block;
+        width: max-content;
+        font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+        font-size: clamp(58px, 5.26vw, 101px);
+        line-height: 1;
+        transform-origin: center;
+        animation: icon-launch 2600ms cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
+      }
+
+      .ring {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        z-index: 1;
+        width: 12px;
+        aspect-ratio: 1;
+        border: 1px solid rgb(0 0 0 / 0.65);
+        border-radius: 999px;
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.2);
+        animation: firework-ring 2600ms cubic-bezier(0.16, 1, 0.3, 1) infinite;
+      }
+
+      .ring:nth-of-type(2) {
+        width: 20px;
+        border-color: rgb(0 0 0 / 0.34);
+        animation-delay: 130ms;
+      }
+
+      .particle {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        z-index: 3;
+        width: 4px;
+        height: 4px;
+        border-radius: 999px;
+        background: currentColor;
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.2);
+        animation: firework-particle 2600ms cubic-bezier(0.16, 1, 0.3, 1) infinite;
+        animation-delay: var(--delay);
+      }
+
+      .particle.streak {
+        width: 2px;
+        height: 10px;
+        border-radius: 999px;
+      }
+
+      .message {
+        margin: clamp(14px, 2.13vw, 41px) 0 0;
+        font-size: clamp(20px, 2.08vw, 40px);
+        line-height: 1.1;
+        letter-spacing: 0;
+        white-space: nowrap;
+      }
+
+      @keyframes icon-launch {
+        0%,
+        14%,
+        100% {
+          opacity: 0.72;
+          filter: none;
+          transform: translateY(0) scale(0.94) rotate(0deg);
+        }
+
+        22% {
+          opacity: 1;
+          filter: drop-shadow(0 0 12px rgb(0 0 0 / 0.2));
+          transform: translateY(-2px) scale(1.08) rotate(-3deg);
+        }
+
+        42% {
+          opacity: 0.9;
+          filter: drop-shadow(0 0 2px rgb(0 0 0 / 0.12));
+          transform: translateY(0) scale(0.98) rotate(2deg);
+        }
+      }
+
+      @keyframes firework-ring {
+        0%,
+        17%,
+        100% {
+          opacity: 0;
+          transform: translate(-50%, -50%) scale(0.2);
+        }
+
+        24% {
+          opacity: 0.42;
+        }
+
+        58% {
+          opacity: 0;
+          transform: translate(-50%, -50%) scale(8.5);
+        }
+      }
+
+      @keyframes firework-particle {
+        0%,
+        18%,
+        100% {
+          opacity: 0;
+          transform: translate(-50%, -50%) scale(0.2) rotate(0deg);
+        }
+
+        27% {
+          opacity: 1;
+          transform: translate(-50%, -50%) translate(var(--mid-x), var(--mid-y)) scale(1) rotate(18deg);
+        }
+
+        58% {
+          opacity: 0.58;
+          transform: translate(-50%, -50%) translate(var(--x), var(--y)) scale(0.72) rotate(42deg);
+        }
+
+        74% {
+          opacity: 0;
+          transform: translate(-50%, -50%) translate(var(--x), var(--y)) scale(0.08) rotate(60deg);
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .icon,
+        .ring,
+        .particle {
+          animation: none;
+        }
+
+        .ring,
+        .particle {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="scene" aria-label="Coming soon animation prototype">
+      <div class="firework-stage" aria-hidden="true">
+        <span class="icon">&#x10205E;</span>
+        <span class="ring"></span>
+        <span class="ring"></span>
+        <span class="particle streak" style="--delay: 0ms; --mid-x: -28px; --mid-y: -27px; --x: -48px; --y: -46px"></span>
+        <span class="particle" style="--delay: 70ms; --mid-x: -8px; --mid-y: -36px; --x: -14px; --y: -62px"></span>
+        <span class="particle" style="--delay: 120ms; --mid-x: 14px; --mid-y: -34px; --x: 24px; --y: -58px"></span>
+        <span class="particle streak" style="--delay: 30ms; --mid-x: 30px; --mid-y: -17px; --x: 52px; --y: -30px"></span>
+        <span class="particle" style="--delay: 170ms; --mid-x: 34px; --mid-y: 5px; --x: 58px; --y: 8px"></span>
+        <span class="particle" style="--delay: 90ms; --mid-x: 16px; --mid-y: 26px; --x: 28px; --y: 44px"></span>
+        <span class="particle streak" style="--delay: 150ms; --mid-x: -5px; --mid-y: 32px; --x: -8px; --y: 56px"></span>
+        <span class="particle" style="--delay: 40ms; --mid-x: -27px; --mid-y: 20px; --x: -46px; --y: 34px"></span>
+        <span class="particle" style="--delay: 110ms; --mid-x: -35px; --mid-y: -2px; --x: -60px; --y: -4px"></span>
+        <span class="particle streak" style="--delay: 210ms; --mid-x: 5px; --mid-y: -22px; --x: 8px; --y: -38px"></span>
+      </div>
+      <p class="message">currently designing and building...</p>
+    </main>
+  </body>
+</html>

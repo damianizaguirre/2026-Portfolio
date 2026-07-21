@@ -1,0 +1,1499 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Song Cover Index Prototype</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #111111;
+        --muted: #a3a3a3;
+        --paper: rgba(255, 255, 255, 0.92);
+        --line: rgba(0, 0, 0, 0.08);
+        --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-width: 320px;
+        min-height: 100vh;
+        overflow: hidden;
+        color: var(--ink);
+        font-family:
+          -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, system-ui,
+          sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      button {
+        border: 0;
+        padding: 0;
+        font: inherit;
+        color: inherit;
+        background: transparent;
+      }
+
+      .scene {
+        position: relative;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: clamp(24px, 5vw, 62px);
+        isolation: isolate;
+      }
+
+      .landscape {
+        position: absolute;
+        inset: 0;
+        z-index: -3;
+        background:
+          radial-gradient(circle at 82% 16%, rgba(5, 39, 19, 0.86), transparent 31%),
+          radial-gradient(circle at 12% 30%, rgba(124, 171, 61, 0.7), transparent 28%),
+          radial-gradient(circle at 40% 82%, rgba(196, 217, 78, 0.45), transparent 35%),
+          linear-gradient(125deg, #174d22 0%, #5f9035 42%, #183b20 100%);
+      }
+
+      .landscape::before,
+      .landscape::after {
+        content: "";
+        position: absolute;
+        inset: -8%;
+        pointer-events: none;
+      }
+
+      .landscape::before {
+        background:
+          repeating-linear-gradient(
+            164deg,
+            rgba(198, 220, 80, 0.58) 0 5px,
+            rgba(58, 127, 43, 0.52) 5px 12px,
+            rgba(18, 79, 33, 0.45) 12px 18px
+          );
+        clip-path: ellipse(68% 54% at 31% 78%);
+        opacity: 0.85;
+        filter: blur(0.4px);
+      }
+
+      .landscape::after {
+        background:
+          radial-gradient(ellipse at 78% 30%, rgba(8, 42, 20, 0.78), transparent 36%),
+          radial-gradient(ellipse at 22% 70%, rgba(213, 222, 87, 0.32), transparent 28%),
+          linear-gradient(32deg, transparent 44%, rgba(172, 124, 68, 0.6) 45%, rgba(172, 124, 68, 0.35) 46%, transparent 48%);
+        mix-blend-mode: multiply;
+        opacity: 0.88;
+      }
+
+      .scrim {
+        position: absolute;
+        inset: 0;
+        z-index: -2;
+        background:
+          radial-gradient(circle at 50% 44%, rgba(255, 255, 255, 0.1), transparent 32%),
+          rgba(0, 0, 0, 0.04);
+      }
+
+      .browser {
+        width: min(78vw, 1000px);
+        aspect-ratio: 1.64;
+        min-height: 520px;
+        border-radius: 18px;
+        overflow: hidden;
+        background: var(--paper);
+        box-shadow:
+          0 36px 90px rgba(0, 0, 0, 0.24),
+          0 0 0 1px rgba(255, 255, 255, 0.38);
+        -webkit-backdrop-filter: blur(18px);
+        backdrop-filter: blur(18px);
+      }
+
+      .browser-bar {
+        height: 38px;
+        display: grid;
+        grid-template-columns: 150px 1fr 150px;
+        align-items: center;
+        padding: 0 18px;
+        color: rgba(0, 0, 0, 0.28);
+        font-size: 10px;
+      }
+
+      .window-tools,
+      .browser-actions,
+      .app-tools,
+      .mini-actions {
+        display: flex;
+        align-items: center;
+      }
+
+      .window-tools {
+        gap: 10px;
+      }
+
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.09);
+      }
+
+      .browser-center {
+        justify-self: center;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        color: rgba(0, 0, 0, 0.46);
+      }
+
+      .browser-actions {
+        justify-self: end;
+        gap: 14px;
+      }
+
+      .browser svg,
+      .phone svg {
+        display: block;
+      }
+
+      .app {
+        position: relative;
+        height: calc(100% - 38px);
+        padding: 10px 26px 28px;
+      }
+
+      .app-header {
+        height: 34px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 12px;
+      }
+
+      .brand {
+        font-weight: 650;
+        letter-spacing: 0;
+      }
+
+      .brand span {
+        margin-left: 4px;
+        color: rgba(0, 0, 0, 0.28);
+        font-weight: 450;
+      }
+
+      .app-tools {
+        gap: 16px;
+        color: rgba(0, 0, 0, 0.38);
+      }
+
+      .carousel-wrap {
+        position: relative;
+        height: clamp(210px, 24vw, 306px);
+        margin: clamp(8px, 1.5vw, 18px) -26px 0;
+        overflow: hidden;
+        perspective: 760px;
+        perspective-origin: 50% 42%;
+      }
+
+      .carousel-wrap::before,
+      .carousel-wrap::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        z-index: 20;
+        width: 22%;
+        pointer-events: none;
+      }
+
+      .carousel-wrap::before {
+        left: 0;
+        background: linear-gradient(90deg, var(--paper) 8%, rgba(255, 255, 255, 0));
+      }
+
+      .carousel-wrap::after {
+        right: 0;
+        background: linear-gradient(270deg, var(--paper) 8%, rgba(255, 255, 255, 0));
+      }
+
+      .cover-stage {
+        position: absolute;
+        inset: 0;
+        cursor: grab;
+        touch-action: pan-y;
+        transform-style: preserve-3d;
+      }
+
+      .cover-stage.is-dragging {
+        cursor: grabbing;
+      }
+
+      .cover {
+        --x: 0px;
+        --scale: 1;
+        --rot: 0deg;
+        --z: 0px;
+        --opacity: 1;
+        --blur: 0px;
+        position: absolute;
+        left: 50%;
+        top: 48%;
+        width: clamp(138px, 15.1vw, 190px);
+        aspect-ratio: 1;
+        border-radius: 16px;
+        overflow: hidden;
+        background: var(--art);
+        box-shadow:
+          0 18px 46px rgba(0, 0, 0, 0.12),
+          inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+        transform:
+          translate(-50%, -50%)
+          translate3d(var(--x), var(--y, 0), var(--z))
+          rotateY(var(--rot))
+          scale(var(--scale));
+        transform-style: preserve-3d;
+        backface-visibility: hidden;
+        opacity: var(--opacity);
+        filter: blur(var(--blur));
+        will-change: transform, opacity, filter;
+      }
+
+      .cover::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(140deg, rgba(255, 255, 255, 0.42), rgba(255, 255, 255, 0) 38%),
+          radial-gradient(circle at 70% 12%, rgba(255, 255, 255, 0.3), transparent 28%),
+          rgba(0, 0, 0, 0.04);
+        mix-blend-mode: screen;
+        pointer-events: none;
+      }
+
+      .cover::after {
+        content: "EXPLICIT";
+        position: absolute;
+        left: 10px;
+        bottom: 10px;
+        padding: 2px 4px;
+        border-radius: 2px;
+        background: rgba(255, 255, 255, 0.74);
+        color: rgba(0, 0, 0, 0.76);
+        font-size: 6px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+      }
+
+      .cover-title {
+        position: absolute;
+        inset: auto 12px 28px;
+        color: rgba(255, 255, 255, 0.92);
+        font-size: 18px;
+        line-height: 0.95;
+        font-weight: 760;
+        text-transform: uppercase;
+        text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+      }
+
+      .cover.is-active {
+        box-shadow:
+          0 34px 72px rgba(0, 0, 0, 0.24),
+          0 0 0 1px rgba(255, 255, 255, 0.16),
+          0 0 56px rgba(255, 255, 255, 0.34),
+          inset 0 0 0 1px rgba(255, 255, 255, 0.3);
+      }
+
+      .cover.is-active::before {
+        background:
+          linear-gradient(140deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0) 38%),
+          radial-gradient(circle at 70% 12%, rgba(255, 255, 255, 0.38), transparent 28%),
+          rgba(0, 0, 0, 0.02);
+      }
+
+      .cursor-hand {
+        position: absolute;
+        left: 62%;
+        top: 70%;
+        z-index: 30;
+        width: 18px;
+        height: 18px;
+        opacity: 0.78;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+      }
+
+      .song-info {
+        display: grid;
+        justify-items: center;
+        margin-top: -4px;
+      }
+
+      .song-title {
+        margin: 0;
+        font-size: 17px;
+        line-height: 1.15;
+        font-weight: 720;
+      }
+
+      .song-album {
+        margin: 7px 0 0;
+        color: rgba(0, 0, 0, 0.34);
+        font-size: 13px;
+      }
+
+      .index-scroll {
+        position: absolute;
+        left: 50%;
+        bottom: 26px;
+        width: min(300px, 42%);
+        height: 26px;
+        transform: translateX(-50%);
+        display: grid;
+        grid-template-columns: 28px 1fr 28px;
+        gap: 10px;
+        align-items: center;
+        color: rgba(0, 0, 0, 0.42);
+        font-size: 10px;
+        font-variant-numeric: tabular-nums;
+        cursor: pointer;
+        user-select: none;
+        touch-action: none;
+        transition:
+          width 220ms var(--ease),
+          height 220ms var(--ease),
+          padding 220ms var(--ease),
+          background-color 220ms var(--ease),
+          box-shadow 220ms var(--ease);
+      }
+
+      .index-scroll[data-variant="capsule"] {
+        width: min(360px, 48%);
+        height: 34px;
+        grid-template-columns: 28px 1fr 28px;
+        padding: 0 10px;
+        border: 1px solid rgba(0, 0, 0, 0.07);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.58);
+        -webkit-backdrop-filter: blur(14px) saturate(1.08);
+        backdrop-filter: blur(14px) saturate(1.08);
+        box-shadow: 0 14px 34px rgba(0, 0, 0, 0.08);
+      }
+
+      .index-scroll[data-variant="capsule"].is-dragging,
+      .index-scroll[data-variant="capsule"].is-settling {
+        background: rgba(255, 255, 255, 0.68);
+        box-shadow: 0 18px 42px rgba(0, 0, 0, 0.12);
+      }
+
+      .index-scroll[data-variant="magnetic"] {
+        width: min(330px, 46%);
+        height: 32px;
+        grid-template-columns: 28px 1fr 28px;
+        padding: 0 8px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.34);
+        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(10px);
+      }
+
+      .index-scroll[data-variant="magnetic"].is-dragging,
+      .index-scroll[data-variant="magnetic"].is-settling {
+        background: rgba(255, 255, 255, 0.46);
+      }
+
+      .index-scroll:focus-visible {
+        outline: 2px solid rgba(0, 0, 0, 0.65);
+        outline-offset: 5px;
+        border-radius: 999px;
+      }
+
+      .index-track {
+        position: relative;
+        height: 10px;
+      }
+
+      .index-track::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 50%;
+        height: 1px;
+        background: rgba(0, 0, 0, 0.16);
+        transform: translateY(-50%);
+        transition:
+          height 220ms var(--ease),
+          background-color 220ms var(--ease);
+      }
+
+      .index-scroll[data-variant="capsule"] .index-track::before {
+        height: 5px;
+        border-radius: 999px;
+        background: rgba(0, 0, 0, 0.1);
+      }
+
+      .index-scroll[data-variant="magnetic"] .index-track::before {
+        height: 2px;
+        background: rgba(0, 0, 0, 0.13);
+      }
+
+      .index-fill {
+        position: absolute;
+        left: 0;
+        top: 50%;
+        width: 0;
+        height: 1px;
+        background: rgba(0, 0, 0, 0.72);
+        transform: translateY(-50%);
+        transition:
+          height 220ms var(--ease),
+          background-color 220ms var(--ease);
+      }
+
+      .index-scroll[data-variant="capsule"] .index-fill {
+        height: 5px;
+        border-radius: 999px;
+      }
+
+      .index-scroll[data-variant="magnetic"] .index-fill {
+        height: 2px;
+      }
+
+      .index-ticks {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        pointer-events: none;
+        opacity: 0;
+      }
+
+      .index-ticks span {
+        width: 3px;
+        height: 3px;
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.22);
+        transition:
+          background-color 180ms ease,
+          transform 180ms var(--ease);
+      }
+
+      .index-ticks span.is-active {
+        background: rgba(0, 0, 0, 0.76);
+      }
+
+      .index-ticks span.is-current {
+        transform: scale(1.38);
+      }
+
+      .index-scroll[data-variant="magnetic"] .index-ticks {
+        opacity: 1;
+      }
+
+      .index-thumb {
+        position: absolute;
+        left: 0%;
+        top: 50%;
+        width: 34px;
+        height: 6px;
+        border-radius: 999px;
+        background: #111111;
+        box-shadow: 0 5px 16px rgba(0, 0, 0, 0.15);
+        transform: translate(0%, -50%);
+        pointer-events: none;
+        transition:
+          width 220ms var(--ease),
+          height 220ms var(--ease),
+          border-color 220ms var(--ease),
+          background-color 220ms var(--ease),
+          box-shadow 220ms var(--ease);
+      }
+
+      .index-scroll[data-variant="capsule"] .index-thumb {
+        width: 52px;
+        height: 14px;
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.48)),
+          #111111;
+        box-shadow:
+          0 10px 22px rgba(0, 0, 0, 0.15),
+          inset 0 1px 0 rgba(255, 255, 255, 0.55);
+      }
+
+      .index-scroll[data-variant="magnetic"] .index-thumb {
+        width: 18px;
+        height: 18px;
+        border: 2px solid rgba(255, 255, 255, 0.84);
+        background: #111111;
+        box-shadow:
+          0 10px 24px rgba(0, 0, 0, 0.18),
+          0 0 0 1px rgba(0, 0, 0, 0.08);
+      }
+
+      .phone-status,
+      .mobile-player,
+      .mobile-browser {
+        display: none;
+      }
+
+      .tuning-panel {
+        position: absolute;
+        right: clamp(14px, 2vw, 28px);
+        bottom: clamp(14px, 2vw, 28px);
+        z-index: 20;
+        border: 1px solid rgba(255, 255, 255, 0.34);
+        border-radius: 18px;
+        background: rgba(18, 24, 18, 0.55);
+        color: rgba(255, 255, 255, 0.9);
+        -webkit-backdrop-filter: blur(18px) saturate(1.15);
+        backdrop-filter: blur(18px) saturate(1.15);
+        box-shadow: 0 18px 48px rgba(0, 0, 0, 0.22);
+      }
+
+      .tuning-panel[open] {
+        width: 248px;
+        padding: 13px 14px;
+      }
+
+      .tuning-panel summary {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        min-width: 124px;
+        padding: 9px 12px;
+        border-radius: 18px;
+        cursor: pointer;
+        font-size: 12px;
+        list-style: none;
+      }
+
+      .tuning-panel summary::-webkit-details-marker {
+        display: none;
+      }
+
+      .tuning-panel[open] summary {
+        padding: 0 0 10px;
+      }
+
+      .tuning-panel label {
+        display: grid;
+        gap: 10px;
+      }
+
+      .tuning-panel label + label {
+        margin-top: 13px;
+      }
+
+      .variant-control {
+        margin-top: 13px;
+        display: grid;
+        gap: 9px;
+      }
+
+      .tuning-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        font-size: 12px;
+      }
+
+      .tuning-row output {
+        min-width: 42px;
+        color: rgba(255, 255, 255, 0.62);
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .tuning-panel input[type="range"] {
+        width: 100%;
+        margin: 0;
+        accent-color: #ffffff;
+      }
+
+      .variant-options {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 5px;
+      }
+
+      .variant-options button {
+        min-height: 28px;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        border-radius: 999px;
+        color: rgba(255, 255, 255, 0.66);
+        font-size: 11px;
+        cursor: pointer;
+      }
+
+      .variant-options button[aria-pressed="true"] {
+        border-color: rgba(255, 255, 255, 0.42);
+        background: rgba(255, 255, 255, 0.16);
+        color: #ffffff;
+      }
+
+      .variant-options button:hover {
+        color: #ffffff;
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      .tuning-actions {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 10px;
+      }
+
+      .tuning-actions button {
+        min-height: 26px;
+        padding: 0 10px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 999px;
+        color: rgba(255, 255, 255, 0.72);
+        font-size: 11px;
+        cursor: pointer;
+      }
+
+      .tuning-actions button:hover {
+        color: #ffffff;
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      @media (max-width: 760px) {
+        body {
+          overflow: hidden;
+        }
+
+        .scene {
+          padding: 14px;
+        }
+
+        .browser {
+          width: min(94vw, 390px);
+          height: min(92vh, 824px);
+          min-height: 690px;
+          aspect-ratio: auto;
+          border: 7px solid #151515;
+          border-radius: 48px;
+          background: #ffffff;
+          box-shadow:
+            0 34px 78px rgba(0, 0, 0, 0.34),
+            inset 0 0 0 1px rgba(255, 255, 255, 0.24);
+        }
+
+        .browser-bar {
+          height: 58px;
+          display: block;
+          padding: 0;
+          color: #111111;
+        }
+
+        .window-tools,
+        .browser-center,
+        .browser-actions {
+          display: none;
+        }
+
+        .phone-status {
+          height: 58px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 0 26px;
+          font-size: 13px;
+          font-weight: 650;
+        }
+
+        .island {
+          position: absolute;
+          left: 50%;
+          top: 12px;
+          width: 86px;
+          height: 25px;
+          border-radius: 999px;
+          background: #050505;
+          transform: translateX(-50%);
+        }
+
+        .status-icons {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .app {
+          height: calc(100% - 58px);
+          padding: 8px 18px 78px;
+        }
+
+        .app-header {
+          font-size: 11px;
+          height: 34px;
+        }
+
+        .app-tools {
+          gap: 14px;
+        }
+
+        .carousel-wrap {
+          height: 208px;
+          margin: 16px -18px 0;
+        }
+
+        .cover {
+          top: 45%;
+          width: 148px;
+          border-radius: 13px;
+        }
+
+        .cover-title {
+          font-size: 14px;
+          inset: auto 10px 25px;
+        }
+
+        .cursor-hand {
+          display: none;
+        }
+
+        .song-info {
+          margin-top: 8px;
+        }
+
+        .song-title {
+          font-size: 16px;
+        }
+
+        .song-album {
+          font-size: 12px;
+        }
+
+        .index-scroll {
+          width: calc(100% - 40px);
+          bottom: 156px;
+        }
+
+        .index-scroll[data-variant="capsule"],
+        .index-scroll[data-variant="magnetic"] {
+          width: calc(100% - 36px);
+        }
+
+        .mobile-player {
+          position: absolute;
+          left: 18px;
+          right: 18px;
+          bottom: 84px;
+          height: 58px;
+          display: grid;
+          grid-template-columns: 36px 1fr auto;
+          align-items: center;
+          gap: 12px;
+          padding: 0 12px;
+          border-radius: 16px;
+          background: rgba(255, 255, 255, 0.92);
+          box-shadow: 0 14px 34px rgba(0, 0, 0, 0.1);
+        }
+
+        .mini-cover {
+          width: 32px;
+          aspect-ratio: 1;
+          border-radius: 7px;
+          background: var(--mini-art);
+        }
+
+        .mini-title {
+          margin: 0;
+          font-size: 11px;
+          font-weight: 700;
+        }
+
+        .mini-album {
+          margin: 4px 0 0;
+          color: rgba(0, 0, 0, 0.36);
+          font-size: 10px;
+        }
+
+        .mini-actions {
+          gap: 16px;
+        }
+
+        .mobile-browser {
+          position: absolute;
+          left: 19px;
+          right: 19px;
+          bottom: 16px;
+          height: 44px;
+          display: grid;
+          grid-template-columns: 34px 1fr 34px;
+          align-items: center;
+          gap: 10px;
+          color: rgba(0, 0, 0, 0.48);
+        }
+
+        .address {
+          height: 34px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 999px;
+          background: rgba(0, 0, 0, 0.06);
+          color: rgba(0, 0, 0, 0.72);
+          font-size: 11px;
+        }
+
+        .tuning-panel {
+          left: 50%;
+          right: auto;
+          bottom: 10px;
+          transform: translateX(-50%);
+        }
+
+        .tuning-panel[open] {
+          width: min(276px, calc(100vw - 28px));
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="scene">
+      <div class="landscape" aria-hidden="true"></div>
+      <div class="scrim" aria-hidden="true"></div>
+
+      <section class="browser" aria-label="Song cover index prototype">
+        <div class="browser-bar">
+          <div class="window-tools" aria-hidden="true">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <svg width="13" height="13" viewBox="0 0 16 16"><path fill="currentColor" d="M4 3.5h8v9H4zM5 5v6h6V5z"/></svg>
+            <svg width="13" height="13" viewBox="0 0 16 16"><path fill="currentColor" d="m6.9 8 3.2-3.2-1-1L4.8 8l4.3 4.2 1-1z"/></svg>
+          </div>
+          <div class="browser-center" aria-hidden="true">
+            <svg width="12" height="12" viewBox="0 0 16 16"><path fill="currentColor" d="M5.5 7V5.5a2.5 2.5 0 0 1 5 0V7H12v6H4V7zm1 0h3V5.5a1.5 1.5 0 0 0-3 0z"/></svg>
+            <span>songindex.local</span>
+          </div>
+          <div class="browser-actions" aria-hidden="true">
+            <svg width="13" height="13" viewBox="0 0 16 16"><path fill="currentColor" d="M8 3a5 5 0 1 0 4.55 2.93l1.2-.72A6.4 6.4 0 1 1 8 1.6zm.7-1.2v4.4h4.4v1.4H7.3V1.8z"/></svg>
+            <svg width="13" height="13" viewBox="0 0 16 16"><path fill="currentColor" d="M7.3 3h1.4v4.3H13v1.4H8.7V13H7.3V8.7H3V7.3h4.3z"/></svg>
+            <svg width="13" height="13" viewBox="0 0 16 16"><path fill="currentColor" d="M5 2h9v9h-2V4H5zm-3 3h9v9H2z"/></svg>
+          </div>
+
+          <div class="phone-status" aria-hidden="true">
+            <span>6:52</span>
+            <span class="island"></span>
+            <span class="status-icons">
+              <svg width="15" height="15" viewBox="0 0 16 16"><path fill="currentColor" d="M1 9h2v5H1zm4-3h2v8H5zm4-3h2v11H9zm4-2h2v13h-2z"/></svg>
+              <svg width="17" height="17" viewBox="0 0 16 16"><path fill="currentColor" d="M8 4.2a8.8 8.8 0 0 1 6.2 2.6L13 8a7.1 7.1 0 0 0-10 0L1.8 6.8A8.8 8.8 0 0 1 8 4.2m0 3.1c1.6 0 3 .6 4.1 1.7L10.9 10a4 4 0 0 0-5.8 0L3.9 9A5.8 5.8 0 0 1 8 7.3m0 3.1c.7 0 1.3.3 1.8.7L8 12.9 6.2 11c.5-.4 1.1-.7 1.8-.7"/></svg>
+            </span>
+          </div>
+        </div>
+
+        <div class="app">
+          <header class="app-header">
+            <div class="brand">songindex <span>0.0.1</span></div>
+            <div class="app-tools" aria-hidden="true">
+              <svg width="14" height="14" viewBox="0 0 16 16"><path fill="currentColor" d="M6.7 2a4.7 4.7 0 1 1 0 9.4A4.7 4.7 0 0 1 6.7 2m0 1.3a3.4 3.4 0 1 0 0 6.8 3.4 3.4 0 0 0 0-6.8m3.5 7.8 3.3 3.2-.9.9-3.3-3.2z"/></svg>
+              <svg width="14" height="14" viewBox="0 0 16 16"><path fill="currentColor" d="M4 3h8v1.3H4zm2.3 4.3h3.4v1.4H6.3zM2.5 12h11v1.3h-11z"/></svg>
+              <svg width="14" height="14" viewBox="0 0 16 16"><path fill="currentColor" d="M3 4h10v1.4H3zm0 3.3h7v1.4H3zm0 3.3h4.5V12H3z"/></svg>
+            </div>
+          </header>
+
+          <section class="carousel-wrap" aria-label="Scrollable song covers">
+            <div class="cover-stage" id="cover-stage"></div>
+            <svg class="cursor-hand" viewBox="0 0 20 20" aria-hidden="true">
+              <path fill="white" stroke="rgba(0,0,0,.55)" stroke-width="1" d="M8.4 16.8c-1.1-.8-2.9-2.8-3.7-4.1-.5-.8.6-1.5 1.3-.8l.9.8V5.1c0-.5.4-.9.9-.9s.9.4.9.9v4.2-.9c0-.5.4-.9.9-.9s.9.4.9.9v1-.7c0-.5.4-.9.9-.9s.9.4.9.9v1.1-.5c0-.5.4-.8.9-.8s.9.4.9.9v3.4c0 2.1-1.7 4-3.9 4z"/>
+            </svg>
+          </section>
+
+          <section class="song-info" aria-live="polite">
+            <h1 class="song-title" id="song-title"></h1>
+            <p class="song-album" id="song-album"></p>
+          </section>
+
+          <div
+            class="index-scroll"
+            id="index-scroll"
+            role="slider"
+            aria-label="Scroll song covers"
+            aria-valuemin="1"
+            aria-valuemax="10"
+            tabindex="0"
+          >
+            <span id="scroll-current">01</span>
+            <div class="index-track" id="index-track">
+              <div class="index-ticks" id="index-ticks" aria-hidden="true"></div>
+              <div class="index-fill" id="index-fill"></div>
+              <div class="index-thumb" id="index-thumb"></div>
+            </div>
+            <span id="scroll-total">10</span>
+          </div>
+
+          <div class="mobile-player" aria-hidden="true">
+            <div class="mini-cover" id="mini-cover"></div>
+            <div>
+              <p class="mini-title" id="mini-title"></p>
+              <p class="mini-album" id="mini-album"></p>
+            </div>
+            <div class="mini-actions">
+              <svg width="14" height="14" viewBox="0 0 16 16"><path fill="currentColor" d="M5 3h2v10H5zm4 0h2v10H9z"/></svg>
+              <svg width="15" height="15" viewBox="0 0 16 16"><path fill="currentColor" d="M3 8a1.4 1.4 0 1 1 2.8 0A1.4 1.4 0 0 1 3 8m3.6 0a1.4 1.4 0 1 1 2.8 0 1.4 1.4 0 0 1-2.8 0m3.6 0A1.4 1.4 0 1 1 13 8a1.4 1.4 0 0 1-2.8 0"/></svg>
+            </div>
+          </div>
+
+          <div class="mobile-browser" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 16 16"><path fill="currentColor" d="m6.9 8 3.2-3.2-1-1L4.8 8l4.3 4.2 1-1z"/></svg>
+            <div class="address">songindex.local</div>
+            <svg width="18" height="18" viewBox="0 0 16 16"><path fill="currentColor" d="M3 8a1.4 1.4 0 1 1 2.8 0A1.4 1.4 0 0 1 3 8m3.6 0a1.4 1.4 0 1 1 2.8 0 1.4 1.4 0 0 1-2.8 0m3.6 0A1.4 1.4 0 1 1 13 8a1.4 1.4 0 0 1-2.8 0"/></svg>
+          </div>
+        </div>
+      </section>
+
+      <details class="tuning-panel" aria-label="Prototype configuration">
+        <summary>
+          <span>Config</span>
+          <output id="config-value">S 130 · D 175</output>
+        </summary>
+        <label for="spacing-control">
+          <span class="tuning-row">
+            <span>Cover spacing</span>
+            <output id="spacing-value">130%</output>
+          </span>
+          <input id="spacing-control" type="range" min="70" max="145" step="1" value="130" />
+        </label>
+        <label for="depth-control">
+          <span class="tuning-row">
+            <span>Cover depth</span>
+            <output id="depth-value">175%</output>
+          </span>
+          <input id="depth-control" type="range" min="50" max="180" step="1" value="175" />
+        </label>
+        <div class="variant-control" aria-label="Scroll bar variation">
+          <span class="tuning-row">
+            <span>Scroll bar</span>
+            <output id="variant-value">Capsule</output>
+          </span>
+          <div class="variant-options" id="variant-options">
+            <button type="button" data-variant="line" aria-pressed="false">Line</button>
+            <button type="button" data-variant="capsule" aria-pressed="true">Capsule</button>
+            <button type="button" data-variant="magnetic" aria-pressed="false">Magnetic</button>
+          </div>
+        </div>
+        <div class="tuning-actions">
+          <button id="config-reset" type="button">Reset</button>
+        </div>
+      </details>
+    </main>
+
+    <script>
+      const songs = [
+        {
+          title: "After Images",
+          album: "Field Notes",
+          year: "2026",
+          producer: "Damian",
+          length: "3:42",
+          cover: "AI",
+          art: "radial-gradient(circle at 24% 20%, #f7d36e 0 16%, transparent 17%), radial-gradient(circle at 72% 72%, #392216 0 22%, transparent 23%), linear-gradient(135deg, #7f4f2e, #f0b95c 45%, #21170f)"
+        },
+        {
+          title: "Small Windows",
+          album: "Interface Songs",
+          year: "2025",
+          producer: "North",
+          length: "2:58",
+          cover: "SW",
+          art: "linear-gradient(90deg, rgba(255,255,255,.28) 0 16%, transparent 16% 32%, rgba(255,255,255,.18) 32% 48%, transparent 48%), linear-gradient(145deg, #d7d3c4, #5e7165 48%, #141816)"
+        },
+        {
+          title: "Soft Chrome",
+          album: "Recent Listens",
+          year: "2026",
+          producer: "Moss",
+          length: "3:13",
+          cover: "SC",
+          art: "radial-gradient(circle at 46% 44%, #f3f3f0 0 20%, #8a8e87 21% 26%, transparent 27%), linear-gradient(125deg, #151515, #70756d 48%, #efefea)"
+        },
+        {
+          title: "Purple Static",
+          album: "Late Index",
+          year: "2024",
+          producer: "Signal",
+          length: "4:01",
+          cover: "PS",
+          art: "radial-gradient(circle at 70% 26%, rgba(255,255,255,.6) 0 8%, transparent 9%), radial-gradient(circle at 34% 68%, #35105d 0 18%, transparent 19%), linear-gradient(135deg, #ff3aaa, #5911a5 52%, #17102a)"
+        },
+        {
+          title: "Garden CD",
+          album: "Windows Open",
+          year: "2023",
+          producer: "Leaf",
+          length: "2:46",
+          cover: "GD",
+          art: "radial-gradient(circle at 50% 50%, #f5f5ef 0 15%, #92a69d 16% 22%, transparent 23%), linear-gradient(90deg, #f8f7ed 0 62%, #ed4d4d 63% 82%, #f8f7ed 83%)"
+        },
+        {
+          title: "Night Tabs",
+          album: "Browser Music",
+          year: "2022",
+          producer: "Tabby",
+          length: "3:29",
+          cover: "NT",
+          art: "linear-gradient(90deg, rgba(255,255,255,.2) 0 10%, transparent 10% 20%), linear-gradient(145deg, #1b1c20, #4e4e56 45%, #0f1014)"
+        },
+        {
+          title: "Satin Path",
+          album: "Tiny Motion",
+          year: "2026",
+          producer: "Cedar",
+          length: "3:07",
+          cover: "SP",
+          art: "radial-gradient(circle at 76% 25%, #ffe6ae 0 18%, transparent 19%), linear-gradient(135deg, #282315, #f4d28f 56%, #77624b)"
+        },
+        {
+          title: "Blur Runners",
+          album: "Index 2",
+          year: "2024",
+          producer: "Axis",
+          length: "2:51",
+          cover: "BR",
+          art: "linear-gradient(115deg, rgba(255,255,255,.38), transparent 38%), radial-gradient(circle at 22% 72%, #86cff9 0 13%, transparent 14%), linear-gradient(135deg, #263f4a, #ece6d6 52%, #171b24)"
+        },
+        {
+          title: "Paper Radio",
+          album: "Low Fidelity",
+          year: "2025",
+          producer: "June",
+          length: "3:35",
+          cover: "PR",
+          art: "repeating-linear-gradient(0deg, rgba(0,0,0,.14) 0 2px, transparent 2px 12px), linear-gradient(145deg, #f2f0e8, #b9b2a2 46%, #302c28)"
+        },
+        {
+          title: "Final Bloom",
+          album: "Seasonal",
+          year: "2026",
+          producer: "Green",
+          length: "3:20",
+          cover: "FB",
+          art: "radial-gradient(circle at 62% 42%, #ffe56f 0 12%, transparent 13%), radial-gradient(circle at 28% 70%, #ffffff 0 10%, transparent 11%), linear-gradient(135deg, #0f381d, #7cab46 50%, #172217)"
+        }
+      ];
+
+      const stage = document.querySelector("#cover-stage");
+      const slider = document.querySelector("#index-scroll");
+      const track = document.querySelector("#index-track");
+      const tickRail = document.querySelector("#index-ticks");
+      const thumb = document.querySelector("#index-thumb");
+      const fill = document.querySelector("#index-fill");
+      const current = document.querySelector("#scroll-current");
+      const total = document.querySelector("#scroll-total");
+      const title = document.querySelector("#song-title");
+      const album = document.querySelector("#song-album");
+      const miniCover = document.querySelector("#mini-cover");
+      const miniTitle = document.querySelector("#mini-title");
+      const miniAlbum = document.querySelector("#mini-album");
+      const spacingControl = document.querySelector("#spacing-control");
+      const spacingValue = document.querySelector("#spacing-value");
+      const depthControl = document.querySelector("#depth-control");
+      const depthValue = document.querySelector("#depth-value");
+      const configValue = document.querySelector("#config-value");
+      const configReset = document.querySelector("#config-reset");
+      const variantOptions = document.querySelector("#variant-options");
+      const variantButtons = Array.from(variantOptions.querySelectorAll("[data-variant]"));
+      const variantValue = document.querySelector("#variant-value");
+
+      let progress = 0.28;
+      let targetProgress = progress;
+      let spacingScale = 1;
+      let depthScale = 1;
+      let scrollVariant = "capsule";
+      let activeIndex = -1;
+      let isDragging = false;
+      let isSliderDragging = false;
+      let dragStartX = 0;
+      let dragStartProgress = 0;
+      let progressFrame = 0;
+      let lastFrameTime = 0;
+      let snapTimer = 0;
+
+      const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+      const ease = (value) => 1 - Math.pow(1 - value, 3);
+      const format = (index) => String(index + 1).padStart(2, "0");
+      const params = new URLSearchParams(window.location.search);
+      const BASE_SPACING_SCALE = 1.3;
+      const BASE_DEPTH_SCALE = 1.75;
+      const BASE_SCROLL_VARIANT = "capsule";
+      const SPACING_STORAGE_KEY = "song-cover-spacing-scale-v3";
+      const DEPTH_STORAGE_KEY = "song-cover-depth-scale-v2";
+      const VARIANT_STORAGE_KEY = "song-cover-scrollbar-variant-v1";
+      const VARIANT_LABELS = {
+        line: "Line",
+        capsule: "Capsule",
+        magnetic: "Magnetic"
+      };
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+      function readInitialSpacingScale() {
+        const spacingParam = params.get("spacing");
+        const fromUrl = Number(spacingParam);
+        if (spacingParam !== null && Number.isFinite(fromUrl)) return fromUrl;
+
+        const storedSpacing = localStorage.getItem(SPACING_STORAGE_KEY);
+        const fromStorage = Number(storedSpacing);
+        if (storedSpacing !== null && Number.isFinite(fromStorage)) return fromStorage;
+
+        return BASE_SPACING_SCALE;
+      }
+
+      function readInitialDepthScale() {
+        const depthParam = params.get("depth");
+        const fromUrl = Number(depthParam);
+        if (depthParam !== null && Number.isFinite(fromUrl)) return fromUrl;
+
+        const storedDepth = localStorage.getItem(DEPTH_STORAGE_KEY);
+        const fromStorage = Number(storedDepth);
+        if (storedDepth !== null && Number.isFinite(fromStorage)) return fromStorage;
+
+        return BASE_DEPTH_SCALE;
+      }
+
+      function readInitialVariant() {
+        const variantParam = params.get("bar");
+        if (variantParam in VARIANT_LABELS) return variantParam;
+
+        const storedVariant = localStorage.getItem(VARIANT_STORAGE_KEY);
+        if (storedVariant in VARIANT_LABELS) return storedVariant;
+
+        return BASE_SCROLL_VARIANT;
+      }
+
+      function updateConfigSummary() {
+        configValue.textContent = `S ${Math.round(spacingScale * 100)} · D ${Math.round(depthScale * 100)} · ${VARIANT_LABELS[scrollVariant]}`;
+      }
+
+      total.textContent = format(songs.length - 1);
+      slider.setAttribute("aria-valuemax", String(songs.length));
+
+      stage.innerHTML = songs
+        .map(
+          (song, index) => `
+            <button class="cover" type="button" data-index="${index}" style="--art: ${song.art}" aria-label="${song.title}">
+              <span class="cover-title">${song.cover}</span>
+            </button>
+          `
+        )
+        .join("");
+
+      const covers = Array.from(document.querySelectorAll(".cover"));
+      tickRail.innerHTML = songs.map(() => "<span></span>").join("");
+      const ticks = Array.from(tickRail.querySelectorAll("span"));
+
+      function setDetails(index) {
+        if (index === activeIndex) return;
+        activeIndex = index;
+        const song = songs[index];
+        title.textContent = song.title;
+        album.textContent = song.album;
+        miniTitle.textContent = song.title;
+        miniAlbum.textContent = song.album;
+        miniCover.style.setProperty("--mini-art", song.art);
+        current.textContent = format(index);
+        slider.setAttribute("aria-valuenow", String(index + 1));
+        slider.setAttribute("aria-valuetext", song.title);
+      }
+
+      function paint() {
+        const scaled = progress * (songs.length - 1);
+        const nearest = clamp(Math.round(scaled), 0, songs.length - 1);
+        const percent = progress * 100;
+        const mobile = window.innerWidth <= 760;
+        const spacing = (mobile ? 104 : 142) * spacingScale;
+
+        setDetails(nearest);
+        fill.style.width = `${percent}%`;
+        thumb.style.left = `${percent}%`;
+        thumb.style.transform = `translate(${-percent}%, -50%)`;
+        ticks.forEach((tick, index) => {
+          const tickProgress = index / (songs.length - 1);
+          tick.classList.toggle("is-active", tickProgress <= progress + 0.001);
+          tick.classList.toggle("is-current", index === nearest);
+        });
+
+        covers.forEach((cover, index) => {
+          const offset = index - scaled;
+          const distance = Math.abs(offset);
+          const influence = ease(clamp(1 - distance, 0, 1));
+          const side = Math.sign(offset);
+          const depthPull = Math.min(distance, 3.2) * 18 * depthScale;
+          const angleAmount = distance < 0.14 ? 0 : (9 + Math.min(distance, 2.7) * 8.8) * depthScale;
+          const x = offset * spacing;
+          const y = mobile ? distance * 4 : distance * 3;
+          const z = influence * (mobile ? 44 : 54) * depthScale - depthPull;
+          const scale = 0.78 + influence * 0.275 - Math.min(distance, 3) * 0.012;
+          const rot = clamp(side * -angleAmount, -52, 52);
+          const opacity = clamp(1.12 - distance * 0.16, 0.18, 1);
+          const blur = Math.max(0, distance - 2.3) * 1.1;
+
+          cover.style.setProperty("--x", `${x}px`);
+          cover.style.setProperty("--y", `${y}px`);
+          cover.style.setProperty("--z", `${z}px`);
+          cover.style.setProperty("--scale", scale.toFixed(4));
+          cover.style.setProperty("--rot", `${rot.toFixed(3)}deg`);
+          cover.style.setProperty("--opacity", opacity.toFixed(4));
+          cover.style.setProperty("--blur", `${blur.toFixed(3)}px`);
+          cover.style.zIndex = String(index === nearest ? 220 : 100 - Math.round(distance * 10));
+          cover.classList.toggle("is-active", index === nearest);
+        });
+      }
+
+      function updateVariantControl() {
+        slider.dataset.variant = scrollVariant;
+        variantValue.textContent = VARIANT_LABELS[scrollVariant];
+        variantButtons.forEach((button) => {
+          button.setAttribute("aria-pressed", String(button.dataset.variant === scrollVariant));
+        });
+        updateConfigSummary();
+      }
+
+      function setScrollVariant(nextVariant, persist = true) {
+        scrollVariant = nextVariant in VARIANT_LABELS ? nextVariant : BASE_SCROLL_VARIANT;
+        updateVariantControl();
+
+        if (persist) {
+          localStorage.setItem(VARIANT_STORAGE_KEY, scrollVariant);
+        }
+      }
+
+      function startProgressAnimation() {
+        if (progressFrame) return;
+        slider.classList.add("is-settling");
+        lastFrameTime = 0;
+        progressFrame = requestAnimationFrame(animateProgress);
+      }
+
+      function animateProgress(timestamp) {
+        if (!lastFrameTime) lastFrameTime = timestamp;
+        const deltaTime = Math.min(timestamp - lastFrameTime, 32);
+        lastFrameTime = timestamp;
+        const distance = targetProgress - progress;
+        const speed = isSliderDragging ? 34 : scrollVariant === "magnetic" ? 20 : 16;
+        const pull = 1 - Math.exp((-speed * deltaTime) / 1000);
+
+        progress += distance * pull;
+
+        if (Math.abs(distance) < 0.0008) {
+          progress = targetProgress;
+          paint();
+          progressFrame = 0;
+          lastFrameTime = 0;
+          slider.classList.remove("is-settling");
+          return;
+        }
+
+        paint();
+        progressFrame = requestAnimationFrame(animateProgress);
+      }
+
+      function clearSnapTimer() {
+        if (!snapTimer) return;
+        window.clearTimeout(snapTimer);
+        snapTimer = 0;
+      }
+
+      function setProgress(nextProgress, options = {}) {
+        const { immediate = false } = options;
+        clearSnapTimer();
+        targetProgress = clamp(nextProgress, 0, 1);
+
+        if (immediate || reduceMotion.matches) {
+          if (progressFrame) {
+            cancelAnimationFrame(progressFrame);
+            progressFrame = 0;
+            lastFrameTime = 0;
+          }
+          progress = targetProgress;
+          slider.classList.remove("is-settling");
+          paint();
+          return;
+        }
+
+        startProgressAnimation();
+      }
+
+      function setSpacingScale(nextScale, persist = true) {
+        spacingScale = clamp(nextScale, 0.7, 1.45);
+        spacingControl.value = String(Math.round(spacingScale * 100));
+        spacingValue.textContent = `${Math.round(spacingScale * 100)}%`;
+        updateConfigSummary();
+
+        if (persist) {
+          localStorage.setItem(SPACING_STORAGE_KEY, spacingScale.toFixed(2));
+        }
+
+        paint();
+      }
+
+      function setDepthScale(nextScale, persist = true) {
+        depthScale = clamp(nextScale, 0.5, 1.8);
+        depthControl.value = String(Math.round(depthScale * 100));
+        depthValue.textContent = `${Math.round(depthScale * 100)}%`;
+        updateConfigSummary();
+
+        if (persist) {
+          localStorage.setItem(DEPTH_STORAGE_KEY, depthScale.toFixed(2));
+        }
+
+        paint();
+      }
+
+      function setIndex(index, options = {}) {
+        setProgress(clamp(index, 0, songs.length - 1) / (songs.length - 1), options);
+      }
+
+      function snapToNearest() {
+        const nearest = Math.round(targetProgress * (songs.length - 1));
+        setIndex(nearest);
+      }
+
+      function scheduleMagneticSnap() {
+        if (scrollVariant !== "magnetic") return;
+        clearSnapTimer();
+        snapTimer = window.setTimeout(() => {
+          snapTimer = 0;
+          snapToNearest();
+        }, 140);
+      }
+
+      function progressFromX(clientX) {
+        const rect = track.getBoundingClientRect();
+        return clamp((clientX - rect.left) / rect.width, 0, 1);
+      }
+
+      slider.addEventListener("pointerdown", (event) => {
+        isSliderDragging = true;
+        slider.classList.add("is-dragging");
+        slider.setPointerCapture(event.pointerId);
+        setProgress(progressFromX(event.clientX));
+      });
+
+      slider.addEventListener("pointermove", (event) => {
+        if (!slider.hasPointerCapture(event.pointerId)) return;
+        setProgress(progressFromX(event.clientX));
+      });
+
+      function stopSliderDrag(event) {
+        if (!isSliderDragging) return;
+        isSliderDragging = false;
+        slider.classList.remove("is-dragging");
+        if (slider.hasPointerCapture(event.pointerId)) {
+          slider.releasePointerCapture(event.pointerId);
+        }
+        if (scrollVariant === "magnetic") {
+          snapToNearest();
+        }
+      }
+
+      slider.addEventListener("pointerup", stopSliderDrag);
+      slider.addEventListener("pointercancel", stopSliderDrag);
+
+      stage.addEventListener("pointerdown", (event) => {
+        isDragging = true;
+        dragStartX = event.clientX;
+        dragStartProgress = progress;
+        stage.classList.add("is-dragging");
+        stage.setPointerCapture(event.pointerId);
+      });
+
+      stage.addEventListener("pointermove", (event) => {
+        if (!isDragging) return;
+        const delta = dragStartX - event.clientX;
+        setProgress(dragStartProgress + delta / (window.innerWidth <= 760 ? 760 : 980), { immediate: true });
+      });
+
+      function stopStageDrag(event) {
+        if (!isDragging) return;
+        isDragging = false;
+        stage.classList.remove("is-dragging");
+        if (stage.hasPointerCapture(event.pointerId)) {
+          stage.releasePointerCapture(event.pointerId);
+        }
+      }
+
+      stage.addEventListener("pointerup", stopStageDrag);
+      stage.addEventListener("pointercancel", stopStageDrag);
+
+      stage.addEventListener(
+        "wheel",
+        (event) => {
+          event.preventDefault();
+          setProgress(targetProgress + (event.deltaY + event.deltaX) / 1800);
+          scheduleMagneticSnap();
+        },
+        { passive: false }
+      );
+
+      covers.forEach((cover) => {
+        cover.addEventListener("click", () => {
+          setIndex(Number(cover.dataset.index));
+        });
+      });
+
+      slider.addEventListener("keydown", (event) => {
+        const step = event.shiftKey ? 1 / ((songs.length - 1) * 4) : 1 / (songs.length - 1);
+        if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+          event.preventDefault();
+          setProgress(targetProgress + step);
+        } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+          event.preventDefault();
+          setProgress(targetProgress - step);
+        } else if (event.key === "Home") {
+          event.preventDefault();
+          setProgress(0);
+        } else if (event.key === "End") {
+          event.preventDefault();
+          setProgress(1);
+        }
+      });
+
+      spacingControl.addEventListener("input", () => {
+        setSpacingScale(Number(spacingControl.value) / 100);
+      });
+
+      depthControl.addEventListener("input", () => {
+        setDepthScale(Number(depthControl.value) / 100);
+      });
+
+      variantOptions.addEventListener("click", (event) => {
+        if (!(event.target instanceof Element)) return;
+        const button = event.target.closest("[data-variant]");
+        if (!button || !variantOptions.contains(button)) return;
+        setScrollVariant(button.dataset.variant);
+        if (scrollVariant === "magnetic") {
+          snapToNearest();
+        }
+      });
+
+      configReset.addEventListener("click", () => {
+        localStorage.removeItem(SPACING_STORAGE_KEY);
+        localStorage.removeItem(DEPTH_STORAGE_KEY);
+        localStorage.removeItem(VARIANT_STORAGE_KEY);
+        setSpacingScale(BASE_SPACING_SCALE, false);
+        setDepthScale(BASE_DEPTH_SCALE, false);
+        setScrollVariant(BASE_SCROLL_VARIANT, false);
+      });
+
+      window.addEventListener("resize", paint);
+
+      const previewProgress = Number(params.get("p"));
+      if (Number.isFinite(previewProgress)) {
+        progress = clamp(previewProgress, 0, 1);
+      }
+      targetProgress = progress;
+      setScrollVariant(readInitialVariant(), false);
+      setSpacingScale(readInitialSpacingScale(), false);
+      setDepthScale(readInitialDepthScale(), false);
+      paint();
+    </script>
+  </body>
+</html>

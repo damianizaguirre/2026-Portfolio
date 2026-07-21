@@ -21,3 +21,4 @@ build/
 # Local dev-only artifacts (never push)
 certificates/
 screenshots/
+.env*
