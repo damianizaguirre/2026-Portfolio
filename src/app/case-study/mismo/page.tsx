@@ -5,6 +5,7 @@ import styles from "./mismo-case-study.module.css";
 
 const frameWidth = 1920;
 const frameHeight = 6320;
+const rulerActivationRatio = 0.18;
 
 const rulerTicks = [
   { y: 5, type: "section", label: "Overview", section: 0, frameY: 1112 },
@@ -27,6 +28,10 @@ const rulerTicks = [
 ];
 
 const sectionLabels = ["Overview", "Problem", "Solution", "Research", "Process", "Reflection"];
+const sectionNavItems = sectionLabels.map((label, index) => ({
+  label,
+  tickIndex: rulerTicks.findIndex((tick) => tick.type === "section" && tick.section === index),
+}));
 
 function useFrameScale() {
   const pageRef = useRef<HTMLElement>(null);
@@ -46,7 +51,6 @@ function useFrameScale() {
 
 export default function MismoCaseStudy() {
   const pageRef = useFrameScale();
-  const rulerHideTimerRef = useRef<number | null>(null);
   const [activeTickIndex, setActiveTickIndex] = useState(0);
   const [isRulerCardVisible, setIsRulerCardVisible] = useState(false);
   const activeTick = rulerTicks[activeTickIndex] || rulerTicks[0];
@@ -60,7 +64,7 @@ export default function MismoCaseStudy() {
       const scale = Math.min(window.innerWidth / frameWidth, 1);
       const frameScrollY = window.scrollY / scale;
       const frameViewportHeight = window.innerHeight / scale;
-      const readingY = Math.min(frameHeight, frameScrollY + frameViewportHeight * 0.34);
+      const readingY = Math.min(frameHeight, frameScrollY + frameViewportHeight * rulerActivationRatio);
       let nextIndex = 0;
 
       rulerTicks.forEach((tick, index) => {
@@ -94,32 +98,31 @@ export default function MismoCaseStudy() {
     };
   }, []);
 
-  useEffect(() => {
-    return () => {
-      if (rulerHideTimerRef.current) {
-        window.clearTimeout(rulerHideTimerRef.current);
-      }
-    };
-  }, []);
-
   const showRulerCard = () => {
-    if (rulerHideTimerRef.current) {
-      window.clearTimeout(rulerHideTimerRef.current);
-      rulerHideTimerRef.current = null;
-    }
-
     setIsRulerCardVisible(true);
   };
 
-  const queueRulerCardHide = () => {
-    if (rulerHideTimerRef.current) {
-      window.clearTimeout(rulerHideTimerRef.current);
+  const hideRulerCard = () => {
+    setIsRulerCardVisible(false);
+  };
+
+  const scrollToRulerSection = (tickIndex: number) => {
+    const tick = rulerTicks[tickIndex];
+
+    if (!tick) {
+      return;
     }
 
-    rulerHideTimerRef.current = window.setTimeout(() => {
-      setIsRulerCardVisible(false);
-      rulerHideTimerRef.current = null;
-    }, 1000);
+    const scale = Math.min(window.innerWidth / frameWidth, 1);
+    const frameViewportHeight = window.innerHeight / scale;
+    const nextScrollY = Math.max(0, (tick.frameY - frameViewportHeight * rulerActivationRatio) * scale);
+
+    setActiveTickIndex(tickIndex);
+    showRulerCard();
+    window.scrollTo({
+      top: nextScrollY,
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+    });
   };
 
   return (
@@ -138,7 +141,6 @@ export default function MismoCaseStudy() {
           className={styles.ruler}
           aria-hidden="true"
           onPointerEnter={showRulerCard}
-          onPointerLeave={queueRulerCardHide}
         >
           {rulerTicks
             .map((tick, index) => (
@@ -162,12 +164,18 @@ export default function MismoCaseStudy() {
           ].join(" ")}
           aria-hidden={!isRulerCardVisible}
           onPointerEnter={showRulerCard}
-          onPointerLeave={queueRulerCardHide}
+          onPointerLeave={hideRulerCard}
         >
           <ol className={styles.rulerList}>
-            {sectionLabels.map((label, index) => (
-              <li className={activeTick.section === index ? styles.rulerListActive : ""} key={label}>
-                {label}
+            {sectionNavItems.map((item, index) => (
+              <li className={activeTick.section === index ? styles.rulerListActive : ""} key={item.label}>
+                <button
+                  className={styles.rulerListButton}
+                  type="button"
+                  onClick={() => scrollToRulerSection(item.tickIndex)}
+                >
+                  {item.label}
+                </button>
               </li>
             ))}
           </ol>
@@ -176,6 +184,10 @@ export default function MismoCaseStudy() {
 
       <div className={styles.stage}>
         <div className={styles.frame}>
+          <a className={styles.backLink} href="/" aria-label="Back to home">
+            <img className={styles.backIcon} src="/images/mismo/icon-arrow-back-outline.svg" alt="" />
+            <span>Back</span>
+          </a>
           <h1 className={styles.title}>Mismo</h1>
 
           <section className={styles.heroCard} aria-label="Mismo hero preview">

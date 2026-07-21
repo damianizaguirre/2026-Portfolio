@@ -71,6 +71,38 @@
   text-decoration: none;
 }
 
+.backLink {
+  position: absolute;
+  left: 72px;
+  top: 134px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #c4c4c4;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: normal;
+  text-decoration: none;
+}
+
+.backLink:hover,
+.backLink:focus-visible {
+  color: rgba(21, 102, 235, 0.8);
+  outline: none;
+}
+
+.backIcon {
+  display: block;
+  width: 19px;
+  height: 19px;
+}
+
+.backLink:hover .backIcon,
+.backLink:focus-visible .backIcon {
+  --stroke-0: rgba(21, 102, 235, 0.8);
+}
+
 .title {
   position: absolute;
   left: 394px;
@@ -293,6 +325,26 @@
   font-size: 14px;
   font-weight: 400;
   line-height: normal;
+}
+
+.rulerListButton {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  appearance: none;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  line-height: inherit;
+  text-align: left;
+}
+
+.rulerListButton:hover,
+.rulerListButton:focus-visible {
+  color: rgba(21, 102, 235, 0.8);
+  outline: none;
 }
 
 .ruler {
