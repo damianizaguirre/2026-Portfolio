@@ -875,6 +875,141 @@
         font-weight: 300;
       }
 
+      .case-ruler-nav {
+        position: fixed;
+        left: calc(67px * var(--scale));
+        top: calc(173px * var(--scale));
+        width: calc(187px * var(--scale));
+        height: calc(230px * var(--scale));
+        z-index: 90;
+        pointer-events: none;
+      }
+
+      .case-ruler-layer {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 187px;
+        height: 230px;
+        transform: scale(var(--scale));
+        transform-origin: top left;
+      }
+
+      .case-ruler {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 32px;
+        height: 206px;
+        pointer-events: auto;
+      }
+
+      .case-ruler-tick,
+      .case-ruler-active {
+        position: absolute;
+        display: block;
+        border-radius: 999px;
+      }
+
+      .case-ruler-tick {
+        left: 16px;
+        width: 8px;
+        height: 4px;
+        padding: 0;
+        border: 0;
+        appearance: none;
+        background: rgba(17, 24, 39, 0.25);
+        cursor: pointer;
+        transition:
+          background 220ms cubic-bezier(0.22, 1, 0.36, 1),
+          transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+          opacity 220ms cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      .case-ruler-tick[data-kind="section"] {
+        left: 13px;
+        width: 14px;
+        background: rgba(17, 24, 39, 0.5);
+      }
+
+      .case-ruler-tick[data-kind="subsection"] {
+        left: 14.5px;
+        width: 11px;
+        background: rgba(17, 24, 39, 0.38);
+      }
+
+      .case-ruler-tick:hover {
+        opacity: 0.78;
+        transform: scaleX(1.16);
+      }
+
+      .case-ruler-active {
+        left: 5px;
+        top: 5px;
+        width: 22px;
+        height: 4px;
+        background: #1566eb;
+        box-shadow: 0 0 3px rgba(21, 102, 235, 0.5);
+        z-index: 2;
+        pointer-events: none;
+        transition: top 340ms cubic-bezier(0.34, 1.25, 0.64, 1);
+        will-change: top;
+      }
+
+      .case-ruler-popover {
+        position: absolute;
+        left: 67px;
+        top: 0;
+        width: 120px;
+        height: 230px;
+        padding: 21px 19px;
+        border-radius: 10px;
+        background: #ffffff;
+        box-shadow: 0 0 2.5px rgba(0, 0, 0, 0.25);
+        opacity: 0;
+        transform: translateX(-8px) scale(0.985);
+        transform-origin: left center;
+        pointer-events: none;
+        transition:
+          opacity 180ms cubic-bezier(0.22, 1, 0.36, 1),
+          transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      .case-ruler-nav:hover .case-ruler-popover,
+      .case-ruler-nav:focus-within .case-ruler-popover {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+        pointer-events: auto;
+      }
+
+      .case-ruler-popover-list {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        color: #c4c4c4;
+        font-size: 14px;
+        line-height: 1;
+        font-weight: 400;
+      }
+
+      .case-ruler-popover-list li {
+        margin: 0;
+        transition: color 220ms cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      .case-ruler-popover-list li.is-active {
+        color: rgba(21, 102, 235, 0.58);
+      }
+
+      @media (max-width: 700px) {
+        .case-ruler-nav {
+          display: none;
+        }
+      }
+
       @media (prefers-reduced-motion: reduce) {
         .t-morph,
         .t-morph-plus,
@@ -886,7 +1021,11 @@
         .time-digit-current,
         .time-digit-next,
         .project-thumbnail img,
-        .project-thumbnail video {
+        .project-thumbnail video,
+        .case-ruler-tick,
+        .case-ruler-active,
+        .case-ruler-popover,
+        .case-ruler-popover-list li {
           transition: none !important;
           animation: none !important;
         }
@@ -922,6 +1061,24 @@
         <a href="#">Resume</a>
       </nav>
     </header>
+
+    <aside class="case-ruler-nav" aria-label="Case study scroll ruler">
+      <div class="case-ruler-layer">
+        <div class="case-ruler" id="case-ruler" role="presentation">
+          <span class="case-ruler-active" id="case-ruler-active" aria-hidden="true"></span>
+        </div>
+        <div class="case-ruler-popover" aria-hidden="true">
+          <ol class="case-ruler-popover-list" id="case-ruler-popover-list">
+            <li class="is-active">Overview</li>
+            <li>Problem</li>
+            <li>Solution</li>
+            <li>Research</li>
+            <li>Process</li>
+            <li>Reflection</li>
+          </ol>
+        </div>
+      </div>
+    </aside>
 
     <div class="viewport" aria-label="Scaled preview of the Figma frame">
       <main class="figma-frame" aria-label="Home Page Final 2026">
@@ -1088,6 +1245,9 @@
       const musicCard = document.querySelector(".music-card");
       const projectVideos = Array.from(document.querySelectorAll(".project-thumbnail video"));
       const hoverSoundTargets = Array.from(document.querySelectorAll("#nav-morph-toggle, .desktop-links a, .morph-item, .project-card"));
+      const caseRuler = document.querySelector("#case-ruler");
+      const caseRulerActive = document.querySelector("#case-ruler-active");
+      const caseRulerLabels = Array.from(document.querySelectorAll("#case-ruler-popover-list li"));
       const params = new URLSearchParams(window.location.search);
       const centralTimeFormatter = new Intl.DateTimeFormat("en-US", {
         timeZone: "America/Chicago",
@@ -1130,6 +1290,26 @@
       let clickSoftPlayerIndex = 0;
       const clickSoftPlayers = [];
       const hoverSoundLastPlayed = new WeakMap();
+      const caseRulerTicks = [
+        { y: 5, section: 0, kind: "section" },
+        { y: 17, section: 0, kind: "content" },
+        { y: 29, section: 0, kind: "content" },
+        { y: 41, section: 0, kind: "content" },
+        { y: 53, section: 1, kind: "section" },
+        { y: 65, section: 1, kind: "content" },
+        { y: 77, section: 1, kind: "content" },
+        { y: 89, section: 1, kind: "content" },
+        { y: 101, section: 2, kind: "section" },
+        { y: 113, section: 2, kind: "content" },
+        { y: 125, section: 2, kind: "content" },
+        { y: 137, section: 2, kind: "content" },
+        { y: 149, section: 3, kind: "section" },
+        { y: 161, section: 3, kind: "content" },
+        { y: 173, section: 4, kind: "section" },
+        { y: 185, section: 4, kind: "content" },
+        { y: 197, section: 5, kind: "section" },
+      ];
+      let caseRulerScrollFrame = 0;
 
       function syncScale() {
         const nextScale = Math.min(window.innerWidth / frameWidth, 1);
@@ -1143,6 +1323,70 @@
         root.style.setProperty("--scale", String(nextScale));
         root.style.setProperty("--hero-y-offset", `${heroOffset}px`);
         root.style.setProperty("--project-y-offset", `${projectOffset}px`);
+      }
+
+      function renderCaseRulerTicks() {
+        const tickFragment = document.createDocumentFragment();
+
+        caseRulerTicks.forEach((tick, index) => {
+          const button = document.createElement("button");
+          button.className = "case-ruler-tick";
+          button.type = "button";
+          button.dataset.kind = tick.kind === "section" ? "section" : "content";
+          button.dataset.index = String(index);
+          button.style.top = `${tick.y}px`;
+          button.setAttribute("aria-label", `Jump to ${caseRulerLabels[tick.section]?.textContent || "section"}`);
+          tickFragment.appendChild(button);
+        });
+
+        caseRuler.appendChild(tickFragment);
+      }
+
+      function setCaseRulerSection(sectionIndex) {
+        caseRulerLabels.forEach((label, index) => {
+          label.classList.toggle("is-active", index === sectionIndex);
+        });
+      }
+
+      function syncCaseRuler() {
+        caseRulerScrollFrame = 0;
+
+        const scrollMax = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+        const progress = Math.max(0, Math.min(window.scrollY / scrollMax, 1));
+        const tickIndex = Math.round(progress * (caseRulerTicks.length - 1));
+        const tick = caseRulerTicks[tickIndex] || caseRulerTicks[0];
+
+        caseRulerActive.style.top = `${tick.y}px`;
+        setCaseRulerSection(tick.section);
+      }
+
+      function requestCaseRulerSync() {
+        if (caseRulerScrollFrame) {
+          return;
+        }
+
+        caseRulerScrollFrame = window.requestAnimationFrame(syncCaseRuler);
+      }
+
+      function initCaseRuler() {
+        renderCaseRulerTicks();
+        caseRuler.addEventListener("click", (event) => {
+          const tickButton = event.target.closest(".case-ruler-tick");
+
+          if (!tickButton) {
+            return;
+          }
+
+          const tickIndex = Number(tickButton.dataset.index || 0);
+          const progress = tickIndex / Math.max(1, caseRulerTicks.length - 1);
+          const scrollMax = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+
+          window.scrollTo({
+            top: scrollMax * progress,
+            behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+          });
+        });
+        syncCaseRuler();
       }
 
       function initProjectVideos() {
@@ -1995,6 +2239,7 @@
       syncScale();
       initProjectVideos();
       initHoverSounds();
+      initCaseRuler();
       syncTrackTitlePan();
       syncCentralTime();
       initSpotifySync();
@@ -2007,8 +2252,10 @@
       }
       window.addEventListener("resize", () => {
         syncScale();
+        requestCaseRulerSync();
         syncTrackTitlePan();
       });
+      window.addEventListener("scroll", requestCaseRulerSync, { passive: true });
       window.setInterval(syncCentralTime, 1000);
       window.setInterval(updateSpotifyProgress, 1000);
       window.setInterval(syncSpotifyNowPlaying, 15_000);
