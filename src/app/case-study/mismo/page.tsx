@@ -1,0 +1,242 @@
+"use client";
+
+import { useEffect } from "react";
+import { useRef } from "react";
+import styles from "./mismo-case-study.module.css";
+
+const frameWidth = 1920;
+
+const rulerTicks = [
+  { y: 5, type: "active" },
+  { y: 17 },
+  { y: 29 },
+  { y: 41 },
+  { y: 53, type: "mid" },
+  { y: 65 },
+  { y: 77 },
+  { y: 89 },
+  { y: 101, type: "section" },
+  { y: 113 },
+  { y: 125 },
+  { y: 137 },
+  { y: 149, type: "mid" },
+  { y: 161 },
+  { y: 173 },
+  { y: 185 },
+  { y: 197, type: "section" },
+];
+
+function useFrameScale() {
+  const pageRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const syncScale = () => {
+      pageRef.current?.style.setProperty("--scale", String(Math.min(window.innerWidth / frameWidth, 1)));
+    };
+
+    syncScale();
+    window.addEventListener("resize", syncScale);
+    return () => window.removeEventListener("resize", syncScale);
+  }, []);
+
+  return pageRef;
+}
+
+export default function MismoCaseStudy() {
+  const pageRef = useFrameScale();
+
+  return (
+    <main className={styles.page} ref={pageRef} aria-label="Mismo case study">
+      <header className={styles.topNav} aria-label="Top Navigation Bar">
+        <a className={styles.navDot} href="/" aria-label="Home" />
+        <nav className={styles.navLinks} aria-label="Primary navigation">
+          <a href="/">Home</a>
+          <a href="/about">About</a>
+          <a href="/resume">Resume</a>
+        </nav>
+      </header>
+
+      <aside className={styles.rulerNav} aria-label="Case study section ruler">
+        <div className={styles.ruler} aria-hidden="true">
+          {rulerTicks
+            .filter((tick) => tick.type !== "active")
+            .map((tick) => (
+              <span
+                className={[
+                  styles.tick,
+                  tick.type === "section" ? styles.tickSection : "",
+                  tick.type === "mid" ? styles.tickMid : "",
+                ].join(" ")}
+                key={tick.y}
+                style={{ top: tick.y }}
+              />
+            ))}
+          <span className={styles.activeTick} />
+        </div>
+        <div className={styles.rulerCard}>
+          <ol className={styles.rulerList}>
+            <li>Overview</li>
+            <li>Problem</li>
+            <li>Solution</li>
+            <li>Research</li>
+            <li>Process</li>
+            <li>Reflection</li>
+          </ol>
+        </div>
+      </aside>
+
+      <div className={styles.stage}>
+        <div className={styles.frame}>
+          <h1 className={styles.title}>Mismo</h1>
+
+          <section className={styles.heroCard} aria-label="Mismo hero preview">
+            <video
+              className={styles.heroVideo}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="auto"
+              poster="/assets/figma-home/mismo-poster.png"
+            >
+              <source src="/assets/figma-home/mismo-preview.mov" type="video/quicktime" />
+              <source src="/assets/figma-home/mismo-preview-clean-white-60fps.mp4" type="video/mp4" />
+            </video>
+          </section>
+
+          <section className={styles.metaGrid} aria-label="Project details">
+            <p className={styles.metaLabel}>Role</p>
+            <p className={styles.metaLabel}>Timeline</p>
+            <p className={styles.metaLabel}>Team</p>
+            <p className={styles.metaLabel}>Status</p>
+            <p className={styles.metaValue}>Product Designer/Developer</p>
+            <p className={styles.metaValue}>Jan - May 2026</p>
+            <p className={styles.metaValue}>Solo</p>
+            <p className={styles.metaValue}>Shipped</p>
+          </section>
+
+          <p className={styles.sectionKicker} style={{ left: 395, top: 1112 }}>
+            Overview
+          </p>
+          <h2 className={styles.sectionTitle} style={{ left: 395, top: 1143 }}>
+            How can we make note taking more powerful with voice?
+          </h2>
+          <p className={styles.sectionCopy} style={{ left: 395, top: 1198, width: 1216 }}>
+            Over the course of the semester, my goal was to pick, design, and build a working
+            prototype of a digital product.
+          </p>
+
+          <p className={styles.sectionKicker} style={{ left: 395, top: 1322 }}>
+            Problem
+          </p>
+          <h2 className={styles.sectionTitle} style={{ left: 395, top: 1361 }}>
+            Voice memos are where thoughts go to die.
+          </h2>
+
+          <section className={styles.problemGrid} aria-label="Problem details">
+            <h3 className={styles.problemTitle} style={{ left: 0, width: 206 }}>
+              Retrieval is dead
+            </h3>
+            <p className={styles.problemCopy} style={{ left: 0, width: 262 }}>
+              People capture voice memos constantly and never open them again.
+            </p>
+
+            <h3 className={styles.problemTitle} style={{ left: 406, width: 260 }}>
+              User&apos;s job is organizing
+            </h3>
+            <p className={styles.problemCopy} style={{ left: 406, width: 260 }}>
+              The filing, naming, and follow-through still lands on the user.
+            </p>
+
+            <h3 className={styles.problemTitle} style={{ left: 810, width: 321 }}>
+              Spoken reminders evaporate.
+            </h3>
+            <p className={styles.problemCopy} style={{ left: 810, width: 321 }}>
+              The intent is in the audio; no app was acting on it.
+            </p>
+          </section>
+
+          <p className={styles.sectionKicker} style={{ left: 395, top: 1679 }}>
+            Solution
+          </p>
+          <h2 className={styles.sectionTitle} style={{ left: 395, top: 1718, width: 1067 }}>
+            Mismo: your voice converted it into a structured, searchable, and personal thinking
+            space.
+          </h2>
+
+          <div className={styles.emptySlot} style={{ left: 398, top: 1958 }} />
+          <h3 className={styles.featureTitle} style={{ left: 1011, top: 2398 }}>
+            Node Graph
+          </h3>
+          <p className={styles.featureCopy} style={{ left: 1011, top: 2453 }}>
+            A spatial map of your thinking.
+          </p>
+
+          <div className={styles.emptySlot} style={{ left: 398, top: 2554 }} />
+          <h3 className={styles.featureTitle} style={{ left: 1011, top: 2968 }}>
+            Self-organizing pipeline
+          </h3>
+          <p className={styles.featureCopy} style={{ left: 1011, top: 3023, width: 515 }}>
+            Transcribes, summary, picks folder, and extracts reminders.
+          </p>
+
+          <div className={styles.emptySlot} style={{ left: 398, top: 3151 }} />
+          <h3 className={styles.featureTitle} style={{ left: 1011, top: 3565 }}>
+            A memory that compounds
+          </h3>
+          <p className={styles.featureCopy} style={{ left: 1011, top: 3620, width: 515 }}>
+            Personal glossary is kept, learns from every manual re-file, and grows with the user.
+          </p>
+
+          <div className={styles.emptySlot} style={{ left: 398, top: 3714 }} />
+          <h3 className={styles.featureTitle} style={{ left: 1011, top: 4128 }}>
+            An onboarding that proves it
+          </h3>
+          <p className={styles.featureCopy} style={{ left: 1011, top: 4183, width: 515 }}>
+            Pick what you want help with, record a real memo, and see Mismo in action.
+          </p>
+
+          <div className={styles.wideSlot} />
+          <img
+            className={styles.researchIcon}
+            src="/images/mismo/research-app-voice-memos.png"
+            alt=""
+            style={{ left: 592 }}
+          />
+          <img
+            className={styles.researchIcon}
+            src="/images/mismo/research-app-notes.png"
+            alt=""
+            style={{ left: 744 }}
+          />
+
+          <p className={styles.sectionKicker} style={{ left: 395, top: 4871 }}>
+            Research
+          </p>
+          <h2 className={styles.sectionTitle} style={{ left: 395, top: 4902 }}>
+            Nobody loses at capture, everybody misses at what happens after
+          </h2>
+          <p className={styles.sectionCopy} style={{ left: 395, top: 4966, width: 1111 }}>
+            From pre-installed apps, to large market share ones, Mismo moved the product&apos;s
+            center of gravity from the record button to the pipeline behind it.
+          </p>
+
+          <p className={styles.sectionKicker} style={{ left: 401, top: 5226 }}>
+            Process
+          </p>
+          <h2 className={styles.sectionTitle} style={{ left: 401, top: 5257 }}>
+            Exploring and simplifying the users experience
+          </h2>
+          <div className={styles.processBlock} />
+
+          <p className={styles.sectionKicker} style={{ left: 401, top: 6071 }}>
+            Reflection
+          </p>
+          <h2 className={styles.sectionTitle} style={{ left: 401, top: 6102 }}>
+            Insights from designing and building my first 0-1 app
+          </h2>
+        </div>
+      </div>
+    </main>
+  );
+}

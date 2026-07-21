@@ -767,6 +767,10 @@
         height: 594px;
       }
 
+      .project-card[data-href] {
+        cursor: pointer;
+      }
+
       .project-card[data-project="mismo"] {
         left: 112px;
         top: calc(1082px + var(--project-y-offset));
@@ -989,7 +993,15 @@
           </p>
         </section>
 
-        <section class="project-card" data-project="mismo" id="projects" aria-label="Mismo project thumbnail">
+        <section
+          class="project-card"
+          data-project="mismo"
+          data-href="/case-study/mismo"
+          id="projects"
+          role="link"
+          tabindex="0"
+          aria-label="Open Mismo case study"
+        >
           <div class="project-thumbnail">
             <video
               autoplay
@@ -1087,6 +1099,7 @@
       const spotifyStatus = document.querySelector("#spotify-status");
       const musicCard = document.querySelector(".music-card");
       const projectVideos = Array.from(document.querySelectorAll(".project-thumbnail video"));
+      const projectCards = Array.from(document.querySelectorAll(".project-card"));
       const hoverSoundTargets = Array.from(document.querySelectorAll("#nav-morph-toggle, .desktop-links a, .morph-item, .project-card"));
       const params = new URLSearchParams(window.location.search);
       const centralTimeFormatter = new Intl.DateTimeFormat("en-US", {
@@ -1336,6 +1349,28 @@
             }
 
             playNavigationHoverSound(target).catch(() => {});
+          });
+        });
+      }
+
+      function initProjectCardLinks() {
+        projectCards.forEach((card) => {
+          const href = card.dataset.href;
+
+          if (!href) {
+            return;
+          }
+
+          card.addEventListener("click", () => {
+            window.location.href = href;
+          });
+          card.addEventListener("keydown", (event) => {
+            if (event.key !== "Enter" && event.key !== " ") {
+              return;
+            }
+
+            event.preventDefault();
+            window.location.href = href;
           });
         });
       }
@@ -1994,6 +2029,7 @@
       syncScale();
       initProjectVideos();
       initHoverSounds();
+      initProjectCardLinks();
       syncTrackTitlePan();
       syncCentralTime();
       initSpotifySync();
