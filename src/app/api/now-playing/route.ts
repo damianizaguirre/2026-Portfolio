@@ -122,6 +122,37 @@ async function getAccessToken(): Promise<string | null> {
   return cachedAccessToken.token;
 }
 
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+// Spotify's currently-playing endpoint occasionally returns a 204/empty
+// response for a brief moment — often right around a track change, sometimes
+// just API flakiness — even though something is genuinely playing. Treating
+// that single blip as "nothing playing" and falling back to recently-played
+// (the *previous* track) made the card visibly jump backward for one 15s
+// poll before self-correcting. One quick retry filters almost all of that
+// out, since real "nothing playing" states don't clear in under a second.
+async function fetchCurrentlyPlaying(authHeader: { Authorization: string }) {
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const res = await fetch(
+      "https://api.spotify.com/v1/me/player/currently-playing?additional_types=track,episode",
+      { headers: authHeader, cache: "no-store" },
+    );
+
+    if (res.status === 200) {
+      const data = await res.json();
+      if (data?.item) {
+        return data;
+      }
+    }
+
+    if (attempt === 0) {
+      await sleep(350);
+    }
+  }
+
+  return null;
+}
+
 export async function GET() {
   const accessToken = await getAccessToken();
 
@@ -131,30 +162,23 @@ export async function GET() {
 
   const authHeader = { Authorization: `Bearer ${accessToken}` };
 
-  const nowPlayingRes = await fetch(
-    "https://api.spotify.com/v1/me/player/currently-playing?additional_types=track,episode",
-    { headers: authHeader, cache: "no-store" },
-  );
+  const data = await fetchCurrentlyPlaying(authHeader);
 
-  if (nowPlayingRes.status === 200) {
-    const data = await nowPlayingRes.json();
+  if (data?.item) {
+    const payload: NowPlayingPayload = {
+      ok: true,
+      isPlaying: Boolean(data.is_playing),
+      progressMs: data.progress_ms || 0,
+      source: "live",
+      serverTime: Date.now(),
+      ...normalizeTrack(data.item),
+    };
 
-    if (data?.item) {
-      const payload: NowPlayingPayload = {
-        ok: true,
-        isPlaying: Boolean(data.is_playing),
-        progressMs: data.progress_ms || 0,
-        source: "live",
-        serverTime: Date.now(),
-        ...normalizeTrack(data.item),
-      };
-
-      return NextResponse.json(payload, { headers: { "Cache-Control": "no-store" } });
-    }
+    return NextResponse.json(payload, { headers: { "Cache-Control": "no-store" } });
   }
 
-  // Nothing currently playing (204, or a payload with no item) — fall back to
-  // the most recently played track so the card isn't just empty between songs.
+  // Still nothing after a retry — genuinely paused/stopped. Fall back to the
+  // most recently played track so the card isn't just empty between songs.
   const recentRes = await fetch("https://api.spotify.com/v1/me/player/recently-played?limit=1", {
     headers: authHeader,
     cache: "no-store",
