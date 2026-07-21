@@ -302,9 +302,14 @@
   pointer-events: auto;
 }
 
-.ruler:hover + .rulerCard,
-.ruler:focus-within + .rulerCard {
+.rulerCard {
+  visibility: hidden;
+}
+
+.ruler:hover ~ .rulerCard,
+.ruler:focus-within ~ .rulerCard {
   opacity: 1;
+  visibility: visible;
   transform: translateX(0) scale(1);
 }
 
@@ -316,7 +321,7 @@
 }
 
 .tick {
-  left: 16px;
+  left: 5px;
   width: 8px;
   height: 4px;
   background: rgba(17, 24, 39, 0.25);
@@ -327,7 +332,7 @@
 }
 
 .tickSection {
-  left: 13px;
+  left: 5px;
   width: 14px;
   background: rgba(17, 24, 39, 0.5);
 }
