@@ -341,6 +341,36 @@
         border-radius: 12.233px;
         object-fit: cover;
         pointer-events: none;
+        background: #f0f0f0;
+      }
+
+      /* Honest loading state: before the first real /api/now-playing response
+         lands, show a neutral pulse instead of a specific placeholder track —
+         a plausible-looking wrong song reads as "broken", a pulse reads as
+         "loading". Stops the moment .is-spotify-live is added. */
+      @keyframes music-card-loading-pulse {
+        0%, 100% { opacity: 0.55; }
+        50% { opacity: 0.9; }
+      }
+
+      .music-card:not(.is-spotify-live) .album-art,
+      .music-card:not(.is-spotify-live) .track-title,
+      .music-card:not(.is-spotify-live) .track-artist,
+      .music-card:not(.is-spotify-live) .progress-track {
+        animation: music-card-loading-pulse 1.6s ease-in-out infinite;
+      }
+
+      .music-card:not(.is-spotify-live) .progress-fill {
+        opacity: 0;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .music-card:not(.is-spotify-live) .album-art,
+        .music-card:not(.is-spotify-live) .track-title,
+        .music-card:not(.is-spotify-live) .track-artist,
+        .music-card:not(.is-spotify-live) .progress-track {
+          animation: none;
+        }
       }
 
       .album-art-next {
@@ -945,17 +975,17 @@
         <section class="music-card" aria-label="Music card">
           <div class="music-card-gradient music-card-gradient-current" id="spotify-gradient-current" aria-hidden="true"></div>
           <div class="music-card-gradient music-card-gradient-next" id="spotify-gradient-next" aria-hidden="true"></div>
-          <img class="album-art album-art-current" id="spotify-album-art" src="./assets/figma-home/music-the-feeling.png" alt="" crossorigin="anonymous" />
+          <img class="album-art album-art-current" id="spotify-album-art" alt="" crossorigin="anonymous" />
           <img class="album-art album-art-next" id="spotify-album-art-next" alt="" crossorigin="anonymous" />
           <div class="song-meta-motion song-meta-current" id="spotify-meta-current">
             <p class="track-title" id="spotify-track-title">
-              <span class="track-title-text" id="spotify-track-title-text">the feeling</span>
+              <span class="track-title-text" id="spotify-track-title-text"></span>
             </p>
-            <p class="track-artist" id="spotify-track-artist">Steve Lacy</p>
+            <p class="track-artist" id="spotify-track-artist"></p>
             <div class="progress-track" aria-hidden="true"></div>
             <div class="progress-fill" id="spotify-progress-fill" aria-hidden="true"></div>
-            <p class="track-time current" id="spotify-progress-current">1:14</p>
-            <p class="track-time duration" id="spotify-progress-duration">3:23</p>
+            <p class="track-time current" id="spotify-progress-current">0:00</p>
+            <p class="track-time duration" id="spotify-progress-duration">0:00</p>
           </div>
           <div class="song-meta-motion song-meta-next" id="spotify-meta-next" aria-hidden="true">
             <p class="track-title">
@@ -967,11 +997,11 @@
             <p class="track-time current" data-song-meta="current"></p>
             <p class="track-time duration" data-song-meta="duration"></p>
           </div>
-          <button class="play-button" type="button" id="spotify-action" aria-label="Connect Spotify">
+          <button class="play-button" type="button" id="spotify-action" aria-label="Spotify">
             <img src="./assets/figma-home/icon-play-bold.svg" alt="" />
             <span class="play-label" id="spotify-action-label">Play</span>
           </button>
-          <p class="spotify-status" id="spotify-status">Connect Spotify to sync</p>
+          <p class="spotify-status" id="spotify-status">Loading…</p>
         </section>
         <section class="time-card" id="central-time-card" aria-label="Current U.S. Central Time" aria-live="polite">
           <p class="time-digit hour-ten" data-time-part="hour-ten" aria-hidden="true">
@@ -1112,7 +1142,7 @@
       let spotifyTrackUrl = "";
       let spotifyPlayback = null;
       const spotifyProgressTrackWidth = 183.74;
-      const spotifyDefaultProgressWidth = 47.595;
+      const spotifyDefaultProgressWidth = 0;
       const spotifyDefaultProgressColors = {
         start: "#38594d",
         mid: "#8c6152",

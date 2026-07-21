@@ -64,7 +64,18 @@ function normalizeTrack(track: SpotifyTrack) {
   };
 }
 
+// Cached in module scope so it survives across requests on a warm serverless
+// instance. Spotify access tokens last an hour — refreshing on every single
+// poll (every page load, plus every 15s while a visitor is on the page) was
+// adding a whole extra network round-trip to Spotify for no reason, which is
+// exactly the kind of delay that turns a brief loading flash into a visible one.
+let cachedAccessToken: { token: string; expiresAt: number } | null = null;
+
 async function getAccessToken(): Promise<string | null> {
+  if (cachedAccessToken && cachedAccessToken.expiresAt > Date.now()) {
+    return cachedAccessToken.token;
+  }
+
   const clientId = process.env.SPOTIFY_CLIENT_ID;
   const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
   const refreshToken = process.env.SPOTIFY_REFRESH_TOKEN;
@@ -97,7 +108,18 @@ async function getAccessToken(): Promise<string | null> {
   }
 
   const data = await response.json();
-  return data.access_token || null;
+
+  if (!data.access_token) {
+    return null;
+  }
+
+  // Trim 60s off the real expiry as safety margin against clock drift/latency.
+  cachedAccessToken = {
+    token: data.access_token,
+    expiresAt: Date.now() + (data.expires_in || 3600) * 1000 - 60_000,
+  };
+
+  return cachedAccessToken.token;
 }
 
 export async function GET() {
