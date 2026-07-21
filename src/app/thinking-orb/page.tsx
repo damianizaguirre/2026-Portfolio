@@ -24,10 +24,8 @@ export default function ThinkingOrbFrame() {
       }}
     >
       <ThinkingOrb
-        state="working"
+        state="listening"
         size={64}
-        theme="light"
-        speed={0.9}
         style={{
           width: "64px",
           height: "64px",
