@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter",
+  --font-sans: var(--font-geist), -apple-system, BlinkMacSystemFont, "SF Pro Display",
     system-ui, sans-serif;
   --color-surface: #f5f5f7;
   --color-surface-alt: #ebebeb;
