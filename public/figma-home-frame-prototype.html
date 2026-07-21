@@ -2004,6 +2004,11 @@
           songMetaTransitionTimer = 0;
           writeCurrentSpotifyMeta(state);
           musicCard.classList.remove("is-meta-transitioning");
+          // writeCurrentSpotifyMeta just painted a static width computed at fetch
+          // time, which is already stale by this 520ms transition. Re-sync from
+          // the live playback clock immediately instead of waiting up to 1s for
+          // the next interval tick, so there's no visible catch-up jump.
+          updateSpotifyProgress();
         }, 520);
       }
 
@@ -2445,6 +2450,12 @@
       }
 
       function updateSpotifyCard(data, options = {}) {
+        // Stamp the instant we actually received this progress_ms from Spotify.
+        // Album art preloading below is a real, unbounded-latency network request —
+        // if we wait until it resolves to start the local progress clock, every new
+        // track's bar starts already behind by however long the image took to load,
+        // and only catches up (visibly jumps) on the next 15s poll.
+        const fetchedAt = Date.now();
         const state = createSpotifyCardState(data);
 
         if (!state) {
@@ -2476,7 +2487,7 @@
             durationMs: state.durationMs,
             progressMs: state.progressMs,
             isPlaying: state.isPlaying,
-            syncedAt: Date.now(),
+            syncedAt: fetchedAt,
           };
           updateSpotifyProgress();
           spotifyActionLabel.textContent = "Play";
