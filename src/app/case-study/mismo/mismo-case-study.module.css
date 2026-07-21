@@ -105,10 +105,24 @@
   --stroke-0: rgba(21, 102, 235, 0.8);
 }
 
+.capstoneLabel {
+  position: absolute;
+  left: 395px;
+  top: 130px;
+  margin: 0;
+  width: 144px;
+  height: 23px;
+  color: #c4c4c4;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: normal;
+  white-space: nowrap;
+}
+
 .title {
   position: absolute;
-  left: 394px;
-  top: 164px;
+  left: 395px;
+  top: 153px;
   margin: 0;
   width: 144px;
   height: 61px;

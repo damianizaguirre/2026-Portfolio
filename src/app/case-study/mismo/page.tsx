@@ -189,6 +189,7 @@ export default function MismoCaseStudy() {
 
       <div className={styles.stage}>
         <div className={styles.frame}>
+          <p className={styles.capstoneLabel}>Capstone 2026</p>
           <h1 className={styles.title}>Mismo</h1>
 
           <section className={styles.heroCard} aria-label="Mismo hero preview">
