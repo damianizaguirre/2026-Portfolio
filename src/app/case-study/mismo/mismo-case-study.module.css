@@ -74,7 +74,7 @@
 .backLink {
   position: fixed;
   left: calc(72px * var(--scale));
-  top: calc(134px * var(--scale));
+  top: calc(164px * var(--scale));
   z-index: 28;
   display: flex;
   align-items: center;
