@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import styles from "./mismo-case-study.module.css";
 
 const frameWidth = 1920;
@@ -33,6 +33,11 @@ const sectionNavItems = sectionLabels.map((label, index) => ({
   tickIndex: rulerTicks.findIndex((tick) => tick.type === "section" && tick.section === index),
 }));
 
+// @soundcn/click-soft, CC0 sound by Kenney.
+const clickSoftSoundDataUri =
+  "data:audio/mpeg;base64,SUQzBAAAAAAAIlRTU0UAAAAOAAADTGF2ZjYyLjMuMTAwAAAAAAAAAAAAAAD/+1DAAAAAAAAAAAAAAAAAAAAAAABJbmZvAAAADwAAAAIAAAJxAKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr//////////////////////////////////////////////////////////////////wAAAABMYXZjNjIuMTEAAAAAAAAAAAAAAAAkBYYAAAAAAAACcU7MYgYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//tQxAAACghZUlTHgAGDlWufHzAAAVWgJg3EszX3mlF95pSk7enve+GBDEMNMg4R8BLACwAsA7BVjjOhDEMQxWKx5EcJwfB/KBiU8/wI7QH+BHaA/ynv6PB8/LgQEMgD78CHO/oGiAIBAQBAYFAA1hDi4z22DmJ7Et+PSEd1f8Y4PmLI5uDYKAWyCmBlSZJ3gAmD0RBEUDS/HKFzC5iZIr/5FTIvE0Yl3/8ipkXi8Yl0u/xEFQVER7/WCoiCoKiL/4VBURPOqgAQuacbblgZh//7UsQEg8aUBv9cMIAgAAA0gAAABIKqErhFDZUNQ7PRK4S8s8r1HiuGlHuSnenrcW9yvO/PcFflep5XqPKfrO9NTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV";
+const clickSoftVolume = 0.576;
+
 function useFrameScale() {
   const pageRef = useRef<HTMLElement>(null);
 
@@ -51,9 +56,85 @@ function useFrameScale() {
 
 export default function MismoCaseStudy() {
   const pageRef = useFrameScale();
+  const clickSoftPlayersRef = useRef<HTMLAudioElement[]>([]);
+  const clickSoftPlayerIndexRef = useRef(0);
+  const hoverSoundLastPlayedRef = useRef(new WeakMap<HTMLElement, number>());
   const [activeTickIndex, setActiveTickIndex] = useState(0);
   const [isRulerCardVisible, setIsRulerCardVisible] = useState(false);
   const activeTick = rulerTicks[activeTickIndex] || rulerTicks[0];
+
+  const getClickSoftPlayer = useCallback(() => {
+    if (!clickSoftPlayersRef.current.length) {
+      for (let index = 0; index < 6; index += 1) {
+        const player = new Audio(clickSoftSoundDataUri);
+        player.preload = "auto";
+        player.volume = clickSoftVolume;
+        clickSoftPlayersRef.current.push(player);
+      }
+    }
+
+    const player = clickSoftPlayersRef.current[clickSoftPlayerIndexRef.current];
+    clickSoftPlayerIndexRef.current = (clickSoftPlayerIndexRef.current + 1) % clickSoftPlayersRef.current.length;
+    return player;
+  }, []);
+
+  const primeClickSoftSound = useCallback(() => {
+    const player = getClickSoftPlayer();
+    const previousVolume = player.volume;
+
+    player.volume = 0;
+    const playPromise = player.play();
+
+    if (!playPromise) {
+      player.pause();
+      player.currentTime = 0;
+      player.volume = previousVolume;
+      return;
+    }
+
+    playPromise
+      .then(() => {
+        player.pause();
+        player.currentTime = 0;
+        player.volume = previousVolume;
+      })
+      .catch(() => {
+        player.volume = previousVolume;
+      });
+  }, [getClickSoftPlayer]);
+
+  const playHoverSound = useCallback((target: HTMLElement) => {
+    const now = performance.now();
+    const lastPlayed = hoverSoundLastPlayedRef.current.get(target) || 0;
+
+    if (now - lastPlayed < 120) {
+      return;
+    }
+
+    hoverSoundLastPlayedRef.current.set(target, now);
+    const player = getClickSoftPlayer();
+    player.volume = clickSoftVolume;
+    player.currentTime = 0;
+    player.play().catch(() => {});
+  }, [getClickSoftPlayer]);
+
+  useEffect(() => {
+    const unlockSound = () => {
+      primeClickSoftSound();
+    };
+
+    document.addEventListener("pointerdown", unlockSound, { passive: true });
+    document.addEventListener("mousedown", unlockSound, { passive: true });
+    document.addEventListener("touchstart", unlockSound, { passive: true });
+    document.addEventListener("keydown", unlockSound);
+
+    return () => {
+      document.removeEventListener("pointerdown", unlockSound);
+      document.removeEventListener("mousedown", unlockSound);
+      document.removeEventListener("touchstart", unlockSound);
+      document.removeEventListener("keydown", unlockSound);
+    };
+  }, [primeClickSoftSound]);
 
   useEffect(() => {
     let animationFrame = 0;
@@ -128,15 +209,25 @@ export default function MismoCaseStudy() {
   return (
     <main className={styles.page} ref={pageRef} aria-label="Mismo case study">
       <header className={styles.topNav} aria-label="Top Navigation Bar">
-        <a className={styles.navDot} href="/" aria-label="Home" />
+        <a
+          className={styles.navDot}
+          href="/"
+          aria-label="Home"
+          onPointerEnter={(event) => playHoverSound(event.currentTarget)}
+        />
         <nav className={styles.navLinks} aria-label="Primary navigation">
-          <a href="/">Home</a>
-          <a href="/about">About</a>
-          <a href="/resume">Resume</a>
+          <a href="/" onPointerEnter={(event) => playHoverSound(event.currentTarget)}>Home</a>
+          <a href="/about" onPointerEnter={(event) => playHoverSound(event.currentTarget)}>About</a>
+          <a href="/resume" onPointerEnter={(event) => playHoverSound(event.currentTarget)}>Resume</a>
         </nav>
       </header>
 
-      <a className={styles.backLink} href="/" aria-label="Back to home">
+      <a
+        className={styles.backLink}
+        href="/"
+        aria-label="Back to home"
+        onPointerEnter={(event) => playHoverSound(event.currentTarget)}
+      >
         <img className={styles.backIcon} src="/images/mismo/icon-arrow-back-outline.svg" alt="" />
         <span>Back</span>
       </a>
@@ -177,6 +268,7 @@ export default function MismoCaseStudy() {
                 <button
                   className={styles.rulerListButton}
                   type="button"
+                  onPointerEnter={(event) => playHoverSound(event.currentTarget)}
                   onClick={() => scrollToRulerSection(item.tickIndex)}
                 >
                   {item.label}
