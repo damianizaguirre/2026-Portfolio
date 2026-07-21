@@ -1,29 +1,32 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "./mismo-case-study.module.css";
 
 const frameWidth = 1920;
+const frameHeight = 6320;
 
 const rulerTicks = [
-  { y: 5, type: "active", label: "Overview" },
-  { y: 17, type: "content", label: "Overview content" },
-  { y: 29, type: "content", label: "Overview content" },
-  { y: 41, type: "section", label: "Problem" },
-  { y: 53, type: "content", label: "Problem content" },
-  { y: 65, type: "content", label: "Problem content" },
-  { y: 77, type: "section", label: "Solution" },
-  { y: 89, type: "content", label: "Solution content" },
-  { y: 101, type: "content", label: "Solution content" },
-  { y: 113, type: "content", label: "Solution content" },
-  { y: 125, type: "content", label: "Solution content" },
-  { y: 137, type: "section", label: "Research" },
-  { y: 149, type: "content", label: "Research content" },
-  { y: 161, type: "content", label: "Research content" },
-  { y: 173, type: "section", label: "Process" },
-  { y: 185, type: "content", label: "Process content" },
-  { y: 197, type: "section", label: "Reflection" },
+  { y: 5, type: "section", label: "Overview", section: 0, frameY: 1112 },
+  { y: 17, type: "content", label: "Overview content", section: 0, frameY: 1198 },
+  { y: 29, type: "content", label: "Overview content", section: 0, frameY: 1258 },
+  { y: 41, type: "section", label: "Problem", section: 1, frameY: 1322 },
+  { y: 53, type: "content", label: "Problem content", section: 1, frameY: 1433 },
+  { y: 65, type: "content", label: "Problem content", section: 1, frameY: 1477 },
+  { y: 77, type: "section", label: "Solution", section: 2, frameY: 1679 },
+  { y: 89, type: "content", label: "Solution content", section: 2, frameY: 1958 },
+  { y: 101, type: "content", label: "Solution content", section: 2, frameY: 2554 },
+  { y: 113, type: "content", label: "Solution content", section: 2, frameY: 3151 },
+  { y: 125, type: "content", label: "Solution content", section: 2, frameY: 3714 },
+  { y: 137, type: "section", label: "Research", section: 3, frameY: 4871 },
+  { y: 149, type: "content", label: "Research content", section: 3, frameY: 4966 },
+  { y: 161, type: "content", label: "Research content", section: 3, frameY: 5060 },
+  { y: 173, type: "section", label: "Process", section: 4, frameY: 5226 },
+  { y: 185, type: "content", label: "Process content", section: 4, frameY: 5332 },
+  { y: 197, type: "section", label: "Reflection", section: 5, frameY: 6071 },
 ];
+
+const sectionLabels = ["Overview", "Problem", "Solution", "Research", "Process", "Reflection"];
 
 function useFrameScale() {
   const pageRef = useRef<HTMLElement>(null);
@@ -43,6 +46,51 @@ function useFrameScale() {
 
 export default function MismoCaseStudy() {
   const pageRef = useFrameScale();
+  const [activeTickIndex, setActiveTickIndex] = useState(0);
+  const activeTick = rulerTicks[activeTickIndex] || rulerTicks[0];
+
+  useEffect(() => {
+    let animationFrame = 0;
+
+    const syncRuler = () => {
+      animationFrame = 0;
+
+      const scale = Math.min(window.innerWidth / frameWidth, 1);
+      const frameScrollY = window.scrollY / scale;
+      const frameViewportHeight = window.innerHeight / scale;
+      const readingY = Math.min(frameHeight, frameScrollY + frameViewportHeight * 0.34);
+      let nextIndex = 0;
+
+      rulerTicks.forEach((tick, index) => {
+        if (readingY >= tick.frameY) {
+          nextIndex = index;
+        }
+      });
+
+      setActiveTickIndex((currentIndex) => currentIndex === nextIndex ? currentIndex : nextIndex);
+    };
+
+    const requestRulerSync = () => {
+      if (animationFrame) {
+        return;
+      }
+
+      animationFrame = window.requestAnimationFrame(syncRuler);
+    };
+
+    syncRuler();
+    window.addEventListener("scroll", requestRulerSync, { passive: true });
+    window.addEventListener("resize", requestRulerSync);
+
+    return () => {
+      if (animationFrame) {
+        window.cancelAnimationFrame(animationFrame);
+      }
+
+      window.removeEventListener("scroll", requestRulerSync);
+      window.removeEventListener("resize", requestRulerSync);
+    };
+  }, []);
 
   return (
     <main className={styles.page} ref={pageRef} aria-label="Mismo case study">
@@ -58,28 +106,27 @@ export default function MismoCaseStudy() {
       <aside className={styles.rulerNav} aria-label="Case study section ruler">
         <div className={styles.ruler} aria-hidden="true">
           {rulerTicks
-            .filter((tick) => tick.type !== "active")
-            .map((tick) => (
+            .map((tick, index) => (
               <span
                 className={[
                   styles.tick,
                   tick.type === "section" ? styles.tickSection : "",
+                  activeTickIndex === index ? styles.tickCurrent : "",
                 ].join(" ")}
                 key={tick.y}
                 style={{ top: tick.y }}
                 title={tick.label}
               />
             ))}
-          <span className={styles.activeTick} />
+          <span className={styles.activeTick} style={{ top: activeTick.y }} />
         </div>
         <div className={styles.rulerCard}>
           <ol className={styles.rulerList}>
-            <li>Overview</li>
-            <li>Problem</li>
-            <li>Solution</li>
-            <li>Research</li>
-            <li>Process</li>
-            <li>Reflection</li>
+            {sectionLabels.map((label, index) => (
+              <li className={activeTick.section === index ? styles.rulerListActive : ""} key={label}>
+                {label}
+              </li>
+            ))}
           </ol>
         </div>
       </aside>

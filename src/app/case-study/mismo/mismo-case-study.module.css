@@ -54,7 +54,7 @@
 
 .navLinks {
   position: absolute;
-  left: 1398px;
+  right: 0;
   top: 17px;
   display: flex;
   gap: 70px;
@@ -293,10 +293,6 @@
   line-height: normal;
 }
 
-.rulerList li:first-child {
-  color: rgba(21, 102, 235, 0.58);
-}
-
 .ruler {
   position: absolute;
   left: 0;
@@ -324,12 +320,21 @@
   width: 8px;
   height: 4px;
   background: rgba(17, 24, 39, 0.25);
+  transition:
+    background-color 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .tickSection {
   left: 13px;
   width: 14px;
   background: rgba(17, 24, 39, 0.5);
+}
+
+.tickCurrent {
+  opacity: 0.62;
+  transform: scaleX(1.08);
 }
 
 .activeTick {
@@ -339,6 +344,20 @@
   height: 4px;
   background: #1566eb;
   box-shadow: 0 0 3px rgba(21, 102, 235, 0.5);
+  transition: top 340ms cubic-bezier(0.34, 1.25, 0.64, 1);
+  will-change: top;
+}
+
+.rulerListActive {
+  color: rgba(21, 102, 235, 0.58);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rulerCard,
+  .tick,
+  .activeTick {
+    transition: none;
+  }
 }
 
 @media (max-width: 700px) {
