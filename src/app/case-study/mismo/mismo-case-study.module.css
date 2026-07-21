@@ -282,7 +282,7 @@
 .rulerNav {
   position: fixed;
   left: calc(67px * var(--scale));
-  top: calc(173px * var(--scale));
+  top: calc(193px * var(--scale));
   width: 187px;
   height: 230px;
   z-index: 25;
