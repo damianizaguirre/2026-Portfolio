@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DamianLLM Card Transition Prototype</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&display=swap");
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+        background: #fbfbfb;
+        color: #000000;
+        font-family:
+          "Geist",
+          -apple-system,
+          BlinkMacSystemFont,
+          "SF Pro Display",
+          Inter,
+          system-ui,
+          sans-serif;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: geometricPrecision;
+      }
+
+      body {
+        display: grid;
+        min-height: 100dvh;
+        place-items: center;
+      }
+
+      .prototype {
+        display: grid;
+        gap: 24px;
+        place-items: center;
+      }
+
+      .damian-llm-card {
+        position: relative;
+        width: 519px;
+        height: 215px;
+        overflow: hidden;
+        border: 1px solid #efefef;
+        border-radius: 10px;
+        background: #ffffff;
+        box-shadow: 0 0 1px rgba(149, 149, 149, 0.25);
+      }
+
+      .layer {
+        position: absolute;
+        inset: 0;
+      }
+
+      .avatar {
+        position: absolute;
+        left: 230px;
+        top: 24px;
+        width: 56px;
+        height: 56px;
+        border-radius: 999px;
+        background: #d9d9d9;
+        transition:
+          opacity 220ms cubic-bezier(0.22, 1, 0.36, 1),
+          transform 440ms cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      .intro-title,
+      .intro-copy,
+      .chat-title,
+      .chat-copy,
+      .prompt-label,
+      .chip-label,
+      .start-label {
+        position: absolute;
+        margin: 0;
+        line-height: normal;
+        letter-spacing: 0;
+        white-space: nowrap;
+      }
+
+      .intro-title {
+        left: 181px;
+        top: 90px;
+        width: 155px;
+        height: 26px;
+        font-size: 20px;
+        font-weight: 600;
+      }
+
+      .intro-copy {
+        left: 103px;
+        top: 121px;
+        width: 313px;
+        height: 18px;
+        color: #5b5b5b;
+        font-size: 14px;
+        font-weight: 400;
+        text-align: center;
+      }
+
+      .chat-title {
+        left: 25px;
+        top: 14px;
+        width: 127px;
+        height: 26px;
+        font-size: 20px;
+        font-weight: 600;
+      }
+
+      .chat-copy {
+        left: 25px;
+        top: 43px;
+        width: 216px;
+        height: 18px;
+        color: #5b5b5b;
+        font-size: 14px;
+        font-weight: 400;
+      }
+
+      .start-button,
+      .input-shell,
+      .send-button,
+      .chip {
+        position: absolute;
+        overflow: hidden;
+        border: 0;
+        padding: 0;
+        font: inherit;
+      }
+
+      .start-button {
+        left: 193px;
+        top: 158px;
+        width: 130px;
+        height: 30px;
+        border-radius: 20px;
+        background: #393939;
+        color: #ffffff;
+        cursor: pointer;
+        transition:
+          left 540ms cubic-bezier(0.34, 1.18, 0.64, 1),
+          top 540ms cubic-bezier(0.34, 1.18, 0.64, 1),
+          width 540ms cubic-bezier(0.34, 1.18, 0.64, 1),
+          background-color 260ms ease,
+          border-color 260ms ease,
+          transform 160ms ease;
+      }
+
+      .start-button:hover,
+      .send-button:hover {
+        transform: scale(0.985);
+      }
+
+      .start-label {
+        left: 19px;
+        top: 6px;
+        width: 93px;
+        height: 18px;
+        font-size: 14px;
+        font-weight: 500;
+        text-align: center;
+        transition:
+          opacity 180ms ease,
+          transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      .input-shell {
+        left: 25px;
+        top: 161px;
+        width: 419px;
+        height: 30px;
+        border: 1px solid #efefef;
+        border-radius: 20px;
+        background: #ffffff;
+        opacity: 0;
+        pointer-events: none;
+        transform: scaleX(0.31);
+        transform-origin: 193px center;
+        transition:
+          opacity 140ms ease,
+          transform 540ms cubic-bezier(0.34, 1.18, 0.64, 1);
+      }
+
+      .prompt-label {
+        left: 18px;
+        top: 5px;
+        width: 216px;
+        height: 18px;
+        color: #a5a5a5;
+        font-size: 14px;
+        font-weight: 400;
+        opacity: 0;
+        transform: translateX(10px);
+        transition:
+          opacity 240ms ease 250ms,
+          transform 380ms cubic-bezier(0.22, 1, 0.36, 1) 230ms;
+      }
+
+      .send-button {
+        left: 458px;
+        top: 161px;
+        width: 30px;
+        height: 30px;
+        border-radius: 999px;
+        background: transparent;
+        cursor: pointer;
+        opacity: 0;
+        transform: translateX(-30px) scale(0.8);
+        transition:
+          opacity 240ms ease 260ms,
+          transform 460ms cubic-bezier(0.34, 1.18, 0.64, 1) 220ms;
+      }
+
+      .send-button img {
+        display: block;
+        width: 30px;
+        height: 30px;
+      }
+
+      .chip {
+        top: 67px;
+        height: 20px;
+        border: 1px solid #efefef;
+        border-radius: 20px;
+        background: #fafafa;
+        opacity: 0;
+        transform: translateY(7px) scale(0.98);
+        transition:
+          opacity 260ms ease,
+          transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      .chip.mismo {
+        left: 25px;
+        width: 102px;
+        transition-delay: 140ms;
+      }
+
+      .chip.work {
+        left: 135px;
+        width: 120px;
+        transition-delay: 180ms;
+      }
+
+      .chip.tools {
+        left: 263px;
+        width: 77px;
+        transition-delay: 220ms;
+      }
+
+      .chip-label {
+        top: 4px;
+        height: 12px;
+        color: #8e8d8d;
+        font-size: 10px;
+        font-weight: 400;
+      }
+
+      .chip.mismo .chip-label {
+        left: 16px;
+        width: 71px;
+      }
+
+      .chip.work .chip-label {
+        left: 16px;
+        width: 88px;
+      }
+
+      .chip.tools .chip-label {
+        left: 13px;
+        width: 51px;
+      }
+
+      .chat-title,
+      .chat-copy {
+        opacity: 0;
+        transform: translateY(8px);
+        transition:
+          opacity 260ms ease,
+          transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      .chat-copy {
+        transition-delay: 60ms;
+      }
+
+      .damian-llm-card[data-open="true"] .avatar,
+      .damian-llm-card[data-open="true"] .intro-title,
+      .damian-llm-card[data-open="true"] .intro-copy {
+        opacity: 0;
+        transform: translateY(-8px) scale(0.98);
+        pointer-events: none;
+      }
+
+      .damian-llm-card[data-open="true"] .start-button {
+        left: 25px;
+        top: 161px;
+        width: 419px;
+        border: 1px solid #efefef;
+        background: #ffffff;
+        pointer-events: none;
+      }
+
+      .damian-llm-card[data-open="true"] .start-label {
+        opacity: 0;
+        transform: translateX(-12px);
+      }
+
+      .damian-llm-card[data-open="true"] .input-shell {
+        opacity: 1;
+        transform: scaleX(1);
+      }
+
+      .damian-llm-card[data-open="true"] .prompt-label,
+      .damian-llm-card[data-open="true"] .chat-title,
+      .damian-llm-card[data-open="true"] .chat-copy,
+      .damian-llm-card[data-open="true"] .chip,
+      .damian-llm-card[data-open="true"] .send-button {
+        opacity: 1;
+        transform: translate(0) scale(1);
+      }
+
+      .controls {
+        display: flex;
+        gap: 10px;
+      }
+
+      .control {
+        height: 32px;
+        border: 1px solid #efefef;
+        border-radius: 999px;
+        padding: 0 14px;
+        background: #ffffff;
+        color: #393939;
+        font: 400 13px/1 "Geist", system-ui, sans-serif;
+        cursor: pointer;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          transition: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="prototype">
+      <section class="damian-llm-card" data-open="false" aria-label="DamianLLM card prototype">
+        <div class="layer" aria-hidden="true">
+          <div class="avatar"></div>
+          <p class="intro-title">Ask DamianLLM</p>
+          <p class="intro-copy">A small AI trained on myself, incase I’m asleep</p>
+          <button class="start-button" type="button" aria-label="Start chatting">
+            <span class="start-label">Start Chatting</span>
+          </button>
+        </div>
+
+        <div class="layer" aria-hidden="true">
+          <p class="chat-title">Chat with me</p>
+          <p class="chat-copy">Pick a question or write your own</p>
+          <div class="chip mismo">
+            <p class="chip-label">What’s Mismo?</p>
+          </div>
+          <div class="chip work">
+            <p class="chip-label">Available for work?</p>
+          </div>
+          <div class="chip tools">
+            <p class="chip-label">Your tools?</p>
+          </div>
+          <div class="input-shell">
+            <p class="prompt-label">Type your question...</p>
+          </div>
+          <button class="send-button" type="button" aria-label="Send question">
+            <img src="./assets/figma-home/damian-llm-send.svg" alt="" />
+          </button>
+        </div>
+      </section>
+
+      <div class="controls">
+        <button class="control" type="button" data-action="open">Start Chatting</button>
+        <button class="control" type="button" data-action="reset">Reset</button>
+      </div>
+    </div>
+
+    <script>
+      const card = document.querySelector(".damian-llm-card");
+      const startButton = document.querySelector(".start-button");
+      const openButton = document.querySelector("[data-action='open']");
+      const resetButton = document.querySelector("[data-action='reset']");
+
+      function setOpen(nextOpen) {
+        card.dataset.open = String(nextOpen);
+      }
+
+      if (window.location.hash === "#open") {
+        setOpen(true);
+      }
+
+      startButton.addEventListener("click", () => setOpen(true));
+      openButton.addEventListener("click", () => setOpen(true));
+      resetButton.addEventListener("click", () => setOpen(false));
+    </script>
+  </body>
+</html>
