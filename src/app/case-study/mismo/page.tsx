@@ -136,6 +136,11 @@ export default function MismoCaseStudy() {
         </nav>
       </header>
 
+      <a className={styles.backLink} href="/" aria-label="Back to home">
+        <img className={styles.backIcon} src="/images/mismo/icon-arrow-back-outline.svg" alt="" />
+        <span>Back</span>
+      </a>
+
       <aside className={styles.rulerNav} aria-label="Case study section ruler">
         <div
           className={styles.ruler}
@@ -184,10 +189,6 @@ export default function MismoCaseStudy() {
 
       <div className={styles.stage}>
         <div className={styles.frame}>
-          <a className={styles.backLink} href="/" aria-label="Back to home">
-            <img className={styles.backIcon} src="/images/mismo/icon-arrow-back-outline.svg" alt="" />
-            <span>Back</span>
-          </a>
           <h1 className={styles.title}>Mismo</h1>
 
           <section className={styles.heroCard} aria-label="Mismo hero preview">

@@ -72,10 +72,10 @@
 }
 
 .backLink {
-  position: absolute;
-  left: 72px;
-  top: 134px;
-  z-index: 5;
+  position: fixed;
+  left: calc(72px * var(--scale));
+  top: calc(134px * var(--scale));
+  z-index: 28;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -84,6 +84,8 @@
   font-weight: 400;
   line-height: normal;
   text-decoration: none;
+  transform: scale(var(--scale));
+  transform-origin: top left;
 }
 
 .backLink:hover,
