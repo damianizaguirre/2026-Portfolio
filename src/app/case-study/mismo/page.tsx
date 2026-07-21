@@ -1,29 +1,28 @@
 "use client";
 
-import { useEffect } from "react";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import styles from "./mismo-case-study.module.css";
 
 const frameWidth = 1920;
 
 const rulerTicks = [
-  { y: 5, type: "active" },
-  { y: 17 },
-  { y: 29 },
-  { y: 41 },
-  { y: 53, type: "mid" },
-  { y: 65 },
-  { y: 77 },
-  { y: 89 },
-  { y: 101, type: "section" },
-  { y: 113 },
-  { y: 125 },
-  { y: 137 },
-  { y: 149, type: "mid" },
-  { y: 161 },
-  { y: 173 },
-  { y: 185 },
-  { y: 197, type: "section" },
+  { y: 5, type: "active", label: "Overview" },
+  { y: 17, type: "content", label: "Overview content" },
+  { y: 29, type: "content", label: "Overview content" },
+  { y: 41, type: "section", label: "Problem" },
+  { y: 53, type: "content", label: "Problem content" },
+  { y: 65, type: "content", label: "Problem content" },
+  { y: 77, type: "section", label: "Solution" },
+  { y: 89, type: "content", label: "Solution content" },
+  { y: 101, type: "content", label: "Solution content" },
+  { y: 113, type: "content", label: "Solution content" },
+  { y: 125, type: "content", label: "Solution content" },
+  { y: 137, type: "section", label: "Research" },
+  { y: 149, type: "content", label: "Research content" },
+  { y: 161, type: "content", label: "Research content" },
+  { y: 173, type: "section", label: "Process" },
+  { y: 185, type: "content", label: "Process content" },
+  { y: 197, type: "section", label: "Reflection" },
 ];
 
 function useFrameScale() {
@@ -65,10 +64,10 @@ export default function MismoCaseStudy() {
                 className={[
                   styles.tick,
                   tick.type === "section" ? styles.tickSection : "",
-                  tick.type === "mid" ? styles.tickMid : "",
                 ].join(" ")}
                 key={tick.y}
                 style={{ top: tick.y }}
+                title={tick.label}
               />
             ))}
           <span className={styles.activeTick} />
