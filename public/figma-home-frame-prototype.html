@@ -796,11 +796,27 @@
         top: calc(730px + var(--hero-y-offset));
         width: 519px;
         height: 215px;
+        --llm-composer-height: 30px;
+        --llm-composer-top: 161px;
         overflow: hidden;
         border: 1px solid #efefef;
         border-radius: 10px;
         background: #ffffff;
         box-shadow: 0 0 1px rgba(149, 149, 149, 0.25);
+      }
+
+      .damian-llm-layer {
+        position: absolute;
+        inset: 0;
+      }
+
+      .damian-llm-intro {
+        z-index: 1;
+      }
+
+      .damian-llm-chat {
+        z-index: 2;
+        pointer-events: none;
       }
 
       .damian-llm-avatar {
@@ -813,11 +829,19 @@
         border: 0;
         background: transparent;
         pointer-events: none;
+        transition:
+          opacity 220ms cubic-bezier(0.22, 1, 0.36, 1),
+          transform 360ms cubic-bezier(0.22, 1, 0.36, 1);
       }
 
       .damian-llm-title,
       .damian-llm-copy,
-      .damian-llm-button-label {
+      .damian-llm-button-label,
+      .damian-llm-chat-title,
+      .damian-llm-chat-copy,
+      .damian-llm-chip-label,
+      .damian-llm-input,
+      .damian-llm-message {
         position: absolute;
         margin: 0;
         letter-spacing: 0;
@@ -833,6 +857,9 @@
         color: #000000;
         font-size: 20px;
         font-weight: 600;
+        transition:
+          opacity 220ms cubic-bezier(0.22, 1, 0.36, 1),
+          transform 360ms cubic-bezier(0.22, 1, 0.36, 1);
       }
 
       .damian-llm-copy {
@@ -844,6 +871,9 @@
         font-size: 14px;
         font-weight: 400;
         text-align: center;
+        transition:
+          opacity 220ms cubic-bezier(0.22, 1, 0.36, 1),
+          transform 360ms cubic-bezier(0.22, 1, 0.36, 1);
       }
 
       .damian-llm-button {
@@ -861,7 +891,12 @@
         cursor: pointer;
         font: inherit;
         transition:
-          background-color 160ms ease,
+          left 360ms cubic-bezier(0.38, 1.45, 0.58, 1),
+          top 360ms cubic-bezier(0.38, 1.45, 0.58, 1),
+          width 360ms cubic-bezier(0.38, 1.45, 0.58, 1),
+          height 360ms cubic-bezier(0.38, 1.45, 0.58, 1),
+          background-color 260ms ease,
+          border-color 260ms ease,
           transform 160ms ease;
       }
 
@@ -882,6 +917,319 @@
         font-size: 14px;
         font-weight: 500;
         text-align: center;
+        transition:
+          opacity 180ms ease,
+          transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      .damian-llm-chat-title {
+        left: 25px;
+        top: 14px;
+        width: 127px;
+        height: 26px;
+        color: #000000;
+        font-size: 20px;
+        font-weight: 600;
+        opacity: 0;
+        transform: translateY(8px);
+        transition:
+          opacity 220ms ease,
+          transform 360ms cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      .damian-llm-chat-copy {
+        left: 25px;
+        top: 43px;
+        width: 216px;
+        height: 18px;
+        color: #5b5b5b;
+        font-size: 14px;
+        font-weight: 400;
+        opacity: 0;
+        transform: translateY(8px);
+        transition:
+          opacity 220ms ease 50ms,
+          transform 360ms cubic-bezier(0.22, 1, 0.36, 1) 50ms;
+      }
+
+      .damian-llm-chip {
+        position: absolute;
+        top: 67px;
+        height: 20px;
+        overflow: hidden;
+        border: 1px solid #efefef;
+        border-radius: 20px;
+        background: #fafafa;
+        opacity: 0;
+        transform: translateY(7px) scale(0.98);
+        transition:
+          opacity 240ms ease,
+          transform 360ms cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      .damian-llm-chip.mismo {
+        left: 25px;
+        width: 102px;
+        transition-delay: 60ms;
+      }
+
+      .damian-llm-chip.work {
+        left: 135px;
+        width: 120px;
+        transition-delay: 90ms;
+      }
+
+      .damian-llm-chip.tools {
+        left: 263px;
+        width: 77px;
+        transition-delay: 120ms;
+      }
+
+      .damian-llm-chip-label {
+        top: 4px;
+        height: 12px;
+        color: #8e8d8d;
+        font-size: 10px;
+        font-weight: 400;
+      }
+
+      .damian-llm-chip.mismo .damian-llm-chip-label {
+        left: 16px;
+        width: 71px;
+      }
+
+      .damian-llm-chip.work .damian-llm-chip-label {
+        left: 16px;
+        width: 88px;
+      }
+
+      .damian-llm-chip.tools .damian-llm-chip-label {
+        left: 13px;
+        width: 51px;
+      }
+
+      .damian-llm-thread {
+        position: absolute;
+        left: 25px;
+        top: 34px;
+        width: 469px;
+        height: 121px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        align-items: flex-start;
+        overflow-y: auto;
+        padding: 1px 0 8px;
+        opacity: 0;
+        pointer-events: none;
+        scrollbar-width: none;
+        transform: translateY(10px);
+        -webkit-mask-image: linear-gradient(to bottom, transparent 0, rgba(0, 0, 0, 0.38) 8px, #000000 20px, #000000 calc(100% - 18px), rgba(0, 0, 0, 0.42) calc(100% - 8px), transparent 100%);
+        mask-image: linear-gradient(to bottom, transparent 0, rgba(0, 0, 0, 0.38) 8px, #000000 20px, #000000 calc(100% - 18px), rgba(0, 0, 0, 0.42) calc(100% - 8px), transparent 100%);
+        transition:
+          opacity 240ms ease,
+          transform 340ms cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      .damian-llm-thread::-webkit-scrollbar {
+        display: none;
+      }
+
+      .damian-llm-message {
+        position: static;
+        max-width: 253px;
+        overflow: visible;
+        border-radius: 10px;
+        padding: 8px 18px;
+        font-size: 12px;
+        line-height: 15px;
+        font-weight: 400;
+        white-space: normal;
+      }
+
+      .damian-llm-message.user {
+        align-self: flex-end;
+        max-width: 244px;
+        background: #393939;
+        color: #ffffff;
+        text-align: right;
+      }
+
+      .damian-llm-message.bot {
+        align-self: flex-start;
+        border: 1px solid #efefef;
+        background: #fafafa;
+        color: #393939;
+      }
+
+      .damian-llm-typing {
+        display: inline-flex;
+        gap: 3px;
+        vertical-align: middle;
+      }
+
+      .damian-llm-typing span {
+        width: 4px;
+        height: 4px;
+        border-radius: 999px;
+        background: #8e8d8d;
+        animation: damian-llm-dot-pulse 900ms ease-in-out infinite;
+      }
+
+      .damian-llm-typing span:nth-child(2) {
+        animation-delay: 120ms;
+      }
+
+      .damian-llm-typing span:nth-child(3) {
+        animation-delay: 240ms;
+      }
+
+      @keyframes damian-llm-dot-pulse {
+        0%,
+        100% {
+          opacity: 0.32;
+          transform: translateY(0);
+        }
+
+        50% {
+          opacity: 1;
+          transform: translateY(-2px);
+        }
+      }
+
+      .damian-llm-input-shell {
+        position: absolute;
+        left: 25px;
+        top: var(--llm-composer-top);
+        width: 419px;
+        height: var(--llm-composer-height);
+        overflow: hidden;
+        border: 1px solid #efefef;
+        border-radius: 20px;
+        background: #ffffff;
+        opacity: 0;
+        pointer-events: none;
+        transform: scaleX(0.31);
+        transform-origin: 193px center;
+        transition:
+          opacity 140ms ease,
+          height 280ms cubic-bezier(0.22, 1, 0.36, 1),
+          top 280ms cubic-bezier(0.22, 1, 0.36, 1),
+          transform 360ms cubic-bezier(0.38, 1.45, 0.58, 1);
+      }
+
+      .damian-llm-input {
+        left: 18px;
+        top: 5px;
+        width: 372px;
+        height: calc(var(--llm-composer-height) - 10px);
+        overflow-y: auto;
+        border: 0;
+        outline: 0;
+        padding: 0;
+        resize: none;
+        background: transparent;
+        color: #393939;
+        font-family: inherit;
+        font-size: 14px;
+        line-height: 18px;
+        font-weight: 400;
+        opacity: 0;
+        transform: translateX(10px);
+        white-space: pre-wrap;
+        scrollbar-width: none;
+        transition:
+          opacity 240ms ease 250ms,
+          height 280ms cubic-bezier(0.22, 1, 0.36, 1),
+          transform 380ms cubic-bezier(0.22, 1, 0.36, 1) 230ms;
+      }
+
+      .damian-llm-input::-webkit-scrollbar {
+        display: none;
+      }
+
+      .damian-llm-input::placeholder {
+        color: #a5a5a5;
+      }
+
+      .damian-llm-send {
+        position: absolute;
+        left: 458px;
+        top: calc(var(--llm-composer-top) + var(--llm-composer-height) - 30px);
+        width: 30px;
+        height: 30px;
+        overflow: hidden;
+        border: 0;
+        border-radius: 999px;
+        padding: 0;
+        background: transparent;
+        cursor: pointer;
+        opacity: 0;
+        transform: translateX(-30px) scale(0.8);
+        transition:
+          opacity 240ms ease 260ms,
+          top 280ms cubic-bezier(0.22, 1, 0.36, 1),
+          transform 320ms cubic-bezier(0.38, 1.45, 0.58, 1) 220ms;
+      }
+
+      .damian-llm-send img {
+        display: block;
+        width: 30px;
+        height: 30px;
+      }
+
+      .damian-llm-card[data-open="true"] .damian-llm-avatar,
+      .damian-llm-card[data-open="true"] .damian-llm-title,
+      .damian-llm-card[data-open="true"] .damian-llm-copy {
+        opacity: 0;
+        transform: translateY(-8px) scale(0.98);
+      }
+
+      .damian-llm-card[data-open="true"] .damian-llm-button {
+        left: 25px;
+        top: var(--llm-composer-top);
+        width: 419px;
+        height: var(--llm-composer-height);
+        border: 1px solid #efefef;
+        background: #ffffff;
+        pointer-events: none;
+      }
+
+      .damian-llm-card[data-open="true"] .damian-llm-button-label {
+        opacity: 0;
+        transform: translateX(-12px);
+      }
+
+      .damian-llm-card[data-open="true"] .damian-llm-chat {
+        pointer-events: auto;
+      }
+
+      .damian-llm-card[data-open="true"] .damian-llm-input-shell {
+        opacity: 1;
+        pointer-events: auto;
+        transform: scaleX(1);
+      }
+
+      .damian-llm-card[data-open="true"] .damian-llm-input,
+      .damian-llm-card[data-open="true"] .damian-llm-chat-title,
+      .damian-llm-card[data-open="true"] .damian-llm-chat-copy,
+      .damian-llm-card[data-open="true"] .damian-llm-chip,
+      .damian-llm-card[data-open="true"] .damian-llm-send {
+        opacity: 1;
+        transform: translate(0) scale(1);
+      }
+
+      .damian-llm-card[data-sent="true"] .damian-llm-chat-copy,
+      .damian-llm-card[data-sent="true"] .damian-llm-chip {
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(-8px) scale(0.98);
+      }
+
+      .damian-llm-card[data-sent="true"] .damian-llm-thread {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(0);
       }
 
       .project-card {
@@ -1013,7 +1361,20 @@
         .time-digit-current,
         .time-digit-next,
         .project-thumbnail img,
-        .project-thumbnail video {
+        .project-thumbnail video,
+        .damian-llm-avatar,
+        .damian-llm-title,
+        .damian-llm-copy,
+        .damian-llm-button,
+        .damian-llm-button-label,
+        .damian-llm-chat-title,
+        .damian-llm-chat-copy,
+        .damian-llm-chip,
+        .damian-llm-thread,
+        .damian-llm-input-shell,
+        .damian-llm-input,
+        .damian-llm-send,
+        .damian-llm-typing span {
           transition: none !important;
           animation: none !important;
         }
@@ -1115,18 +1476,40 @@
             <span class="time-digit-next"></span>
           </p>
         </section>
-        <section class="damian-llm-card" aria-label="DamianLLM card">
-          <iframe
-            class="damian-llm-avatar"
-            title="Thinking orb"
-            src="/thinking-orb"
-            aria-hidden="true"
-          ></iframe>
-          <p class="damian-llm-title">Ask DamianLLM</p>
-          <p class="damian-llm-copy">A small AI trained on myself, incase I’m asleep</p>
-          <button class="damian-llm-button" type="button">
-            <span class="damian-llm-button-label">Start Chatting</span>
-          </button>
+        <section class="damian-llm-card" data-open="false" data-sent="false" aria-label="DamianLLM card">
+          <div class="damian-llm-layer damian-llm-intro" aria-hidden="true">
+            <iframe
+              class="damian-llm-avatar"
+              title="Thinking orb"
+              src="/thinking-orb"
+              aria-hidden="true"
+            ></iframe>
+            <p class="damian-llm-title">Ask DamianLLM</p>
+            <p class="damian-llm-copy">A small AI trained on myself, incase I’m asleep</p>
+            <button class="damian-llm-button" type="button" aria-label="Start chatting with DamianLLM">
+              <span class="damian-llm-button-label">Start Chatting</span>
+            </button>
+          </div>
+          <div class="damian-llm-layer damian-llm-chat">
+            <p class="damian-llm-chat-title">Chat with me</p>
+            <p class="damian-llm-chat-copy">Pick a question or write your own</p>
+            <button class="damian-llm-chip mismo" type="button" data-question="What’s Mismo?">
+              <span class="damian-llm-chip-label">What’s Mismo?</span>
+            </button>
+            <button class="damian-llm-chip work" type="button" data-question="Available for work?">
+              <span class="damian-llm-chip-label">Available for work?</span>
+            </button>
+            <button class="damian-llm-chip tools" type="button" data-question="Your tools?">
+              <span class="damian-llm-chip-label">Your tools?</span>
+            </button>
+            <div class="damian-llm-thread" aria-live="polite"></div>
+            <div class="damian-llm-input-shell">
+              <textarea class="damian-llm-input" rows="1" spellcheck="false" placeholder="Type your question..."></textarea>
+            </div>
+            <button class="damian-llm-send" type="button" aria-label="Send question">
+              <img src="./assets/figma-home/damian-llm-send.svg" alt="" />
+            </button>
+          </div>
         </section>
 
         <section
@@ -1236,7 +1619,14 @@
       const musicCard = document.querySelector(".music-card");
       const projectVideos = Array.from(document.querySelectorAll(".project-thumbnail video"));
       const projectCards = Array.from(document.querySelectorAll(".project-card"));
-      const hoverSoundTargets = Array.from(document.querySelectorAll("#nav-morph-toggle, .desktop-links a, .morph-item, .project-card, .play-button, .damian-llm-button"));
+      const damianLlmCard = document.querySelector(".damian-llm-card");
+      const damianLlmStart = document.querySelector(".damian-llm-button");
+      const damianLlmTitle = document.querySelector(".damian-llm-chat-title");
+      const damianLlmInput = document.querySelector(".damian-llm-input");
+      const damianLlmThread = document.querySelector(".damian-llm-thread");
+      const damianLlmSend = document.querySelector(".damian-llm-send");
+      const damianLlmChips = Array.from(document.querySelectorAll(".damian-llm-chip"));
+      const hoverSoundTargets = Array.from(document.querySelectorAll("#nav-morph-toggle, .desktop-links a, .morph-item, .project-card, .play-button, .damian-llm-button, .damian-llm-send, .damian-llm-chip"));
       const params = new URLSearchParams(window.location.search);
       const centralTimeFormatter = new Intl.DateTimeFormat("en-US", {
         timeZone: "America/Chicago",
@@ -1268,6 +1658,12 @@
       let songMetaTransitionTimer = 0;
       let spotifyUpdateSequence = 0;
       let spotifyRenderedTrackKey = `${spotifyDefaultCard.title}|${spotifyDefaultCard.artist}|${spotifyDefaultCard.duration}`;
+      const llmComposerBottom = 191;
+      const damianLlmReplies = {
+        "What’s Mismo?": "Mismo is my capstone project about giving voice memos more power through clearer capture, organization, and review flows.",
+        "Available for work?": "Yes. I’m focused on product design roles where I can work across systems, interaction, and thoughtful product strategy.",
+        "Your tools?": "I use Figma, code prototypes, research notes, and a lot of iteration to make abstract ideas easier to feel and test.",
+      };
       // @soundcn/click-soft, CC0 sound by Kenney.
       const clickSoftSound = {
         dataUri:
@@ -1291,6 +1687,121 @@
         root.style.setProperty("--scale", String(nextScale));
         root.style.setProperty("--hero-y-offset", `${heroOffset}px`);
         root.style.setProperty("--project-y-offset", `${projectOffset}px`);
+      }
+
+      function setDamianLlmOpen(nextOpen) {
+        if (!damianLlmCard) {
+          return;
+        }
+
+        damianLlmCard.dataset.open = String(nextOpen);
+
+        if (nextOpen) {
+          window.requestAnimationFrame(() => {
+            damianLlmInput?.focus({ preventScroll: true });
+          });
+        }
+      }
+
+      function syncDamianLlmComposer() {
+        if (!damianLlmCard || !damianLlmInput) {
+          return;
+        }
+
+        const value = damianLlmInput.value.trim();
+        damianLlmInput.style.height = "18px";
+        const shouldCompactAfterSend = damianLlmCard.dataset.sent === "true" && !value;
+        const height = shouldCompactAfterSend ? 30 : 48;
+        const top = llmComposerBottom - height;
+
+        damianLlmCard.style.setProperty("--llm-composer-height", `${height}px`);
+        damianLlmCard.style.setProperty("--llm-composer-top", `${top}px`);
+        damianLlmInput.style.height = `${height - 10}px`;
+      }
+
+      function getDamianLlmTypingMarkup() {
+        return '<span class="damian-llm-typing" aria-label="DamianLLM is typing"><span></span><span></span><span></span></span>';
+      }
+
+      function appendDamianLlmBubble(kind, content, isHtml = false) {
+        const bubble = document.createElement("p");
+        bubble.className = `damian-llm-message ${kind}`;
+
+        if (isHtml) {
+          bubble.innerHTML = content;
+        } else {
+          bubble.textContent = content;
+        }
+
+        damianLlmThread.appendChild(bubble);
+        return bubble;
+      }
+
+      function scrollDamianLlmThreadToBottom() {
+        window.requestAnimationFrame(() => {
+          damianLlmThread?.scrollTo({ top: damianLlmThread.scrollHeight, behavior: "smooth" });
+        });
+      }
+
+      function getDamianLlmReply(question) {
+        return damianLlmReplies[question] || "I’d probably start by talking through the design decisions, then show the work behind them.";
+      }
+
+      function sendDamianLlmMessage(messageOverride = "") {
+        if (!damianLlmCard || !damianLlmInput || !damianLlmThread || !damianLlmTitle) {
+          return;
+        }
+
+        const value = (messageOverride || damianLlmInput.value).trim();
+
+        if (!value) {
+          setDamianLlmOpen(true);
+          return;
+        }
+
+        appendDamianLlmBubble("user", value);
+        const botBubble = appendDamianLlmBubble("bot", getDamianLlmTypingMarkup(), true);
+
+        damianLlmCard.dataset.sent = "true";
+        damianLlmTitle.textContent = "DamianLLM";
+        damianLlmInput.value = "";
+        damianLlmInput.placeholder = "Ask a follow-up...";
+        setDamianLlmOpen(true);
+        syncDamianLlmComposer();
+        scrollDamianLlmThreadToBottom();
+
+        window.setTimeout(() => {
+          if (damianLlmCard.dataset.sent !== "true") {
+            return;
+          }
+
+          botBubble.textContent = getDamianLlmReply(value);
+          scrollDamianLlmThreadToBottom();
+        }, 900);
+      }
+
+      function initDamianLlmCard() {
+        if (!damianLlmCard || !damianLlmStart || !damianLlmInput || !damianLlmSend) {
+          return;
+        }
+
+        damianLlmStart.addEventListener("click", () => setDamianLlmOpen(true));
+        damianLlmSend.addEventListener("click", () => sendDamianLlmMessage());
+        damianLlmInput.addEventListener("input", syncDamianLlmComposer);
+        damianLlmInput.addEventListener("keydown", (event) => {
+          if (event.key !== "Enter" || event.shiftKey) {
+            return;
+          }
+
+          event.preventDefault();
+          sendDamianLlmMessage();
+        });
+        damianLlmChips.forEach((chip) => {
+          chip.addEventListener("click", () => {
+            sendDamianLlmMessage(chip.dataset.question || chip.textContent || "");
+          });
+        });
+        syncDamianLlmComposer();
       }
 
       function initProjectVideos() {
@@ -2163,6 +2674,7 @@
       });
 
       syncScale();
+      initDamianLlmCard();
       initProjectVideos();
       initHoverSounds();
       initProjectCardLinks();

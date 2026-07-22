@@ -37,14 +37,46 @@
 
       .prototype {
         display: grid;
-        gap: 24px;
+        gap: 18px;
         place-items: center;
+      }
+
+      .variation-bar {
+        display: flex;
+        gap: 8px;
+      }
+
+      .variation {
+        height: 30px;
+        border: 1px solid #efefef;
+        border-radius: 999px;
+        padding: 0 12px;
+        background: #ffffff;
+        color: #8e8d8d;
+        font: 400 12px/1 "Geist", system-ui, sans-serif;
+        cursor: pointer;
+        transition:
+          background-color 160ms ease,
+          color 160ms ease,
+          transform 160ms ease;
+      }
+
+      .variation:hover {
+        transform: translateY(-1px);
+      }
+
+      .variation[aria-pressed="true"] {
+        background: #393939;
+        color: #ffffff;
       }
 
       .damian-llm-card {
         position: relative;
         width: 519px;
         height: 215px;
+        --composer-height: 30px;
+        --composer-top: 161px;
+        --composer-extra: 0px;
         overflow: hidden;
         border: 1px solid #efefef;
         border-radius: 10px;
@@ -55,6 +87,15 @@
       .layer {
         position: absolute;
         inset: 0;
+      }
+
+      .intro-layer {
+        z-index: 1;
+      }
+
+      .chat-layer {
+        z-index: 2;
+        clip-path: inset(0 0 0 0 round 10px);
       }
 
       .avatar {
@@ -74,9 +115,10 @@
       .intro-copy,
       .chat-title,
       .chat-copy,
-      .prompt-label,
+      .question-input,
       .chip-label,
-      .start-label {
+      .start-label,
+      .message-bubble {
         position: absolute;
         margin: 0;
         line-height: normal;
@@ -144,9 +186,10 @@
         color: #ffffff;
         cursor: pointer;
         transition:
-          left 540ms cubic-bezier(0.34, 1.18, 0.64, 1),
-          top 540ms cubic-bezier(0.34, 1.18, 0.64, 1),
-          width 540ms cubic-bezier(0.34, 1.18, 0.64, 1),
+          left var(--button-dur, 540ms) var(--button-ease, cubic-bezier(0.34, 1.18, 0.64, 1)),
+          top var(--button-dur, 540ms) var(--button-ease, cubic-bezier(0.34, 1.18, 0.64, 1)),
+          width var(--button-dur, 540ms) var(--button-ease, cubic-bezier(0.34, 1.18, 0.64, 1)),
+          height var(--button-dur, 540ms) var(--button-ease, cubic-bezier(0.34, 1.18, 0.64, 1)),
           background-color 260ms ease,
           border-color 260ms ease,
           transform 160ms ease;
@@ -172,9 +215,9 @@
 
       .input-shell {
         left: 25px;
-        top: 161px;
+        top: var(--composer-top);
         width: 419px;
-        height: 30px;
+        height: var(--composer-height);
         border: 1px solid #efefef;
         border-radius: 20px;
         background: #ffffff;
@@ -184,27 +227,43 @@
         transform-origin: 193px center;
         transition:
           opacity 140ms ease,
-          transform 540ms cubic-bezier(0.34, 1.18, 0.64, 1);
+          height 280ms cubic-bezier(0.22, 1, 0.36, 1),
+          top 280ms cubic-bezier(0.22, 1, 0.36, 1),
+          border-radius 280ms cubic-bezier(0.22, 1, 0.36, 1),
+          transform var(--input-dur, 540ms) var(--input-ease, cubic-bezier(0.34, 1.18, 0.64, 1));
       }
 
-      .prompt-label {
+      .question-input {
         left: 18px;
         top: 5px;
-        width: 216px;
-        height: 18px;
-        color: #a5a5a5;
+        width: 372px;
+        height: calc(var(--composer-height) - 10px);
+        border: 0;
+        outline: 0;
+        padding: 0;
+        resize: none;
+        overflow: hidden;
+        background: transparent;
+        color: #393939;
         font-size: 14px;
         font-weight: 400;
+        line-height: 18px;
         opacity: 0;
         transform: translateX(10px);
+        white-space: pre-wrap;
         transition:
           opacity 240ms ease 250ms,
+          height 280ms cubic-bezier(0.22, 1, 0.36, 1),
           transform 380ms cubic-bezier(0.22, 1, 0.36, 1) 230ms;
+      }
+
+      .question-input::placeholder {
+        color: #a5a5a5;
       }
 
       .send-button {
         left: 458px;
-        top: 161px;
+        top: calc(var(--composer-top) + var(--composer-height) - 30px);
         width: 30px;
         height: 30px;
         border-radius: 999px;
@@ -214,13 +273,125 @@
         transform: translateX(-30px) scale(0.8);
         transition:
           opacity 240ms ease 260ms,
-          transform 460ms cubic-bezier(0.34, 1.18, 0.64, 1) 220ms;
+          top 280ms cubic-bezier(0.22, 1, 0.36, 1),
+          transform var(--send-dur, 460ms) var(--send-ease, cubic-bezier(0.34, 1.18, 0.64, 1)) 220ms;
       }
 
       .send-button img {
         display: block;
         width: 30px;
         height: 30px;
+      }
+
+      .chat-thread {
+        position: absolute;
+        left: 25px;
+        top: 34px;
+        width: 469px;
+        height: 121px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        align-items: flex-start;
+        overflow-y: auto;
+        padding: 1px 0 8px;
+        scrollbar-width: none;
+        -webkit-mask-image: linear-gradient(
+          to bottom,
+          transparent 0,
+          rgba(0, 0, 0, 0.38) 8px,
+          #000000 20px,
+          #000000 calc(100% - 18px),
+          rgba(0, 0, 0, 0.42) calc(100% - 8px),
+          transparent 100%
+        );
+        mask-image: linear-gradient(
+          to bottom,
+          transparent 0,
+          rgba(0, 0, 0, 0.38) 8px,
+          #000000 20px,
+          #000000 calc(100% - 18px),
+          rgba(0, 0, 0, 0.42) calc(100% - 8px),
+          transparent 100%
+        );
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(10px);
+        transition:
+          opacity 240ms ease,
+          transform 340ms cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      .chat-thread::-webkit-scrollbar {
+        display: none;
+      }
+
+      .message-bubble {
+        position: static;
+        max-width: 253px;
+        border-radius: 10px;
+        padding: 8px 18px;
+        overflow: visible;
+        white-space: normal;
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 15px;
+        transition:
+          opacity 240ms ease,
+          transform 360ms cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      .message-bubble.user {
+        align-self: flex-end;
+        max-width: 244px;
+        background: #393939;
+        color: #ffffff;
+        text-align: right;
+        transform-origin: right bottom;
+      }
+
+      .message-bubble.bot {
+        align-self: flex-start;
+        max-width: 253px;
+        border: 1px solid #efefef;
+        background: #fafafa;
+        color: #393939;
+        transform-origin: left bottom;
+      }
+
+      .typing-dots {
+        display: inline-flex;
+        gap: 3px;
+        vertical-align: middle;
+      }
+
+      .typing-dots span {
+        width: 4px;
+        height: 4px;
+        border-radius: 999px;
+        background: #8e8d8d;
+        animation: dotPulse 900ms ease-in-out infinite;
+      }
+
+      .typing-dots span:nth-child(2) {
+        animation-delay: 120ms;
+      }
+
+      .typing-dots span:nth-child(3) {
+        animation-delay: 240ms;
+      }
+
+      @keyframes dotPulse {
+        0%,
+        100% {
+          opacity: 0.32;
+          transform: translateY(0);
+        }
+
+        50% {
+          opacity: 1;
+          transform: translateY(-2px);
+        }
       }
 
       .chip {
@@ -300,8 +471,9 @@
 
       .damian-llm-card[data-open="true"] .start-button {
         left: 25px;
-        top: 161px;
+        top: var(--composer-top);
         width: 419px;
+        height: var(--composer-height);
         border: 1px solid #efefef;
         background: #ffffff;
         pointer-events: none;
@@ -314,16 +486,186 @@
 
       .damian-llm-card[data-open="true"] .input-shell {
         opacity: 1;
+        pointer-events: auto;
         transform: scaleX(1);
       }
 
-      .damian-llm-card[data-open="true"] .prompt-label,
+      .damian-llm-card[data-open="true"] .question-input,
       .damian-llm-card[data-open="true"] .chat-title,
       .damian-llm-card[data-open="true"] .chat-copy,
       .damian-llm-card[data-open="true"] .chip,
       .damian-llm-card[data-open="true"] .send-button {
         opacity: 1;
         transform: translate(0) scale(1);
+      }
+
+      .damian-llm-card[data-variant="sweep"] {
+        --button-dur: 520ms;
+        --button-ease: cubic-bezier(0.18, 0.88, 0.28, 1);
+        --input-dur: 520ms;
+        --input-ease: cubic-bezier(0.18, 0.88, 0.28, 1);
+      }
+
+      .damian-llm-card[data-variant="sweep"] .chat-title,
+      .damian-llm-card[data-variant="sweep"] .chat-copy,
+      .damian-llm-card[data-variant="sweep"] .chip {
+        transform: translateX(18px);
+      }
+
+      .damian-llm-card[data-variant="sweep"] .input-shell {
+        transform: translateX(30px) scaleX(0.31);
+        transform-origin: right center;
+      }
+
+      .damian-llm-card[data-variant="sweep"][data-open="true"] .avatar,
+      .damian-llm-card[data-variant="sweep"][data-open="true"] .intro-title,
+      .damian-llm-card[data-variant="sweep"][data-open="true"] .intro-copy {
+        transform: translateX(-18px);
+      }
+
+      .damian-llm-card[data-variant="sweep"][data-open="true"] .input-shell {
+        transform: translateX(0) scaleX(1);
+      }
+
+      .damian-llm-card[data-variant="bloom"] {
+        --button-dur: 680ms;
+        --button-ease: cubic-bezier(0.16, 1, 0.3, 1);
+        --input-dur: 680ms;
+        --input-ease: cubic-bezier(0.16, 1, 0.3, 1);
+        --send-dur: 560ms;
+        --send-ease: cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .damian-llm-card[data-variant="bloom"] .avatar {
+        transition:
+          opacity 260ms ease,
+          transform 640ms cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .damian-llm-card[data-variant="bloom"] .chat-title,
+      .damian-llm-card[data-variant="bloom"] .chat-copy,
+      .damian-llm-card[data-variant="bloom"] .chip,
+      .damian-llm-card[data-variant="bloom"] .send-button {
+        transform: translateY(12px) scale(0.94);
+      }
+
+      .damian-llm-card[data-variant="bloom"] .input-shell {
+        transform: scale(0.28);
+        transform-origin: center center;
+      }
+
+      .damian-llm-card[data-variant="bloom"][data-open="true"] .avatar {
+        transform: translateY(20px) scale(2.2);
+      }
+
+      .damian-llm-card[data-variant="snap"] {
+        --button-dur: 360ms;
+        --button-ease: cubic-bezier(0.38, 1.45, 0.58, 1);
+        --input-dur: 360ms;
+        --input-ease: cubic-bezier(0.38, 1.45, 0.58, 1);
+        --send-dur: 320ms;
+        --send-ease: cubic-bezier(0.38, 1.45, 0.58, 1);
+      }
+
+      .damian-llm-card[data-variant="snap"] .chat-title,
+      .damian-llm-card[data-variant="snap"] .chat-copy {
+        transition-duration: 220ms;
+      }
+
+      .damian-llm-card[data-variant="snap"] .chip.mismo {
+        transition-delay: 60ms;
+      }
+
+      .damian-llm-card[data-variant="snap"] .chip.work {
+        transition-delay: 90ms;
+      }
+
+      .damian-llm-card[data-variant="snap"] .chip.tools {
+        transition-delay: 120ms;
+      }
+
+      .damian-llm-card[data-compose-variant="grow"] .input-shell {
+        border-radius: clamp(20px, calc(20px - var(--composer-extra) * 0.08), 12px);
+      }
+
+      .damian-llm-card[data-compose-variant="grow"] .question-input {
+        overflow: hidden;
+      }
+
+      .damian-llm-card[data-compose-variant="lift"] .chat-title,
+      .damian-llm-card[data-compose-variant="lift"] .chat-copy,
+      .damian-llm-card[data-compose-variant="lift"] .chip {
+        transform: translateY(calc(var(--composer-extra) * -0.32));
+      }
+
+      .damian-llm-card[data-compose-variant="lift"][data-open="true"] .chat-title,
+      .damian-llm-card[data-compose-variant="lift"][data-open="true"] .chat-copy,
+      .damian-llm-card[data-compose-variant="lift"][data-open="true"] .chip {
+        transform: translateY(calc(var(--composer-extra) * -0.32)) scale(1);
+      }
+
+      .damian-llm-card[data-compose-variant="shelf"] .input-shell {
+        box-shadow: 0 -10px 24px rgba(255, 255, 255, 0.88);
+      }
+
+      .damian-llm-card[data-compose-variant="shelf"][data-long-text="true"] .chip {
+        opacity: 0.28;
+        transform: translateY(-5px) scale(0.98);
+      }
+
+      .damian-llm-card[data-compose-variant="scroll"] .question-input {
+        overflow-y: auto;
+        scrollbar-width: none;
+      }
+
+      .damian-llm-card[data-compose-variant="scroll"] .question-input::-webkit-scrollbar {
+        display: none;
+      }
+
+      .damian-llm-card[data-sent="true"] .chat-copy,
+      .damian-llm-card[data-sent="true"] .chip {
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(-8px) scale(0.98);
+      }
+
+      .damian-llm-card[data-sent="true"] .chat-title {
+        top: 14px;
+        transform: translateY(0) scale(1);
+        transform-origin: left top;
+      }
+
+      .damian-llm-card[data-sent="true"] .chat-thread {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(0);
+      }
+
+      .damian-llm-card[data-chat-variant="airy"] .chat-thread {
+        top: 34px;
+        height: 121px;
+        gap: 8px;
+      }
+
+      .damian-llm-card[data-chat-variant="airy"] .message-bubble {
+        max-width: 236px;
+      }
+
+      .damian-llm-card[data-chat-variant="stacked"] .chat-thread {
+        top: 34px;
+        height: 121px;
+        gap: 6px;
+      }
+
+      .damian-llm-card[data-chat-variant="stacked"] .message-bubble.user {
+        align-self: flex-start;
+        max-width: 300px;
+        text-align: left;
+      }
+
+      .damian-llm-card[data-chat-variant="stacked"] .message-bubble.bot {
+        align-self: flex-start;
+        margin-left: 26px;
       }
 
       .controls {
@@ -342,6 +684,11 @@
         cursor: pointer;
       }
 
+      .control[data-fill="true"] {
+        background: #393939;
+        color: #ffffff;
+      }
+
       @media (prefers-reduced-motion: reduce) {
         *,
         *::before,
@@ -353,8 +700,28 @@
   </head>
   <body>
     <div class="prototype">
-      <section class="damian-llm-card" data-open="false" aria-label="DamianLLM card prototype">
-        <div class="layer" aria-hidden="true">
+      <div class="variation-bar" aria-label="Animation variations">
+        <button class="variation" type="button" data-variant="morph" aria-pressed="false">A Morph</button>
+        <button class="variation" type="button" data-variant="sweep" aria-pressed="false">B Sweep</button>
+        <button class="variation" type="button" data-variant="bloom" aria-pressed="false">C Bloom</button>
+        <button class="variation" type="button" data-variant="snap" aria-pressed="true">D Snap</button>
+      </div>
+
+      <div class="variation-bar" aria-label="Typing flow variations">
+        <button class="variation" type="button" data-compose-variant="grow" aria-pressed="false">A Grow Up</button>
+        <button class="variation" type="button" data-compose-variant="lift" aria-pressed="false">B Lift Content</button>
+        <button class="variation" type="button" data-compose-variant="shelf" aria-pressed="false">C Fade Shelf</button>
+        <button class="variation" type="button" data-compose-variant="scroll" aria-pressed="true">D Scroll Inside</button>
+      </div>
+
+      <div class="variation-bar" aria-label="Sent chat layout variations">
+        <button class="variation" type="button" data-chat-variant="balanced" aria-pressed="true">A Balanced</button>
+        <button class="variation" type="button" data-chat-variant="airy" aria-pressed="false">B Airy</button>
+        <button class="variation" type="button" data-chat-variant="stacked" aria-pressed="false">C Stacked</button>
+      </div>
+
+      <section class="damian-llm-card" data-open="false" data-sent="false" data-variant="snap" data-compose-variant="scroll" data-chat-variant="balanced" data-long-text="false" aria-label="DamianLLM card prototype">
+        <div class="layer intro-layer" aria-hidden="true">
           <div class="avatar"></div>
           <p class="intro-title">Ask DamianLLM</p>
           <p class="intro-copy">A small AI trained on myself, incase I’m asleep</p>
@@ -363,7 +730,7 @@
           </button>
         </div>
 
-        <div class="layer" aria-hidden="true">
+        <div class="layer chat-layer" aria-hidden="true">
           <p class="chat-title">Chat with me</p>
           <p class="chat-copy">Pick a question or write your own</p>
           <div class="chip mismo">
@@ -375,8 +742,10 @@
           <div class="chip tools">
             <p class="chip-label">Your tools?</p>
           </div>
+          <div class="chat-thread" aria-live="polite">
+          </div>
           <div class="input-shell">
-            <p class="prompt-label">Type your question...</p>
+            <textarea class="question-input" rows="1" spellcheck="false" placeholder="Type your question..."></textarea>
           </div>
           <button class="send-button" type="button" aria-label="Send question">
             <img src="./assets/figma-home/damian-llm-send.svg" alt="" />
@@ -386,6 +755,9 @@
 
       <div class="controls">
         <button class="control" type="button" data-action="open">Start Chatting</button>
+        <button class="control" type="button" data-action="short">Short Question</button>
+        <button class="control" type="button" data-action="long" data-fill="true">Long Question</button>
+        <button class="control" type="button" data-action="send">Send</button>
         <button class="control" type="button" data-action="reset">Reset</button>
       </div>
     </div>
@@ -395,9 +767,94 @@
       const startButton = document.querySelector(".start-button");
       const openButton = document.querySelector("[data-action='open']");
       const resetButton = document.querySelector("[data-action='reset']");
+      const shortButton = document.querySelector("[data-action='short']");
+      const longButton = document.querySelector("[data-action='long']");
+      const sendControlButton = document.querySelector("[data-action='send']");
+      const questionInput = document.querySelector(".question-input");
+      const sendButton = document.querySelector(".send-button");
+      const chatTitle = document.querySelector(".chat-title");
+      const chatThread = document.querySelector(".chat-thread");
+      const transitionButtons = Array.from(document.querySelectorAll("button[data-variant]"));
+      const composeButtons = Array.from(document.querySelectorAll("button[data-compose-variant]"));
+      const chatButtons = Array.from(document.querySelectorAll("button[data-chat-variant]"));
+      const composerBottom = 191;
+      const sampleShort = "What’s your favorite part of designing Mismo?";
+      const sampleLong =
+        "How did you think through the product strategy, voice interaction, and visual system for Mismo while keeping the experience simple enough for someone to understand right away?";
+
+      function clamp(value, min, max) {
+        return Math.min(Math.max(value, min), max);
+      }
 
       function setOpen(nextOpen) {
         card.dataset.open = String(nextOpen);
+        if (nextOpen) {
+          window.requestAnimationFrame(() => questionInput.focus({ preventScroll: true }));
+        }
+      }
+
+      function typingMarkup() {
+        return '<span class="typing-dots" aria-label="DamianLLM is typing"><span></span><span></span><span></span></span>';
+      }
+
+      function appendBubble(kind, content, isHtml = false) {
+        const bubble = document.createElement("p");
+        bubble.className = `message-bubble ${kind}`;
+        if (isHtml) {
+          bubble.innerHTML = content;
+        } else {
+          bubble.textContent = content;
+        }
+        chatThread.appendChild(bubble);
+        return bubble;
+      }
+
+      function scrollChatToBottom() {
+        window.requestAnimationFrame(() => {
+          chatThread.scrollTo({ top: chatThread.scrollHeight, behavior: "smooth" });
+        });
+      }
+
+      function syncComposer() {
+        const value = questionInput.value.trim();
+        const variant = card.dataset.composeVariant;
+        questionInput.style.height = "18px";
+        const measuredHeight = questionInput.scrollHeight + 10;
+        const maxHeight = variant === "scroll" ? 48 : variant === "shelf" ? 92 : 82;
+        const shouldCompactAfterSend = variant === "scroll" && card.dataset.sent === "true" && !value;
+        const height = shouldCompactAfterSend ? 30 : variant === "scroll" ? 48 : clamp(measuredHeight, 30, maxHeight);
+        const top = composerBottom - height;
+        const extra = height - 30;
+
+        card.style.setProperty("--composer-height", `${height}px`);
+        card.style.setProperty("--composer-top", `${top}px`);
+        card.style.setProperty("--composer-extra", `${extra}px`);
+        questionInput.style.height = `${height - 10}px`;
+        card.dataset.longText = String(value.length > 72 || height > 54);
+      }
+
+      function sendMessage() {
+        const value = questionInput.value.trim();
+        if (!value) {
+          setOpen(true);
+          return;
+        }
+
+        appendBubble("user", value);
+        const botBubble = appendBubble("bot", typingMarkup(), true);
+        card.dataset.sent = "true";
+        chatTitle.textContent = "DamianLLM";
+        questionInput.value = "";
+        questionInput.placeholder = "Ask a follow-up...";
+        setOpen(true);
+        syncComposer();
+        scrollChatToBottom();
+
+        window.setTimeout(() => {
+          if (card.dataset.sent !== "true") return;
+          botBubble.textContent = "I’d probably start by talking through the design decisions, then show the work behind them.";
+          scrollChatToBottom();
+        }, 900);
       }
 
       if (window.location.hash === "#open") {
@@ -406,7 +863,72 @@
 
       startButton.addEventListener("click", () => setOpen(true));
       openButton.addEventListener("click", () => setOpen(true));
-      resetButton.addEventListener("click", () => setOpen(false));
+      resetButton.addEventListener("click", () => {
+        questionInput.value = "";
+        questionInput.placeholder = "Type your question...";
+        card.dataset.sent = "false";
+        chatTitle.textContent = "Chat with me";
+        chatThread.replaceChildren();
+        syncComposer();
+        setOpen(false);
+      });
+      shortButton.addEventListener("click", () => {
+        questionInput.value = sampleShort;
+        setOpen(true);
+        syncComposer();
+      });
+      longButton.addEventListener("click", () => {
+        questionInput.value = sampleLong;
+        setOpen(true);
+        syncComposer();
+      });
+      questionInput.addEventListener("input", syncComposer);
+      sendButton.addEventListener("click", sendMessage);
+      sendControlButton.addEventListener("click", sendMessage);
+      questionInput.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" && !event.shiftKey) {
+          event.preventDefault();
+          sendMessage();
+        }
+      });
+
+      transitionButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          transitionButtons.forEach((item) => {
+            item.setAttribute("aria-pressed", String(item === button));
+          });
+          card.dataset.variant = button.dataset.variant;
+          setOpen(false);
+        });
+      });
+
+      composeButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          composeButtons.forEach((item) => {
+            item.setAttribute("aria-pressed", String(item === button));
+          });
+          card.dataset.composeVariant = button.dataset.composeVariant;
+          setOpen(true);
+          syncComposer();
+        });
+      });
+
+      chatButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          chatButtons.forEach((item) => {
+            item.setAttribute("aria-pressed", String(item === button));
+          });
+          card.dataset.chatVariant = button.dataset.chatVariant;
+          setOpen(true);
+          if (card.dataset.sent !== "true") {
+            questionInput.value = sampleShort;
+            sendMessage();
+          }
+          scrollChatToBottom();
+        });
+      });
+
+      syncComposer();
     </script>
   </body>
 </html>
