@@ -957,7 +957,9 @@
         display: block;
         cursor: help;
         opacity: 0.55;
-        transition: opacity 160ms ease;
+        transition:
+          opacity 160ms ease,
+          left 220ms cubic-bezier(0.22, 1, 0.36, 1);
       }
 
       .damian-llm-info:hover {
@@ -1007,6 +1009,11 @@
       .damian-llm-chat-heading:hover .damian-llm-chat-title,
       .damian-llm-chat-heading:focus-within .damian-llm-chat-title {
         left: 20px;
+      }
+
+      .damian-llm-chat-heading:hover .damian-llm-info,
+      .damian-llm-chat-heading:focus-within .damian-llm-info {
+        left: 152px;
       }
 
       .damian-llm-chat-copy {
