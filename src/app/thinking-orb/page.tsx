@@ -7,7 +7,7 @@ export default function ThinkingOrbFrame() {
   useEffect(() => {
     document.documentElement.style.background = "transparent";
     document.body.style.margin = "0";
-    document.body.style.minHeight = "56px";
+    document.body.style.minHeight = "64px";
     document.body.style.background = "transparent";
   }, []);
 
@@ -16,23 +16,14 @@ export default function ThinkingOrbFrame() {
       aria-hidden="true"
       style={{
         display: "grid",
-        width: "56px",
-        height: "56px",
+        width: "64px",
+        height: "64px",
         placeItems: "center",
         overflow: "hidden",
         background: "transparent",
       }}
     >
-      <ThinkingOrb
-        state="composing"
-        size={64}
-        style={{
-          width: "64px",
-          height: "64px",
-          transform: "scale(0.875)",
-          transformOrigin: "center",
-        }}
-      />
+      <ThinkingOrb state="composing" size={64} />
     </main>
   );
 }
