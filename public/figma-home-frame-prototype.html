@@ -1284,6 +1284,38 @@
         transform: translateY(0);
       }
 
+      .damian-llm-card[data-returning="true"] .damian-llm-back {
+        opacity: 0;
+        pointer-events: none;
+        transform: translateX(5px) scale(0.94);
+      }
+
+      .damian-llm-card[data-returning="true"] .damian-llm-chat-title {
+        left: 0;
+      }
+
+      .damian-llm-card[data-returning="true"] .damian-llm-chat-heading,
+      .damian-llm-card[data-returning="true"] .damian-llm-chat-copy,
+      .damian-llm-card[data-returning="true"] .damian-llm-chip,
+      .damian-llm-card[data-returning="true"] .damian-llm-thread,
+      .damian-llm-card[data-returning="true"] .damian-llm-input,
+      .damian-llm-card[data-returning="true"] .damian-llm-input-shell,
+      .damian-llm-card[data-returning="true"] .damian-llm-send {
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(-6px) scale(0.98);
+        transition-duration: 180ms;
+      }
+
+      .damian-llm-card[data-returning="true"] .damian-llm-avatar,
+      .damian-llm-card[data-returning="true"] .damian-llm-title,
+      .damian-llm-card[data-returning="true"] .damian-llm-copy,
+      .damian-llm-card[data-returning="true"] .damian-llm-button-label {
+        opacity: 0;
+        transform: translateY(6px) scale(0.98);
+        transition-duration: 120ms;
+      }
+
       .project-card {
         position: absolute;
         width: 780px;
@@ -1720,6 +1752,7 @@
       let songMetaTransitionTimer = 0;
       let spotifyUpdateSequence = 0;
       let spotifyRenderedTrackKey = `${spotifyDefaultCard.title}|${spotifyDefaultCard.artist}|${spotifyDefaultCard.duration}`;
+      let damianLlmReturnTimer = 0;
       const llmComposerBottom = 191;
       const damianLlmReplies = {
         "What’s Mismo?": "Mismo is my capstone project about giving voice memos more power through clearer capture, organization, and review flows.",
@@ -1754,6 +1787,11 @@
       function setDamianLlmOpen(nextOpen) {
         if (!damianLlmCard) {
           return;
+        }
+
+        if (nextOpen) {
+          window.clearTimeout(damianLlmReturnTimer);
+          damianLlmCard.dataset.returning = "false";
         }
 
         damianLlmCard.dataset.open = String(nextOpen);
@@ -1853,11 +1891,17 @@
 
         damianLlmInput.value = "";
         damianLlmInput.placeholder = "Type your question...";
-        damianLlmThread.replaceChildren();
         damianLlmTitle.textContent = "Chat with me";
+        damianLlmCard.dataset.returning = "true";
         damianLlmCard.dataset.sent = "false";
         syncDamianLlmComposer();
         setDamianLlmOpen(false);
+
+        window.clearTimeout(damianLlmReturnTimer);
+        damianLlmReturnTimer = window.setTimeout(() => {
+          damianLlmThread.replaceChildren();
+          damianLlmCard.dataset.returning = "false";
+        }, 420);
       }
 
       function initDamianLlmCard() {
