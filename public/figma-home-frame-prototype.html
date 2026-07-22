@@ -1754,11 +1754,7 @@
       let spotifyRenderedTrackKey = `${spotifyDefaultCard.title}|${spotifyDefaultCard.artist}|${spotifyDefaultCard.duration}`;
       let damianLlmReturnTimer = 0;
       const llmComposerBottom = 191;
-      const damianLlmReplies = {
-        "What’s Mismo?": "Mismo is my capstone project about giving voice memos more power through clearer capture, organization, and review flows.",
-        "Available for work?": "Yes. I’m focused on product design roles where I can work across systems, interaction, and thoughtful product strategy.",
-        "Your tools?": "I use Figma, code prototypes, research notes, and a lot of iteration to make abstract ideas easier to feel and test.",
-      };
+      const damianLlmHistory = [];
       // @soundcn/click-soft, CC0 sound by Kenney.
       const clickSoftSound = {
         dataUri:
@@ -1852,8 +1848,21 @@
         });
       }
 
-      function getDamianLlmReply(question) {
-        return damianLlmReplies[question] || "I’d probably start by talking through the design decisions, then show the work behind them.";
+      const damianLlmFallbackReply =
+        "I’d probably start by talking through the design decisions, then show the work behind them.";
+
+      async function fetchDamianLlmReply(question) {
+        try {
+          const response = await fetch("/api/damian-llm", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message: question, history: damianLlmHistory }),
+          });
+          const data = await response.json();
+          return typeof data.reply === "string" && data.reply ? data.reply : damianLlmFallbackReply;
+        } catch (error) {
+          return damianLlmFallbackReply;
+        }
       }
 
       function sendDamianLlmMessage(messageOverride = "") {
@@ -1879,14 +1888,16 @@
         syncDamianLlmComposer();
         scrollDamianLlmThreadToBottom();
 
-        window.setTimeout(() => {
+        fetchDamianLlmReply(value).then((reply) => {
           if (damianLlmCard.dataset.sent !== "true") {
             return;
           }
 
-          botBubble.textContent = getDamianLlmReply(value);
+          damianLlmHistory.push({ role: "user", content: value });
+          damianLlmHistory.push({ role: "assistant", content: reply });
+          botBubble.textContent = reply;
           scrollDamianLlmThreadToBottom();
-        }, 900);
+        });
       }
 
       function resetDamianLlmCard() {
@@ -1906,6 +1917,7 @@
         damianLlmReturnTimer = window.setTimeout(() => {
           damianLlmThread.replaceChildren();
           damianLlmCard.dataset.returning = "false";
+          damianLlmHistory.length = 0;
         }, 420);
       }
 
