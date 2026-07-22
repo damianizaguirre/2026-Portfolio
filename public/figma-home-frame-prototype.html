@@ -1809,12 +1809,17 @@
         }
 
         const value = damianLlmInput.value.trim();
+        const minHeight = 30;
+        const maxHeight = 66;
+
+        // Measure how tall the content actually wants to be -- shrink first
+        // so scrollHeight reflects the real content height rather than
+        // whatever height was previously forced, then grow only as far as
+        // that requires. Typing a single short line should never expand the
+        // box; it should only grow once the text actually wraps.
         damianLlmInput.style.height = "18px";
-        // Height should only track whether there's text to make room for, not
-        // whether a message has ever been sent -- on first open, before typing
-        // anything, this was defaulting to 48px while the send button stayed a
-        // fixed 30px, making the pill visibly taller than its own button.
-        const height = value ? 48 : 30;
+        const contentHeight = damianLlmInput.scrollHeight + 10;
+        const height = Math.max(minHeight, Math.min(maxHeight, contentHeight));
         const top = llmComposerBottom - height;
 
         damianLlmCard.style.setProperty("--llm-composer-height", `${height}px`);
