@@ -798,6 +798,7 @@
         height: 215px;
         --llm-composer-height: 30px;
         --llm-composer-top: 161px;
+        --llm-input-width: 216px;
         overflow: hidden;
         border: 1px solid #efefef;
         border-radius: 10px;
@@ -922,19 +923,68 @@
           transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
       }
 
-      .damian-llm-chat-title {
+      .damian-llm-chat-heading {
+        position: absolute;
         left: 25px;
         top: 14px;
-        width: 127px;
+        width: 166px;
         height: 26px;
-        color: #000000;
-        font-size: 20px;
-        font-weight: 600;
         opacity: 0;
         transform: translateY(8px);
         transition:
           opacity 220ms ease,
           transform 360ms cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      .damian-llm-chat-title {
+        left: 0;
+        top: 0;
+        width: 127px;
+        height: 26px;
+        color: #000000;
+        font-size: 20px;
+        font-weight: 600;
+        transition:
+          left 220ms cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      .damian-llm-back {
+        position: absolute;
+        left: 0;
+        top: 6px;
+        width: 14px;
+        height: 14px;
+        display: grid;
+        place-items: center;
+        border: 0;
+        padding: 0;
+        background: transparent;
+        color: #000000;
+        cursor: pointer;
+        opacity: 0;
+        pointer-events: none;
+        transform: translateX(5px) scale(0.94);
+        transition:
+          opacity 180ms ease,
+          transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      .damian-llm-back svg {
+        width: 14px;
+        height: 14px;
+        stroke-width: 2.2;
+      }
+
+      .damian-llm-chat-heading:hover .damian-llm-back,
+      .damian-llm-chat-heading:focus-within .damian-llm-back {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateX(0) scale(1);
+      }
+
+      .damian-llm-chat-heading:hover .damian-llm-chat-title,
+      .damian-llm-chat-heading:focus-within .damian-llm-chat-title {
+        left: 20px;
       }
 
       .damian-llm-chat-copy {
@@ -1122,7 +1172,7 @@
       .damian-llm-input {
         left: 18px;
         top: 5px;
-        width: 372px;
+        width: var(--llm-input-width);
         height: calc(var(--llm-composer-height) - 10px);
         overflow-y: auto;
         border: 0;
@@ -1141,6 +1191,7 @@
         scrollbar-width: none;
         transition:
           opacity 240ms ease 250ms,
+          width 220ms cubic-bezier(0.22, 1, 0.36, 1),
           height 280ms cubic-bezier(0.22, 1, 0.36, 1),
           transform 380ms cubic-bezier(0.22, 1, 0.36, 1) 230ms;
       }
@@ -1212,7 +1263,7 @@
       }
 
       .damian-llm-card[data-open="true"] .damian-llm-input,
-      .damian-llm-card[data-open="true"] .damian-llm-chat-title,
+      .damian-llm-card[data-open="true"] .damian-llm-chat-heading,
       .damian-llm-card[data-open="true"] .damian-llm-chat-copy,
       .damian-llm-card[data-open="true"] .damian-llm-chip,
       .damian-llm-card[data-open="true"] .damian-llm-send {
@@ -1368,7 +1419,9 @@
         .damian-llm-copy,
         .damian-llm-button,
         .damian-llm-button-label,
+        .damian-llm-chat-heading,
         .damian-llm-chat-title,
+        .damian-llm-back,
         .damian-llm-chat-copy,
         .damian-llm-chip,
         .damian-llm-thread,
@@ -1492,7 +1545,14 @@
             </button>
           </div>
           <div class="damian-llm-layer damian-llm-chat">
-            <p class="damian-llm-chat-title">Chat with me</p>
+            <div class="damian-llm-chat-heading">
+              <button class="damian-llm-back" type="button" aria-label="Back to Ask DamianLLM">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" aria-hidden="true">
+                  <path d="M10 3.5 5.5 8l4.5 4.5" />
+                </svg>
+              </button>
+              <p class="damian-llm-chat-title">Chat with me</p>
+            </div>
             <p class="damian-llm-chat-copy">Pick a question or write your own</p>
             <button class="damian-llm-chip mismo" type="button" data-question="What’s Mismo?">
               <span class="damian-llm-chip-label">What’s Mismo?</span>
@@ -1626,8 +1686,9 @@
       const damianLlmInput = document.querySelector(".damian-llm-input");
       const damianLlmThread = document.querySelector(".damian-llm-thread");
       const damianLlmSend = document.querySelector(".damian-llm-send");
+      const damianLlmBack = document.querySelector(".damian-llm-back");
       const damianLlmChips = Array.from(document.querySelectorAll(".damian-llm-chip"));
-      const hoverSoundTargets = Array.from(document.querySelectorAll("#nav-morph-toggle, .desktop-links a, .morph-item, .project-card, .play-button, .damian-llm-button, .damian-llm-send, .damian-llm-chip"));
+      const hoverSoundTargets = Array.from(document.querySelectorAll("#nav-morph-toggle, .desktop-links a, .morph-item, .project-card, .play-button, .damian-llm-button, .damian-llm-send, .damian-llm-back, .damian-llm-chip"));
       const params = new URLSearchParams(window.location.search);
       const centralTimeFormatter = new Intl.DateTimeFormat("en-US", {
         timeZone: "America/Chicago",
@@ -1711,12 +1772,16 @@
 
         const value = damianLlmInput.value.trim();
         damianLlmInput.style.height = "18px";
-        const shouldCompactAfterSend = damianLlmCard.dataset.sent === "true" && !value;
-        const height = shouldCompactAfterSend ? 30 : 48;
+        // Height should only track whether there's text to make room for, not
+        // whether a message has ever been sent -- on first open, before typing
+        // anything, this was defaulting to 48px while the send button stayed a
+        // fixed 30px, making the pill visibly taller than its own button.
+        const height = value ? 48 : 30;
         const top = llmComposerBottom - height;
 
         damianLlmCard.style.setProperty("--llm-composer-height", `${height}px`);
         damianLlmCard.style.setProperty("--llm-composer-top", `${top}px`);
+        damianLlmCard.style.setProperty("--llm-input-width", value ? "375px" : "216px");
         damianLlmInput.style.height = `${height - 10}px`;
       }
 
@@ -1781,6 +1846,20 @@
         }, 900);
       }
 
+      function resetDamianLlmCard() {
+        if (!damianLlmCard || !damianLlmInput || !damianLlmThread || !damianLlmTitle) {
+          return;
+        }
+
+        damianLlmInput.value = "";
+        damianLlmInput.placeholder = "Type your question...";
+        damianLlmThread.replaceChildren();
+        damianLlmTitle.textContent = "Chat with me";
+        damianLlmCard.dataset.sent = "false";
+        syncDamianLlmComposer();
+        setDamianLlmOpen(false);
+      }
+
       function initDamianLlmCard() {
         if (!damianLlmCard || !damianLlmStart || !damianLlmInput || !damianLlmSend) {
           return;
@@ -1788,6 +1867,7 @@
 
         damianLlmStart.addEventListener("click", () => setDamianLlmOpen(true));
         damianLlmSend.addEventListener("click", () => sendDamianLlmMessage());
+        damianLlmBack?.addEventListener("click", resetDamianLlmCard);
         damianLlmInput.addEventListener("input", syncDamianLlmComposer);
         damianLlmInput.addEventListener("keydown", (event) => {
           if (event.key !== "Enter" || event.shiftKey) {
