@@ -15,6 +15,10 @@ export const dynamic = "force-dynamic";
 const MODEL = "claude-haiku-4-5";
 const MAX_HISTORY_MESSAGES = 8;
 const MAX_MESSAGE_LENGTH = 400;
+// Generous ceiling for JSON.stringify({ message, history }) at max lengths --
+// checked via Content-Length before the body is ever parsed, so an
+// oversized payload is rejected before it costs any parse time.
+const MAX_BODY_BYTES = 6_000;
 const ALLOWED_ORIGINS = new Set([
   "https://damianizaguirre.com",
   "https://www.damianizaguirre.com",
@@ -139,10 +143,30 @@ export async function POST(request: Request) {
   // direct-hit scripts (e.g. `curl .../api/damian-llm`) without affecting
   // real visitors using the widget. Not a security boundary on its own
   // (Origin is trivially spoofable by a determined caller) — paired with
-  // the rate limit and daily budget below as the real backstops.
+  // the rate limit and daily budget below as the real backstops. In
+  // production a missing Origin is rejected outright; locally it's allowed
+  // so curl/tooling can still hit the route during development.
   const origin = request.headers.get("origin");
-  if (origin && !ALLOWED_ORIGINS.has(origin) && !origin.startsWith("http://localhost")) {
+  const isAllowedOrigin = !!origin && ALLOWED_ORIGINS.has(origin);
+  const isLocalOrigin = !!origin && origin.startsWith("http://localhost");
+
+  if (process.env.NODE_ENV === "production" ? !isAllowedOrigin : origin && !isAllowedOrigin && !isLocalOrigin) {
     return NextResponse.json({ ok: false, reply: null }, { status: 403 });
+  }
+
+  // Rate limit and body-size checks run before the body is ever parsed, so a
+  // spammer can't burn parse time/memory on oversized payloads by racing
+  // ahead of the limiter.
+  if (isRateLimited(getClientIp(request))) {
+    return NextResponse.json(
+      { ok: false, reply: slowDownFallback },
+      { status: 429, headers: { "Cache-Control": "no-store" } },
+    );
+  }
+
+  const contentLength = Number(request.headers.get("content-length") || 0);
+  if (contentLength > MAX_BODY_BYTES) {
+    return NextResponse.json({ ok: false, reply: null }, { status: 413 });
   }
 
   let body: { message?: unknown; history?: unknown };
@@ -157,13 +181,6 @@ export async function POST(request: Request) {
 
   if (!message) {
     return NextResponse.json({ ok: false, reply: null }, { status: 400 });
-  }
-
-  if (isRateLimited(getClientIp(request))) {
-    return NextResponse.json(
-      { ok: false, reply: slowDownFallback },
-      { status: 429, headers: { "Cache-Control": "no-store" } },
-    );
   }
 
   if (isOverDailyBudget()) {
@@ -191,7 +208,7 @@ export async function POST(request: Request) {
   try {
     const response = await client.messages.create({
       model: MODEL,
-      max_tokens: 300,
+      max_tokens: 200,
       system: [{ type: "text", text: SYSTEM_PROMPT, cache_control: { type: "ephemeral" } }],
       messages,
     });
