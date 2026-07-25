@@ -1,6 +1,6 @@
 .page {
   --frame-width: 1920;
-  --frame-height: 6320;
+  --frame-height: 6412;
   --scale: 1;
   min-height: calc(var(--frame-height) * 1px * var(--scale));
   background: #fbfbfb;
@@ -238,13 +238,21 @@
   line-height: normal;
 }
 
-.emptySlot {
+.demoCard {
   position: absolute;
-  width: 558px;
-  height: 521px;
+  width: 541px;
+  height: 541px;
+  overflow: hidden;
   border: 1px solid #efefef;
   border-radius: 10px;
   background: #ffffff;
+}
+
+.demoVideo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .featureTitle {

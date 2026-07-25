@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import styles from "./mismo-case-study.module.css";
 
 const frameWidth = 1920;
-const frameHeight = 6320;
+const frameHeight = 6412;
 const rulerActivationRatio = 0.18;
 
 const rulerTicks = [
@@ -15,10 +15,10 @@ const rulerTicks = [
   { y: 53, type: "content", label: "Problem content", section: 1, frameY: 1433 },
   { y: 65, type: "content", label: "Problem content", section: 1, frameY: 1477 },
   { y: 77, type: "section", label: "Solution", section: 2, frameY: 1679 },
-  { y: 89, type: "content", label: "Solution content", section: 2, frameY: 1958 },
-  { y: 101, type: "content", label: "Solution content", section: 2, frameY: 2554 },
-  { y: 113, type: "content", label: "Solution content", section: 2, frameY: 3151 },
-  { y: 125, type: "content", label: "Solution content", section: 2, frameY: 3714 },
+  { y: 89, type: "content", label: "Solution content", section: 2, frameY: 1948 },
+  { y: 101, type: "content", label: "Solution content", section: 2, frameY: 2528 },
+  { y: 113, type: "content", label: "Solution content", section: 2, frameY: 3108 },
+  { y: 125, type: "content", label: "Solution content", section: 2, frameY: 3688 },
   { y: 137, type: "section", label: "Research", section: 3, frameY: 4871 },
   { y: 149, type: "content", label: "Research content", section: 3, frameY: 4966 },
   { y: 161, type: "content", label: "Research content", section: 3, frameY: 5060 },
@@ -52,6 +52,46 @@ function useFrameScale() {
   }, []);
 
   return pageRef;
+}
+
+function DemoVideo({ label, src }: { label: string; src: string }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+
+    if (!video) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      },
+      { rootMargin: "240px 0px", threshold: 0.05 },
+    );
+
+    observer.observe(video);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <video
+      ref={videoRef}
+      className={styles.demoVideo}
+      muted
+      loop
+      playsInline
+      preload="metadata"
+      aria-label={label}
+    >
+      <source src={src} type="video/mp4" />
+    </video>
+  );
 }
 
 export default function MismoCaseStudy() {
@@ -359,35 +399,46 @@ export default function MismoCaseStudy() {
             space.
           </h2>
 
-          <div className={styles.emptySlot} style={{ left: 398, top: 1958 }} />
-          <h3 className={styles.featureTitle} style={{ left: 1011, top: 2398 }}>
+          <div className={styles.demoCard} style={{ left: 407, top: 1948 }}>
+            <DemoVideo label="Mismo node graph demo" src="/videos/mismo/node-graph-demo.m4v" />
+          </div>
+          <h3 className={styles.featureTitle} style={{ left: 1010, top: 2408 }}>
             Node Graph
           </h3>
-          <p className={styles.featureCopy} style={{ left: 1011, top: 2453 }}>
+          <p className={styles.featureCopy} style={{ left: 1010, top: 2463 }}>
             A spatial map of your thinking.
           </p>
 
-          <div className={styles.emptySlot} style={{ left: 398, top: 2554 }} />
-          <h3 className={styles.featureTitle} style={{ left: 1011, top: 2968 }}>
+          <div className={styles.demoCard} style={{ left: 407, top: 2528 }}>
+            <DemoVideo
+              label="Mismo self-organizing pipeline demo"
+              src="/videos/mismo/self-sorting-demo.m4v"
+            />
+          </div>
+          <h3 className={styles.featureTitle} style={{ left: 1011, top: 2962 }}>
             Self-organizing pipeline
           </h3>
-          <p className={styles.featureCopy} style={{ left: 1011, top: 3023, width: 515 }}>
+          <p className={styles.featureCopy} style={{ left: 1011, top: 3017, width: 515 }}>
             Transcribes, summary, picks folder, and extracts reminders.
           </p>
 
-          <div className={styles.emptySlot} style={{ left: 398, top: 3151 }} />
-          <h3 className={styles.featureTitle} style={{ left: 1011, top: 3565 }}>
+          <div className={styles.demoCard} style={{ left: 407, top: 3108 }}>
+            <DemoVideo label="Mismo search and memory demo" src="/videos/mismo/search-demo.m4v" />
+          </div>
+          <h3 className={styles.featureTitle} style={{ left: 1011, top: 3542 }}>
             A memory that compounds
           </h3>
-          <p className={styles.featureCopy} style={{ left: 1011, top: 3620, width: 515 }}>
+          <p className={styles.featureCopy} style={{ left: 1011, top: 3597, width: 515 }}>
             Personal glossary is kept, learns from every manual re-file, and grows with the user.
           </p>
 
-          <div className={styles.emptySlot} style={{ left: 398, top: 3714 }} />
-          <h3 className={styles.featureTitle} style={{ left: 1011, top: 4128 }}>
+          <div className={styles.demoCard} style={{ left: 407, top: 3688 }}>
+            <DemoVideo label="Mismo onboarding demo" src="/videos/mismo/onboarding-demo.m4v" />
+          </div>
+          <h3 className={styles.featureTitle} style={{ left: 1011, top: 4122 }}>
             An onboarding that proves it
           </h3>
-          <p className={styles.featureCopy} style={{ left: 1011, top: 4183, width: 515 }}>
+          <p className={styles.featureCopy} style={{ left: 1011, top: 4177, width: 515 }}>
             Pick what you want help with, record a real memo, and see Mismo in action.
           </p>
 
