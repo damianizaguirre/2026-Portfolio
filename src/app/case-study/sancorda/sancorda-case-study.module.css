@@ -136,15 +136,21 @@
   position: absolute;
   width: 1131px;
   height: 637px;
+}
+
+.heroCard {
+  left: 395px;
+  top: 225px;
   overflow: hidden;
   border: 1px solid #efefef;
   border-radius: 10px;
   background: #ffffff;
 }
 
-.heroCard {
-  left: 395px;
-  top: 225px;
+.imageCard {
+  overflow: visible;
+  border: 0;
+  background: transparent;
 }
 
 .heroImage {
@@ -222,6 +228,14 @@
   font-size: 20px;
   font-weight: 300;
   line-height: normal;
+}
+
+.sectionCopy p {
+  margin: 0;
+}
+
+.sectionCopy p + p {
+  margin-top: 24px;
 }
 
 .wideImage {

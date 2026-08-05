@@ -302,17 +302,22 @@ export default function SancordaCaseStudy() {
           <h2 className={styles.sectionTitle} style={{ left: 420, top: 1134, width: 929 }}>
             Designing a planning platform for a medical startup
           </h2>
-          <p className={styles.sectionCopy} style={{ left: 420, top: 1186, width: 1106 }}>
-            Over the Summer 2025, I had the opportunity to intern with Sancorda Medical, a
-            medical startup, and worked with the founders to visualize their SaaS platform. While
-            the team at Sancorda had already identified their market need for their platform, my
-            work was to translate their goals and ideas into prototypes and a final demo for future
-            potential investors. With Sancorda&apos;s medical software being split between 3 sections,
-            these being Recont ST, Recon AI, and iPlant, over the summer I focused on the first
-            two. Having different purposes and workflows between the two sections, with findings
-            gathered through research and biomedical &amp; bioengineering insights from the founders,
-            I translated these into a web-based platform.
-          </p>
+          <div className={styles.sectionCopy} style={{ left: 420, top: 1186, width: 1106 }}>
+            <p>
+              Over the Summer 2025, I had the opportunity to intern with Sancorda Medical, a
+              medical startup, and worked with the founders to visualize their SaaS platform. While
+              the team at Sancorda had already identified their market need for their platform, my
+              work was to translate their goals and ideas into prototypes and a final demo for
+              future potential investors.
+            </p>
+            <p>
+              With Sancorda&apos;s medical software being split between 3 sections, these being Recont
+              ST, Recon AI, and iPlant, over the summer I focused on the first two. Having
+              different purposes and workflows between the two sections, with findings gathered
+              through research and biomedical &amp; bioengineering insights from the founders, I
+              translated these into a web-based platform.
+            </p>
+          </div>
 
           <section className={styles.imageCard} style={{ left: 395, top: 1517 }} aria-label="What is Sancorda visual">
             <img
