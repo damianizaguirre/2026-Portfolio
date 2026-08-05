@@ -142,8 +142,8 @@
   left: 395px;
   top: 225px;
   overflow: hidden;
-  border: 0;
-  border-radius: 0;
+  border: 1px solid #efefef;
+  border-radius: 10px;
   background: #ffffff;
 }
 
@@ -163,22 +163,12 @@
   object-position: center;
 }
 
-.whatImageViewport {
+.whatImage {
   position: absolute;
   left: 177px;
   top: 86px;
   width: 776px;
   height: 466px;
-  overflow: hidden;
-  background: #ffffff;
-}
-
-.whatImage {
-  position: absolute;
-  left: -3px;
-  top: -3px;
-  width: calc(100% + 6px);
-  height: calc(100% + 6px);
   object-fit: cover;
   object-position: center;
 }
