@@ -1802,6 +1802,7 @@
       const root = document.documentElement;
       const frameWidth = 1920;
       const designViewportHeight = 1080;
+      const heroVerticalLift = 56;
       const projectStart = 1082;
       const projectFoldGap = 54;
       const morph = document.querySelector("#nav-morph");
@@ -1889,7 +1890,7 @@
       function syncScale() {
         const nextScale = Math.min(window.innerWidth / frameWidth, 1);
         const viewportHeightInFrame = window.innerHeight / nextScale;
-        const heroOffset = Math.round((viewportHeightInFrame - designViewportHeight) / 2);
+        const heroOffset = Math.round((viewportHeightInFrame - designViewportHeight) / 2) - heroVerticalLift;
         const projectOffset = Math.max(
           0,
           Math.round(viewportHeightInFrame + projectFoldGap - projectStart),
