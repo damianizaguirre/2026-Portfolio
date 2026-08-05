@@ -148,9 +148,10 @@
 }
 
 .imageCard {
-  overflow: visible;
-  border: 0;
-  background: transparent;
+  overflow: hidden;
+  border: 1px solid #efefef;
+  border-radius: 10px;
+  background: #ffffff;
 }
 
 .heroImage {
@@ -165,12 +166,22 @@
 
 .whatImage {
   position: absolute;
-  left: 177px;
-  top: 86px;
-  width: 776px;
-  height: 466px;
-  object-fit: cover;
-  object-position: center;
+  left: -0.01%;
+  top: -1.92%;
+  width: 100.01%;
+  height: 101.99%;
+  max-width: none;
+  object-fit: fill;
+}
+
+.whatImageFrame {
+  position: absolute;
+  left: 176px;
+  top: 85px;
+  width: 776.053px;
+  height: 465.632px;
+  overflow: hidden;
+  pointer-events: none;
 }
 
 .metaGrid {

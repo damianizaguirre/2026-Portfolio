@@ -320,11 +320,13 @@ export default function SancordaCaseStudy() {
           </div>
 
           <section className={styles.imageCard} style={{ left: 395, top: 1517 }} aria-label="What is Sancorda visual">
-            <img
-              className={styles.whatImage}
-              src="/images/sancorda/what-is-sancorda.png"
-              alt="Overview of the Sancorda platform"
-            />
+            <div className={styles.whatImageFrame}>
+              <img
+                className={styles.whatImage}
+                src="/images/sancorda/what-is-sancorda.png"
+                alt="Overview of the Sancorda platform"
+              />
+            </div>
           </section>
 
           <h2 className={styles.sectionTitle} style={{ left: 395, top: 2211, width: 929 }}>
