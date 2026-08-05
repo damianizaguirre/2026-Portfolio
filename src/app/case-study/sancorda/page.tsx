@@ -1,210 +1,439 @@
-import Image from "next/image";
-import CaseStudyLayout from "@/components/CaseStudyLayout";
-import CaseStudySection from "@/components/CaseStudySection";
+"use client";
 
-const sideNav = [
-  { label: "Track Challenge", href: "#challenge" },
-  { label: "Our Solution", href: "#solution" },
-  { label: "Design Process", href: "#process" },
-  { label: "Analysis", href: "#analysis" },
-  { label: "Current Solutions and Problems", href: "#current-solutions" },
-  { label: "User Sentiment", href: "#sentiment" },
-  { label: "Early Concepts", href: "#concepts" },
-  { label: "Final Demo", href: "#demo" },
+import { useCallback, useEffect, useRef, useState } from "react";
+import styles from "./sancorda-case-study.module.css";
+
+const frameWidth = 1920;
+const frameHeight = 8327;
+const rulerActivationRatio = 0.18;
+
+const rulerTicks = [
+  { y: 5, type: "section", label: "Overview", section: 0, frameY: 1103 },
+  { y: 17, type: "content", label: "Overview content", section: 0, frameY: 1186 },
+  { y: 29, type: "content", label: "Overview content", section: 0, frameY: 1517 },
+  { y: 41, type: "content", label: "Overview content", section: 0, frameY: 2211 },
+  { y: 53, type: "section", label: "Research", section: 1, frameY: 2433 },
+  { y: 65, type: "content", label: "Research content", section: 1, frameY: 2530 },
+  { y: 77, type: "content", label: "Research content", section: 1, frameY: 2744 },
+  { y: 89, type: "content", label: "Research content", section: 1, frameY: 3550 },
+  { y: 101, type: "section", label: "Design", section: 2, frameY: 5747 },
+  { y: 113, type: "content", label: "Design content", section: 2, frameY: 5802 },
+  { y: 125, type: "content", label: "Design content", section: 2, frameY: 5912 },
+  { y: 137, type: "content", label: "Design content", section: 2, frameY: 6699 },
+  { y: 149, type: "content", label: "Design content", section: 2, frameY: 6799 },
+  { y: 161, type: "section", label: "Reflection", section: 3, frameY: 7587 },
+  { y: 173, type: "content", label: "Reflection content", section: 3, frameY: 7670 },
 ];
 
+const sectionLabels = ["Overview", "Research", "Design", "Reflection"];
+const sectionNavItems = sectionLabels.map((label, index) => ({
+  label,
+  tickIndex: rulerTicks.findIndex((tick) => tick.type === "section" && tick.section === index),
+}));
+
+// @soundcn/click-soft, CC0 sound by Kenney.
+const clickSoftSoundDataUri =
+  "data:audio/mpeg;base64,SUQzBAAAAAAAIlRTU0UAAAAOAAADTGF2ZjYyLjMuMTAwAAAAAAAAAAAAAAD/+1DAAAAAAAAAAAAAAAAAAAAAAABJbmZvAAAADwAAAAIAAAJxAKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr//////////////////////////////////////////////////////////////////wAAAABMYXZjNjIuMTEAAAAAAAAAAAAAAAAkBYYAAAAAAAACcU7MYgYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//tQxAAACghZUlTHgAGDlWufHzAAAVWgJg3EszX3mlF95pSk7enve+GBDEMNMg4R8BLACwAsA7BVjjOhDEMQxWKx5EcJwfB/KBiU8/wI7QH+BHaA/ynv6PB8/LgQEMgD78CHO/oGiAIBAQBAYFAA1hDi4z22DmJ7Et+PSEd1f8Y4PmLI5uDYKAWyCmBlSZJ3gAmD0RBEUDS/HKFzC5iZIr/5FTIvE0Yl3/8ipkXi8Yl0u/xEFQVER7/WCoiCoKiL/4VBURPOqgAQuacbblgZh//7UsQEg8aUBv9cMIAgAAA0gAAABIKqErhFDZUNQ7PRK4S8s8r1HiuGlHuSnenrcW9yvO/PcFflep5XqPKfrO9NTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV";
+const clickSoftVolume = 0.576;
+
+function useFrameScale() {
+  const pageRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const syncScale = () => {
+      pageRef.current?.style.setProperty("--scale", String(Math.min(window.innerWidth / frameWidth, 1)));
+    };
+
+    syncScale();
+    window.addEventListener("resize", syncScale);
+    return () => window.removeEventListener("resize", syncScale);
+  }, []);
+
+  return pageRef;
+}
+
 export default function SancordaCaseStudy() {
-  return (
-    <CaseStudyLayout
-      title="Interactive Medical Planning Platform"
-      subtitle="SANCORDA MEDICAL \u00b7 DESIGN INTERNSHIP 2025"
-      sideNav={sideNav}
-      timeline="Jun - Aug 2025"
-      role="Product Designer Intern"
-      team={[{ name: "Jeremy Warren" }, { name: "John Woo" }]}
-      skills={["Product Design", "Product Research", "Prototyping"]}
-      heroImage={
-        <Image
-          src="/images/sancorda-thumbnail.png"
-          alt="Sancorda Medical planning platform with 3D visualization"
-          width={983}
-          height={605}
-          className="w-full h-auto rounded-md"
-          priority
-        />
+  const pageRef = useFrameScale();
+  const clickSoftPlayersRef = useRef<HTMLAudioElement[]>([]);
+  const clickSoftPlayerIndexRef = useRef(0);
+  const hoverSoundLastPlayedRef = useRef(new WeakMap<HTMLElement, number>());
+  const [activeTickIndex, setActiveTickIndex] = useState(0);
+  const [isRulerCardVisible, setIsRulerCardVisible] = useState(false);
+  const activeTick = rulerTicks[activeTickIndex] || rulerTicks[0];
+
+  const getClickSoftPlayer = useCallback(() => {
+    if (!clickSoftPlayersRef.current.length) {
+      for (let index = 0; index < 6; index += 1) {
+        const player = new Audio(clickSoftSoundDataUri);
+        player.preload = "auto";
+        player.volume = clickSoftVolume;
+        clickSoftPlayersRef.current.push(player);
       }
-    >
-      <CaseStudySection
-        id="challenge"
-        label="OVERVIEW"
-        title="Designing a planning platform for a medical startup"
-      >
-        <p>
-          Over the Summer 2025, I had the opportunity to intern with Sancorda
-          Medical, a medical startup, and worked with the founders to visualize
-          their SaaS platform. While the team at Sancorda had already identified
-          their market need for their platform, my work was to translate their
-          goals and ideas into prototypes and a final demo for future potential
-          investors. With Sancorda&apos;s medical software being split between 3
-          sections, these being Recon ST, Recon AI, and iPlant, over the summer
-          I focused on the first two. Having different purposes and workflows
-          between the two sections, with findings gathered through research and
-          biomedical &amp; bioengineering insights from the founders, I
-          translated these into a web-based platform.
-        </p>
-      </CaseStudySection>
+    }
 
-      <CaseStudySection id="solution" title="So what is Sancorda?">
-        <p>
-          Sancorda Medical is a medical startup developing a 3D coronary artery
-          visualization and operation planning platform. It&apos;s designed to
-          assist in identifying potential cardiac issues and aid in
-          pre-operative planning.
-        </p>
-        <Image
-          src="/images/sancorda/what-is-sancorda.png"
-          alt="Sancorda platform overview"
-          width={958}
-          height={530}
-          className="w-full h-auto"
-          style={{ marginTop: "clamp(20px, 2.6vw, 50px)" }}
+    const player = clickSoftPlayersRef.current[clickSoftPlayerIndexRef.current];
+    clickSoftPlayerIndexRef.current = (clickSoftPlayerIndexRef.current + 1) % clickSoftPlayersRef.current.length;
+    return player;
+  }, []);
+
+  const primeClickSoftSound = useCallback(() => {
+    const player = getClickSoftPlayer();
+    const previousVolume = player.volume;
+
+    player.volume = 0;
+    const playPromise = player.play();
+
+    if (!playPromise) {
+      player.pause();
+      player.currentTime = 0;
+      player.volume = previousVolume;
+      return;
+    }
+
+    playPromise
+      .then(() => {
+        player.pause();
+        player.currentTime = 0;
+        player.volume = previousVolume;
+      })
+      .catch(() => {
+        player.volume = previousVolume;
+      });
+  }, [getClickSoftPlayer]);
+
+  const playHoverSound = useCallback((target: HTMLElement) => {
+    const now = performance.now();
+    const lastPlayed = hoverSoundLastPlayedRef.current.get(target) || 0;
+
+    if (now - lastPlayed < 120) {
+      return;
+    }
+
+    hoverSoundLastPlayedRef.current.set(target, now);
+    const player = getClickSoftPlayer();
+    player.volume = clickSoftVolume;
+    player.currentTime = 0;
+    player.play().catch(() => {});
+  }, [getClickSoftPlayer]);
+
+  useEffect(() => {
+    const unlockSound = () => {
+      primeClickSoftSound();
+    };
+
+    document.addEventListener("pointerdown", unlockSound, { passive: true });
+    document.addEventListener("mousedown", unlockSound, { passive: true });
+    document.addEventListener("touchstart", unlockSound, { passive: true });
+    document.addEventListener("keydown", unlockSound);
+
+    return () => {
+      document.removeEventListener("pointerdown", unlockSound);
+      document.removeEventListener("mousedown", unlockSound);
+      document.removeEventListener("touchstart", unlockSound);
+      document.removeEventListener("keydown", unlockSound);
+    };
+  }, [primeClickSoftSound]);
+
+  useEffect(() => {
+    let animationFrame = 0;
+
+    const syncRuler = () => {
+      animationFrame = 0;
+
+      const scale = Math.min(window.innerWidth / frameWidth, 1);
+      const frameScrollY = window.scrollY / scale;
+      const frameViewportHeight = window.innerHeight / scale;
+      const readingY = Math.min(frameHeight, frameScrollY + frameViewportHeight * rulerActivationRatio);
+      let nextIndex = 0;
+
+      rulerTicks.forEach((tick, index) => {
+        if (readingY >= tick.frameY) {
+          nextIndex = index;
+        }
+      });
+
+      setActiveTickIndex((currentIndex) => currentIndex === nextIndex ? currentIndex : nextIndex);
+    };
+
+    const requestRulerSync = () => {
+      if (animationFrame) {
+        return;
+      }
+
+      animationFrame = window.requestAnimationFrame(syncRuler);
+    };
+
+    syncRuler();
+    window.addEventListener("scroll", requestRulerSync, { passive: true });
+    window.addEventListener("resize", requestRulerSync);
+
+    return () => {
+      if (animationFrame) {
+        window.cancelAnimationFrame(animationFrame);
+      }
+
+      window.removeEventListener("scroll", requestRulerSync);
+      window.removeEventListener("resize", requestRulerSync);
+    };
+  }, []);
+
+  const showRulerCard = () => {
+    setIsRulerCardVisible(true);
+  };
+
+  const hideRulerCard = () => {
+    setIsRulerCardVisible(false);
+  };
+
+  const scrollToRulerSection = (tickIndex: number) => {
+    const tick = rulerTicks[tickIndex];
+
+    if (!tick) {
+      return;
+    }
+
+    const scale = Math.min(window.innerWidth / frameWidth, 1);
+    const frameViewportHeight = window.innerHeight / scale;
+    const nextScrollY = Math.max(0, (tick.frameY - frameViewportHeight * rulerActivationRatio) * scale);
+
+    setActiveTickIndex(tickIndex);
+    showRulerCard();
+    window.scrollTo({
+      top: nextScrollY,
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+    });
+  };
+
+  return (
+    <main className={styles.page} ref={pageRef} aria-label="Sancorda case study">
+      <header className={styles.topNav} aria-label="Top Navigation Bar">
+        <a
+          className={styles.navDot}
+          href="/"
+          aria-label="Home"
+          onPointerEnter={(event) => playHoverSound(event.currentTarget)}
         />
-      </CaseStudySection>
+        <nav className={styles.navLinks} aria-label="Primary navigation">
+          <a href="/" onPointerEnter={(event) => playHoverSound(event.currentTarget)}>Home</a>
+          <a href="/about" onPointerEnter={(event) => playHoverSound(event.currentTarget)}>About</a>
+          <a href="/resume" onPointerEnter={(event) => playHoverSound(event.currentTarget)}>Resume</a>
+        </nav>
+      </header>
 
-      {/* User Flows */}
-      <section id="process" style={{ marginBottom: "clamp(40px, 5.2vw, 100px)" }}>
-        <div className="flex flex-col" style={{ gap: "clamp(30px, 3.6vw, 70px)" }}>
-          <div>
-            <h3
-              className="font-normal text-black"
-              style={{
-                fontSize: "clamp(22px, 1.67vw, 32px)",
-                marginBottom: "clamp(12px, 1.56vw, 30px)",
-              }}
-            >
-              Initial User Flow for Recon ST
-            </h3>
-            <Image
-              src="/images/sancorda/user-flow-recon-st.png"
-              alt="User flow diagram for Recon ST"
-              width={956}
-              height={501}
-              className="w-full h-auto"
+      <a
+        className={styles.backLink}
+        href="/"
+        aria-label="Back to home"
+        onPointerEnter={(event) => playHoverSound(event.currentTarget)}
+      >
+        <img className={styles.backIcon} src="/images/mismo/icon-arrow-back-outline.svg" alt="" />
+        <span>Back</span>
+      </a>
+
+      <aside className={styles.rulerNav} aria-label="Case study section ruler">
+        <div className={styles.ruler} aria-hidden="true" onPointerEnter={showRulerCard}>
+          {rulerTicks.map((tick, index) => (
+            <span
+              className={[
+                styles.tick,
+                tick.type === "section" ? styles.tickSection : "",
+                activeTickIndex === index ? styles.tickCurrent : "",
+              ].join(" ")}
+              key={`${tick.y}-${tick.label}`}
+              style={{ top: tick.y }}
+              title={tick.label}
+            />
+          ))}
+          <span className={styles.activeTick} style={{ top: activeTick.y }} />
+        </div>
+        <div
+          className={[
+            styles.rulerCard,
+            isRulerCardVisible ? styles.rulerCardVisible : "",
+          ].join(" ")}
+          aria-hidden={!isRulerCardVisible}
+          onPointerEnter={showRulerCard}
+          onPointerLeave={hideRulerCard}
+        >
+          <ol className={styles.rulerList}>
+            {sectionNavItems.map((item, index) => (
+              <li className={activeTick.section === index ? styles.rulerListActive : ""} key={item.label}>
+                <button
+                  className={styles.rulerListButton}
+                  type="button"
+                  onPointerEnter={(event) => playHoverSound(event.currentTarget)}
+                  onClick={() => scrollToRulerSection(item.tickIndex)}
+                >
+                  {item.label}
+                </button>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </aside>
+
+      <div className={styles.stage}>
+        <div className={styles.frame}>
+          <p className={styles.projectLabel}>Product Design Internship 2026</p>
+          <h1 className={styles.title}>Interactive Medical PlanningPlatform</h1>
+
+          <section className={styles.heroCard} aria-label="Sancorda hero preview">
+            <img
+              className={styles.heroImage}
+              src="/images/sancorda-thumbnail.png"
+              alt="Sancorda medical planning interface"
+            />
+          </section>
+
+          <section className={styles.metaGrid} aria-label="Project details">
+            <p className={styles.metaLabel}>Role</p>
+            <p className={styles.metaLabel}>Timeline</p>
+            <p className={styles.metaLabel}>With</p>
+            <p className={styles.metaLabel}>Skills</p>
+            <p className={styles.metaValue}>Product Design Intern</p>
+            <p className={styles.metaValue}>June - Aug 2025</p>
+            <p className={styles.metaValue}>Jeremy Warren John Woo</p>
+            <p className={styles.metaValue}>Product Design Product Research Prototyping</p>
+          </section>
+
+          <p className={styles.sectionKicker} style={{ left: 420, top: 1103 }}>
+            Overview
+          </p>
+          <h2 className={styles.sectionTitle} style={{ left: 420, top: 1134, width: 929 }}>
+            Designing a planning platform for a medical startup
+          </h2>
+          <p className={styles.sectionCopy} style={{ left: 420, top: 1186, width: 1106 }}>
+            Over the Summer 2025, I had the opportunity to intern with Sancorda Medical, a
+            medical startup, and worked with the founders to visualize their SaaS platform. While
+            the team at Sancorda had already identified their market need for their platform, my
+            work was to translate their goals and ideas into prototypes and a final demo for future
+            potential investors. With Sancorda&apos;s medical software being split between 3 sections,
+            these being Recont ST, Recon AI, and iPlant, over the summer I focused on the first
+            two. Having different purposes and workflows between the two sections, with findings
+            gathered through research and biomedical &amp; bioengineering insights from the founders,
+            I translated these into a web-based platform.
+          </p>
+
+          <section className={styles.imageCard} style={{ left: 395, top: 1517 }} aria-label="What is Sancorda visual">
+            <img
+              className={styles.whatImage}
+              src="/images/sancorda/what-is-sancorda.png"
+              alt="Overview of the Sancorda platform"
+            />
+          </section>
+
+          <h2 className={styles.sectionTitle} style={{ left: 395, top: 2211, width: 929 }}>
+            So what is Sancorda?
+          </h2>
+          <p className={styles.sectionCopy} style={{ left: 395, top: 2266, width: 958 }}>
+            Sancorda Medical is a medical startup developing a 3D coronary artery visualization
+            and operation planning platform. It&apos;s design to assist in identifying potential
+            ruptures and optimizing the placements of stents. Their ultimate goal is to reduce the
+            amount of hospital readmissions for heart patients.
+          </p>
+
+          <p className={styles.sectionKicker} style={{ left: 395, top: 2433 }}>
+            Research
+          </p>
+          <h2 className={styles.sectionTitle} style={{ left: 395, top: 2464, width: 929 }}>
+            Looking at the Medical Lab Software Products
+          </h2>
+          <p className={styles.sectionCopy} style={{ left: 395, top: 2534, width: 1131 }}>
+            In order to understand the current market, I conducted an analysis of some competitors
+            that offer similar services. Due to the very limiting information that is open to the
+            public, I also looked into design editing tools to capture more editing aspects. This
+            helped me identify a range of potential features to incorporate into their product, as
+            well as features to avoid.
+          </p>
+
+          <img
+            className={styles.wideImage}
+            src="/images/sancorda/competitor-analysis.png"
+            alt="Competitor analysis of medical software products"
+            style={{ left: 397, top: 2705, width: 1130, height: 665 }}
+          />
+
+          <h2 className={styles.sectionTitle} style={{ left: 395, top: 3550, width: 929 }}>
+            Initial User Flow for Recon ST
+          </h2>
+          <p className={styles.sectionCopy} style={{ left: 395, top: 3605, width: 1131 }}>
+            I mapped the standard reconstruction workflow to understand how the platform could
+            guide users from importing patient data into focused planning, review, and final
+            decision support.
+          </p>
+          <img
+            className={styles.wideImage}
+            src="/images/sancorda/user-flow-recon-st.png"
+            alt="Initial user flow for Recon ST"
+            style={{ left: 397, top: 3724, width: 1130, height: 592 }}
+          />
+
+          <h2 className={styles.sectionTitle} style={{ left: 395, top: 4448, width: 929 }}>
+            Initial User Flow for Recon AI
+          </h2>
+          <p className={styles.sectionCopy} style={{ left: 395, top: 4503, width: 1131 }}>
+            Recon AI required a different mental model, so I separated AI-assisted review from
+            manual planning while keeping the two workflows visually connected.
+          </p>
+          <img
+            className={styles.wideImage}
+            src="/images/sancorda/user-flow-recon-ai.png"
+            alt="Initial user flow for Recon AI"
+            style={{ left: 397, top: 4622, width: 1130, height: 430 }}
+          />
+
+          <p className={styles.sectionKicker} style={{ left: 396, top: 5661 }}>
+            Design
+          </p>
+          <h2 className={styles.sectionTitle} style={{ left: 396, top: 5747, width: 929 }}>
+            Design Style &amp; Icons
+          </h2>
+          <p className={styles.sectionCopy} style={{ left: 396, top: 5802, width: 1131 }}>
+            With the UI of this project being very simple, dark themed, and overall abundant, the
+            different variations of the components were designed to maintain visual clarity
+            throughout the demo journey due to its data-heavy dashboards.
+          </p>
+          <img
+            className={styles.wideImage}
+            src="/images/sancorda/design-style.png"
+            alt="Sancorda design style and icon system"
+            style={{ left: 398, top: 5912, width: 1129, height: 693 }}
+          />
+
+          <h2 className={styles.sectionTitle} style={{ left: 395, top: 6699, width: 929 }}>
+            Recon ST &amp; Recon AI Demo
+          </h2>
+          <div className={styles.demoGrid} style={{ left: 397, top: 6799 }}>
+            <img
+              className={styles.demoImage}
+              src="/images/sancorda/recon-st-demo.png"
+              alt="Recon ST demo screenshot"
+            />
+            <img
+              className={styles.demoImage}
+              src="/images/sancorda/recon-ai-demo.png"
+              alt="Recon AI demo screenshot"
             />
           </div>
 
-          <div>
-            <h3
-              className="font-normal text-black"
-              style={{
-                fontSize: "clamp(22px, 1.67vw, 32px)",
-                marginBottom: "clamp(12px, 1.56vw, 30px)",
-              }}
-            >
-              Initial User Flow for Recon AI
-            </h3>
-            <Image
-              src="/images/sancorda/user-flow-recon-ai.png"
-              alt="User flow diagram for Recon AI"
-              width={957}
-              height={364}
-              className="w-full h-auto"
-            />
-          </div>
+          <p className={styles.sectionKicker} style={{ left: 397, top: 7587 }}>
+            Reflection
+          </p>
+          <h2 className={styles.sectionTitle} style={{ left: 397, top: 7615, width: 896 }}>
+            Thoughts &amp; Takeaways
+          </h2>
+          <p className={styles.sectionCopy} style={{ left: 397, top: 7670, width: 1132 }}>
+            New Research - Since this project was a biomedical &amp; bioengineering based, I learned
+            new interesting and complex things that previously I didn&apos;t expect to know about.
+            Compact Design - Designing in a whole different layout for the demo, I learned new ways
+            in maximizing space with necessary information, but still balancing it with functionality
+            and user-friendly design. User Work Flow - Designing for the split between Recon ST and
+            Recon AI workflows, required consistent iteration due to their respective functionalities.
+            I gained insightful experience with user-flow mapping and overall creating a smooth guide
+            to users.
+          </p>
         </div>
-      </section>
-
-      <CaseStudySection
-        id="analysis"
-        label="RESEARCH"
-        title="Looking at the Medical Lab Software Products"
-      >
-        <p>
-          In order to understand the current market, I conducted an analysis of
-          some competitors that offer similar services. Due to the very limiting
-          information that is open to the public, I also looked into design
-          editing tools to capture more editing aspects. This helped me identify
-          a range of potential features to incorporate into their product, as
-          well as features to avoid.
-        </p>
-        <Image
-          src="/images/sancorda/competitor-analysis.png"
-          alt="Competitor analysis of medical software products"
-          width={957}
-          height={563}
-          className="w-full h-auto"
-          style={{ marginTop: "clamp(20px, 2.6vw, 50px)" }}
-        />
-      </CaseStudySection>
-
-      <CaseStudySection
-        id="current-solutions"
-        label="DESIGN"
-        title="Optimizing the layout for high-density information"
-      >
-        <p>
-          After researching key elements to incorporate and avoid within the
-          software, I knew that this software was going to have a data-heavy
-          dashboard. I focused on creating a layout that could handle complex 3D
-          visualizations alongside detailed patient data while remaining
-          intuitive for medical professionals.
-        </p>
-      </CaseStudySection>
-
-      <CaseStudySection id="concepts" title="Design Style & Icons">
-        <p>
-          With the UI of this project being very simple, dark themed, and
-          overall abundant, the different variations of the components were
-          designed to maintain consistency across the platform while supporting
-          high-density data display.
-        </p>
-        <Image
-          src="/images/sancorda/design-style.png"
-          alt="Design style guide and icon set"
-          width={956}
-          height={634}
-          className="w-full h-auto"
-          style={{ marginTop: "clamp(20px, 2.6vw, 50px)" }}
-        />
-      </CaseStudySection>
-
-      <CaseStudySection id="demo" title="Recon ST & Recon AI Demo">
-        <p>
-          The platform features two main tools: Recon ST for standard
-          visualization and analysis, and Recon AI for AI-assisted diagnostics
-          and planning.
-        </p>
-        <div className="flex flex-col" style={{ gap: "clamp(20px, 2.6vw, 50px)", marginTop: "clamp(20px, 2.6vw, 50px)" }}>
-          <Image
-            src="/images/sancorda/recon-st-demo.png"
-            alt="Recon ST demo screenshot"
-            width={956}
-            height={587}
-            className="w-full h-auto"
-          />
-          <Image
-            src="/images/sancorda/recon-ai-demo.png"
-            alt="Recon AI demo screenshot"
-            width={956}
-            height={587}
-            className="w-full h-auto"
-          />
-        </div>
-      </CaseStudySection>
-
-      <CaseStudySection
-        id="takeaways"
-        label="REFLECTION"
-        title="Thoughts & Takeaways"
-      >
-        <p>
-          New Research - Since this project was a biomedical &amp; bioengineering
-          based product, I learned new interesting and complex things that
-          previously I didn&apos;t expect. The experience taught me how to
-          design for specialized professional tools where accuracy and data
-          clarity are paramount.
-        </p>
-      </CaseStudySection>
-    </CaseStudyLayout>
+      </div>
+    </main>
   );
 }

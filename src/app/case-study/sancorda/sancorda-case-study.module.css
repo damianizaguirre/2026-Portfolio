@@ -1,0 +1,401 @@
+.page {
+  --frame-width: 1920;
+  --frame-height: 8327;
+  --scale: 1;
+  min-height: calc(var(--frame-height) * 1px * var(--scale));
+  background: #fbfbfb;
+  color: #000000;
+  font-family:
+    var(--font-geist),
+    -apple-system,
+    BlinkMacSystemFont,
+    "SF Pro Display",
+    Inter,
+    system-ui,
+    sans-serif;
+}
+
+.stage {
+  width: calc(var(--frame-width) * 1px * var(--scale));
+  height: calc(var(--frame-height) * 1px * var(--scale));
+  overflow: hidden;
+}
+
+.frame {
+  position: relative;
+  width: calc(var(--frame-width) * 1px);
+  height: calc(var(--frame-height) * 1px);
+  background: #fbfbfb;
+  transform: scale(var(--scale));
+  transform-origin: top left;
+}
+
+.topNav {
+  position: fixed;
+  left: calc(67px * var(--scale));
+  top: 0;
+  width: 1787px;
+  height: 67px;
+  z-index: 30;
+  transform: scale(var(--scale));
+  transform-origin: top left;
+}
+
+.navDot {
+  position: absolute;
+  left: 0;
+  top: 11px;
+  width: 45px;
+  height: 45px;
+  border: 1px solid #efefef;
+  border-radius: 50px;
+  background: #71dd88;
+}
+
+.navLinks {
+  position: absolute;
+  right: 0;
+  top: 17px;
+  display: flex;
+  gap: 70px;
+  align-items: center;
+  padding: 4px 0;
+  font-size: 20px;
+  font-weight: 300;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.navLinks a {
+  color: #000000;
+  text-decoration: none;
+}
+
+.backLink {
+  position: fixed;
+  left: calc(72px * var(--scale));
+  top: calc(175px * var(--scale));
+  z-index: 28;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #c4c4c4;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: normal;
+  text-decoration: none;
+  transform: scale(var(--scale));
+  transform-origin: top left;
+}
+
+.backLink:hover,
+.backLink:focus-visible {
+  color: rgba(21, 102, 235, 0.8);
+  outline: none;
+}
+
+.backIcon {
+  display: block;
+  width: 19px;
+  height: 19px;
+}
+
+.backLink:hover .backIcon,
+.backLink:focus-visible .backIcon {
+  --stroke-0: rgba(21, 102, 235, 0.8);
+}
+
+.projectLabel {
+  position: absolute;
+  left: 395px;
+  top: 130px;
+  margin: 0;
+  width: 637px;
+  height: 23px;
+  color: #c4c4c4;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.title {
+  position: absolute;
+  left: 395px;
+  top: 153px;
+  margin: 0;
+  width: 815px;
+  height: 61px;
+  font-size: 48px;
+  font-weight: 300;
+  line-height: normal;
+}
+
+.heroCard,
+.imageCard {
+  position: absolute;
+  width: 1131px;
+  height: 637px;
+  overflow: hidden;
+  border: 1px solid #efefef;
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+.heroCard {
+  left: 395px;
+  top: 225px;
+}
+
+.heroImage {
+  position: absolute;
+  left: 163px;
+  top: 93px;
+  width: 803px;
+  height: 452px;
+  object-fit: cover;
+  object-position: center;
+}
+
+.whatImage {
+  position: absolute;
+  left: 177px;
+  top: 86px;
+  width: 776px;
+  height: 466px;
+  object-fit: cover;
+  object-position: center;
+}
+
+.metaGrid {
+  position: absolute;
+  left: 420px;
+  top: 892px;
+  display: grid;
+  width: 1047px;
+  height: 121px;
+  grid-template-columns: 114px 114px 141px 165px;
+  column-gap: 197px;
+  row-gap: 17px;
+  font-size: 20px;
+  line-height: normal;
+}
+
+.metaLabel,
+.metaValue,
+.sectionKicker,
+.sectionTitle,
+.sectionCopy {
+  margin: 0;
+}
+
+.metaLabel {
+  color: #000000;
+  font-weight: 400;
+}
+
+.metaValue {
+  color: rgba(0, 0, 0, 0.7);
+  font-weight: 300;
+}
+
+.sectionKicker {
+  position: absolute;
+  color: #000000;
+  font-size: 20px;
+  font-weight: 300;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.sectionTitle {
+  position: absolute;
+  color: #000000;
+  font-size: 32px;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.sectionCopy {
+  position: absolute;
+  color: rgba(0, 0, 0, 0.7);
+  font-size: 20px;
+  font-weight: 300;
+  line-height: normal;
+}
+
+.wideImage {
+  position: absolute;
+  display: block;
+  border: 1px solid #efefef;
+  border-radius: 10px;
+  background: #ffffff;
+  object-fit: cover;
+  object-position: center;
+}
+
+.demoGrid {
+  position: absolute;
+  display: grid;
+  width: 1130px;
+  height: 694px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.demoImage {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid #efefef;
+  border-radius: 10px;
+  background: #ffffff;
+  object-fit: cover;
+  object-position: center;
+}
+
+.rulerNav {
+  position: fixed;
+  left: calc(67px * var(--scale));
+  top: calc(214px * var(--scale));
+  width: 187px;
+  height: 230px;
+  z-index: 25;
+  pointer-events: none;
+  transform: scale(var(--scale));
+  transform-origin: top left;
+}
+
+.rulerCard {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 120px;
+  height: 162px;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #ffffff;
+  box-shadow: 0 0 2.5px rgba(0, 0, 0, 0.25);
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+  z-index: 2;
+  transform: translateX(-4px) scale(0.985);
+  transform-origin: left center;
+  transition:
+    opacity 180ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.rulerList {
+  position: absolute;
+  left: 19px;
+  top: 21px;
+  display: flex;
+  width: 66px;
+  flex-direction: column;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: #c4c4c4;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.rulerListButton {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  appearance: none;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  line-height: inherit;
+  text-align: left;
+}
+
+.rulerListButton:hover,
+.rulerListButton:focus-visible {
+  color: rgba(21, 102, 235, 0.8);
+  outline: none;
+}
+
+.ruler {
+  position: absolute;
+  left: 32px;
+  top: 0;
+  width: 32px;
+  height: 206px;
+  z-index: 1;
+  pointer-events: auto;
+}
+
+.rulerCardVisible {
+  opacity: 1;
+  pointer-events: auto;
+  visibility: visible;
+  transform: translateX(0) scale(1);
+}
+
+.tick,
+.activeTick {
+  position: absolute;
+  display: block;
+  border-radius: 999px;
+}
+
+.tick {
+  right: 13px;
+  width: 8px;
+  height: 4px;
+  background: rgba(17, 24, 39, 0.25);
+  transition:
+    background-color 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.tickSection {
+  right: 7px;
+  width: 14px;
+  background: rgba(17, 24, 39, 0.5);
+}
+
+.tickCurrent {
+  opacity: 0.62;
+  transform: scaleX(1.08);
+}
+
+.activeTick {
+  right: 0;
+  top: 5px;
+  width: 22px;
+  height: 4px;
+  background: #1566eb;
+  box-shadow: 0 0 3px rgba(21, 102, 235, 0.5);
+  transition: top 340ms cubic-bezier(0.34, 1.25, 0.64, 1);
+  will-change: top;
+}
+
+.rulerListActive {
+  color: rgba(21, 102, 235, 0.58);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rulerCard,
+  .tick,
+  .activeTick {
+    transition: none;
+  }
+}
+
+@media (max-width: 700px) {
+  .rulerNav {
+    display: none;
+  }
+}
