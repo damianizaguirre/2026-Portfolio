@@ -280,7 +280,7 @@ export default function SancordaCaseStudy() {
           <section className={styles.heroCard} aria-label="Sancorda hero preview">
             <img
               className={styles.heroImage}
-              src="/images/sancorda-thumbnail.png"
+              src="/images/sancorda/hero-recon-ai.png"
               alt="Sancorda medical planning interface"
             />
           </section>
