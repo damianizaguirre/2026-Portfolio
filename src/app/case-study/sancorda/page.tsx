@@ -13,16 +13,18 @@ const rulerTicks = [
   { y: 29, type: "content", label: "Overview content", section: 0, frameY: 1517 },
   { y: 41, type: "content", label: "Overview content", section: 0, frameY: 2211 },
   { y: 53, type: "section", label: "Research", section: 1, frameY: 2433 },
-  { y: 65, type: "content", label: "Research content", section: 1, frameY: 2530 },
-  { y: 77, type: "content", label: "Research content", section: 1, frameY: 2744 },
-  { y: 89, type: "content", label: "Research content", section: 1, frameY: 3550 },
-  { y: 101, type: "section", label: "Design", section: 2, frameY: 5747 },
-  { y: 113, type: "content", label: "Design content", section: 2, frameY: 5802 },
-  { y: 125, type: "content", label: "Design content", section: 2, frameY: 5912 },
-  { y: 137, type: "content", label: "Design content", section: 2, frameY: 6699 },
-  { y: 149, type: "content", label: "Design content", section: 2, frameY: 6799 },
-  { y: 161, type: "section", label: "Reflection", section: 3, frameY: 7587 },
-  { y: 173, type: "content", label: "Reflection content", section: 3, frameY: 7670 },
+  { y: 65, type: "content", label: "Research content", section: 1, frameY: 2519 },
+  { y: 77, type: "content", label: "Research content", section: 1, frameY: 2655 },
+  { y: 89, type: "content", label: "Research content", section: 1, frameY: 3378 },
+  { y: 101, type: "content", label: "Research content", section: 1, frameY: 4123 },
+  { y: 113, type: "section", label: "Design", section: 2, frameY: 4706 },
+  { y: 125, type: "content", label: "Design content", section: 2, frameY: 4792 },
+  { y: 137, type: "content", label: "Design content", section: 2, frameY: 4902 },
+  { y: 149, type: "content", label: "Design content", section: 2, frameY: 5747 },
+  { y: 161, type: "content", label: "Design content", section: 2, frameY: 5912 },
+  { y: 173, type: "content", label: "Design content", section: 2, frameY: 6799 },
+  { y: 185, type: "section", label: "Reflection", section: 3, frameY: 7587 },
+  { y: 197, type: "content", label: "Reflection content", section: 3, frameY: 7670 },
 ];
 
 const sectionLabels = ["Overview", "Research", "Design", "Reflection"];
@@ -345,7 +347,7 @@ export default function SancordaCaseStudy() {
           <h2 className={styles.sectionTitle} style={{ left: 395, top: 2464, width: 929 }}>
             Looking at the Medical Lab Software Products
           </h2>
-          <p className={styles.sectionCopy} style={{ left: 395, top: 2534, width: 1131 }}>
+          <p className={styles.sectionCopy} style={{ left: 395, top: 2519, width: 1131 }}>
             In order to understand the current market, I conducted an analysis of some competitors
             that offer similar services. Due to the very limiting information that is open to the
             public, I also looked into design editing tools to capture more editing aspects. This
@@ -357,41 +359,47 @@ export default function SancordaCaseStudy() {
             className={styles.wideImage}
             src="/images/sancorda/competitor-analysis.png"
             alt="Competitor analysis of medical software products"
-            style={{ left: 397, top: 2705, width: 1130, height: 665 }}
+            style={{ left: 395, top: 2655, width: 1131, height: 666 }}
           />
 
-          <h2 className={styles.sectionTitle} style={{ left: 395, top: 3550, width: 929 }}>
+          <h2 className={styles.sectionTitle} style={{ left: 395, top: 3378, width: 1022 }}>
             Initial User Flow for Recon ST
           </h2>
-          <p className={styles.sectionCopy} style={{ left: 395, top: 3605, width: 1131 }}>
-            I mapped the standard reconstruction workflow to understand how the platform could
-            guide users from importing patient data into focused planning, review, and final
-            decision support.
-          </p>
           <img
             className={styles.wideImage}
             src="/images/sancorda/user-flow-recon-st.png"
             alt="Initial user flow for Recon ST"
-            style={{ left: 397, top: 3724, width: 1130, height: 592 }}
+            style={{ left: 395, top: 3436, width: 1131, height: 592 }}
           />
 
-          <h2 className={styles.sectionTitle} style={{ left: 395, top: 4448, width: 929 }}>
+          <h2 className={styles.sectionTitle} style={{ left: 396, top: 4123, width: 1022 }}>
             Initial User Flow for Recon AI
           </h2>
-          <p className={styles.sectionCopy} style={{ left: 395, top: 4503, width: 1131 }}>
-            Recon AI required a different mental model, so I separated AI-assisted review from
-            manual planning while keeping the two workflows visually connected.
-          </p>
           <img
             className={styles.wideImage}
             src="/images/sancorda/user-flow-recon-ai.png"
             alt="Initial user flow for Recon AI"
-            style={{ left: 397, top: 4622, width: 1130, height: 430 }}
+            style={{ left: 396, top: 4181, width: 1131, height: 431 }}
           />
 
-          <p className={styles.sectionKicker} style={{ left: 396, top: 5661 }}>
+          <p className={styles.sectionKicker} style={{ left: 395, top: 4706 }}>
             Design
           </p>
+          <h2 className={styles.sectionTitle} style={{ left: 395, top: 4737, width: 929 }}>
+            Optimizing the layout for high-density information
+          </h2>
+          <p className={styles.sectionCopy} style={{ left: 395, top: 4792, width: 1132 }}>
+            After researching key elements to incorporate and avoid within the software, I knew
+            that this software was going to have a data-heavy dashboard, I was excited and
+            interested in figuring out the different combinations of data layouts.
+          </p>
+          <img
+            className={styles.designDemoImage}
+            src="/images/sancorda/sancorda-frames.png"
+            alt="Layout explorations for the Sancorda dashboard"
+            style={{ left: 395, top: 4902, width: 1132, height: 751 }}
+          />
+
           <h2 className={styles.sectionTitle} style={{ left: 396, top: 5747, width: 929 }}>
             Design Style &amp; Icons
           </h2>
