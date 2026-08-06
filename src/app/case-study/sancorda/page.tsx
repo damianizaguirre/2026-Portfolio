@@ -401,7 +401,7 @@ export default function SancordaCaseStudy() {
             throughout the demo journey due to its data-heavy dashboards.
           </p>
           <img
-            className={styles.wideImage}
+            className={styles.designImage}
             src="/images/sancorda/design-style.png"
             alt="Sancorda design style and icon system"
             style={{ left: 398, top: 5912, width: 1129, height: 693 }}
@@ -410,18 +410,12 @@ export default function SancordaCaseStudy() {
           <h2 className={styles.sectionTitle} style={{ left: 395, top: 6699, width: 929 }}>
             Recon ST &amp; Recon AI Demo
           </h2>
-          <div className={styles.demoGrid} style={{ left: 397, top: 6799 }}>
-            <img
-              className={styles.demoImage}
-              src="/images/sancorda/recon-st-demo.png"
-              alt="Recon ST demo screenshot"
-            />
-            <img
-              className={styles.demoImage}
-              src="/images/sancorda/recon-ai-demo.png"
-              alt="Recon AI demo screenshot"
-            />
-          </div>
+          <img
+            className={styles.designDemoImage}
+            src="/images/sancorda/design-demo.png"
+            alt="Recon ST and Recon AI demo screenshot"
+            style={{ left: 397, top: 6799, width: 1130, height: 694 }}
+          />
 
           <p className={styles.sectionKicker} style={{ left: 397, top: 7587 }}>
             Reflection

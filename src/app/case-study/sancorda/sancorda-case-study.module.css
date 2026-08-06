@@ -259,6 +259,22 @@
   object-position: center;
 }
 
+.designImage {
+  position: absolute;
+  display: block;
+  overflow: hidden;
+  border-radius: 10px;
+  object-fit: cover;
+  object-position: center;
+}
+
+.designDemoImage {
+  position: absolute;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+}
+
 .demoGrid {
   position: absolute;
   display: grid;
