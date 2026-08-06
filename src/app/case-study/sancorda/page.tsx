@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import styles from "./sancorda-case-study.module.css";
 
 const frameWidth = 1920;
-const frameHeight = 8327;
+const frameHeight = 7950;
 const rulerActivationRatio = 0.18;
 
 const rulerTicks = [
