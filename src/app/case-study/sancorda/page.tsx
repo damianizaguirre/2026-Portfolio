@@ -207,9 +207,10 @@ export default function SancordaCaseStudy() {
   return (
     <main className={styles.page} ref={pageRef} aria-label="Sancorda case study">
       <header className={styles.topNav} aria-label="Top Navigation Bar">
-        <span
+        <a
           className={styles.navDot}
-          aria-hidden="true"
+          href="/"
+          aria-label="Home"
         />
         <nav className={styles.navLinks} aria-label="Primary navigation">
           <a href="/" onPointerEnter={(event) => playHoverSound(event.currentTarget)}>Home</a>
