@@ -8,29 +8,22 @@ const frameHeight = 7950;
 const rulerActivationRatio = 0.18;
 
 const rulerTicks = [
-  { y: 5, type: "section", label: "Overview", section: 0, frameY: 1103 },
-  { y: 17, type: "content", label: "Overview content", section: 0, frameY: 1186 },
-  { y: 29, type: "content", label: "Overview content", section: 0, frameY: 1517 },
-  { y: 41, type: "content", label: "Overview content", section: 0, frameY: 2211 },
-  { y: 53, type: "section", label: "Research", section: 1, frameY: 2433 },
-  { y: 65, type: "content", label: "Research content", section: 1, frameY: 2519 },
-  { y: 77, type: "content", label: "Research content", section: 1, frameY: 2655 },
-  { y: 89, type: "content", label: "Research content", section: 1, frameY: 3378 },
-  { y: 101, type: "content", label: "Research content", section: 1, frameY: 4123 },
-  { y: 113, type: "section", label: "Design", section: 2, frameY: 4706 },
-  { y: 125, type: "content", label: "Design content", section: 2, frameY: 4792 },
-  { y: 137, type: "content", label: "Design content", section: 2, frameY: 4902 },
-  { y: 149, type: "content", label: "Design content", section: 2, frameY: 5747 },
-  { y: 161, type: "content", label: "Design content", section: 2, frameY: 5912 },
-  { y: 173, type: "content", label: "Design content", section: 2, frameY: 6799 },
-  { y: 185, type: "section", label: "Reflection", section: 3, frameY: 7587 },
-  { y: 197, type: "content", label: "Reflection content", section: 3, frameY: 7670 },
+  { y: 5, type: "section", label: "Overview", frameY: 1103 },
+  { y: 23, type: "content", label: "What is Sancorda?", frameY: 2211 },
+  { y: 41, type: "section", label: "Research", frameY: 2433 },
+  { y: 59, type: "content", label: "Competitor Analysis", frameY: 2655 },
+  { y: 77, type: "content", label: "Recon ST Flow", frameY: 3378 },
+  { y: 95, type: "content", label: "Recon AI Flow", frameY: 4123 },
+  { y: 113, type: "section", label: "Design", frameY: 4706 },
+  { y: 131, type: "content", label: "Layout Explorations", frameY: 4902 },
+  { y: 149, type: "content", label: "Design Style & Icons", frameY: 5747 },
+  { y: 167, type: "content", label: "Recon ST & AI Demo", frameY: 6699 },
+  { y: 185, type: "section", label: "Reflection", frameY: 7587 },
 ];
 
-const sectionLabels = ["Overview", "Research", "Design", "Reflection"];
-const sectionNavItems = sectionLabels.map((label, index) => ({
-  label,
-  tickIndex: rulerTicks.findIndex((tick) => tick.type === "section" && tick.section === index),
+const sectionNavItems = rulerTicks.map((tick, index) => ({
+  label: tick.label,
+  tickIndex: index,
 }));
 
 // @soundcn/click-soft, CC0 sound by Kenney.
@@ -259,7 +252,7 @@ export default function SancordaCaseStudy() {
         >
           <ol className={styles.rulerList}>
             {sectionNavItems.map((item, index) => (
-              <li className={activeTick.section === index ? styles.rulerListActive : ""} key={item.label}>
+              <li className={activeTickIndex === item.tickIndex ? styles.rulerListActive : ""} key={item.label}>
                 <button
                   className={styles.rulerListButton}
                   type="button"

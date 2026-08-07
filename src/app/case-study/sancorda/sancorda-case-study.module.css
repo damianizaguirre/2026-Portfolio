@@ -300,7 +300,7 @@
   position: fixed;
   left: calc(67px * var(--scale));
   top: calc(214px * var(--scale));
-  width: 187px;
+  width: 260px;
   height: 230px;
   z-index: 25;
   pointer-events: none;
@@ -312,8 +312,8 @@
   position: absolute;
   left: 0;
   top: 0;
-  width: 120px;
-  height: 162px;
+  width: 216px;
+  height: 318px;
   overflow: hidden;
   border-radius: 10px;
   background: #ffffff;
@@ -334,16 +334,16 @@
   left: 19px;
   top: 21px;
   display: flex;
-  width: 66px;
+  width: 176px;
   flex-direction: column;
-  gap: 16px;
+  gap: 10px;
   margin: 0;
   padding: 0;
   list-style: none;
   color: #c4c4c4;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 400;
-  line-height: normal;
+  line-height: 1.15;
 }
 
 .rulerListButton {
