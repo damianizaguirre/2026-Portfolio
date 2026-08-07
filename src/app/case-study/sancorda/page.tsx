@@ -411,11 +411,16 @@ export default function SancordaCaseStudy() {
           <h2 className={styles.sectionTitle} style={{ left: 395, top: 6699, width: 929 }}>
             Recon ST &amp; Recon AI Demo
           </h2>
-          <img
+          <video
             className={styles.designDemoImage}
-            src="/images/sancorda/design-demo.png"
-            alt="Recon ST and Recon AI demo screenshot"
-            style={{ left: 397, top: 6799, width: 1130, height: 694 }}
+            src="/videos/sancorda-demo.mp4"
+            aria-label="Recon ST and Recon AI demo recording"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            style={{ left: 397, top: 6799, width: 1130, height: 595, borderRadius: 10 }}
           />
 
           <p className={styles.sectionKicker} style={{ left: 397, top: 7587 }}>
