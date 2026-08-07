@@ -442,30 +442,66 @@ export default function MismoCaseStudy() {
           </p>
 
           <div className={styles.wideSlot} />
-          <img
-            className={styles.researchIcon}
-            src="/images/mismo/research-app-apple-voice-memos.png"
-            alt="Apple Voice Memos app icon"
+          <a
+            className={styles.researchIconLink}
+            href="https://apps.apple.com/us/app/voice-memos/id1069512134"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Open Apple Voice Memos on the App Store"
             style={{ left: 645 }}
-          />
-          <img
-            className={styles.researchIcon}
-            src="/images/mismo/research-app-otter-ai.png"
-            alt="Otter app icon"
+            onPointerEnter={(event) => playHoverSound(event.currentTarget)}
+          >
+            <img
+              className={styles.researchIcon}
+              src="/images/mismo/research-app-apple-voice-memos.png"
+              alt=""
+            />
+          </a>
+          <a
+            className={styles.researchIconLink}
+            href="https://apps.apple.com/us/app/otter-transcribe-voice-notes/id1276437113"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Open Otter on the App Store"
             style={{ left: 821 }}
-          />
-          <img
-            className={styles.researchIcon}
-            src="/images/mismo/research-app-audiopen.png"
-            alt="AudioPen app icon"
+            onPointerEnter={(event) => playHoverSound(event.currentTarget)}
+          >
+            <img
+              className={styles.researchIcon}
+              src="/images/mismo/research-app-otter-ai.png"
+              alt=""
+            />
+          </a>
+          <a
+            className={styles.researchIconLink}
+            href="https://apps.apple.com/us/app/audiopen-ai-voice-to-text/id6502638001"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Open AudioPen on the App Store"
             style={{ left: 997 }}
-          />
-          <img
-            className={styles.researchIcon}
-            src="/images/mismo/research-app-voicenotes.png"
-            alt="Voicenotes app icon"
+            onPointerEnter={(event) => playHoverSound(event.currentTarget)}
+          >
+            <img
+              className={styles.researchIcon}
+              src="/images/mismo/research-app-audiopen.png"
+              alt=""
+            />
+          </a>
+          <a
+            className={styles.researchIconLink}
+            href="https://apps.apple.com/us/app/voicenotes-ai-notes-meetings/id6483293628"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Open Voicenotes on the App Store"
             style={{ left: 1173 }}
-          />
+            onPointerEnter={(event) => playHoverSound(event.currentTarget)}
+          >
+            <img
+              className={styles.researchIcon}
+              src="/images/mismo/research-app-voicenotes.png"
+              alt=""
+            />
+          </a>
 
           <p className={styles.sectionKicker} style={{ left: 395, top: 4871 }}>
             Research
