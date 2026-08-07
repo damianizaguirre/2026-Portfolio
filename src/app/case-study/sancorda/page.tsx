@@ -138,14 +138,19 @@ export default function SancordaCaseStudy() {
       const scale = Math.min(window.innerWidth / frameWidth, 1);
       const frameScrollY = window.scrollY / scale;
       const frameViewportHeight = window.innerHeight / scale;
+      const pageScrollBottom = window.scrollY + window.innerHeight;
+      const scrollableHeight = document.documentElement.scrollHeight;
+      const isAtPageBottom = pageScrollBottom >= scrollableHeight - 8;
       const readingY = Math.min(frameHeight, frameScrollY + frameViewportHeight * rulerActivationRatio);
-      let nextIndex = 0;
+      let nextIndex = isAtPageBottom ? rulerTicks.length - 1 : 0;
 
-      rulerTicks.forEach((tick, index) => {
-        if (readingY >= tick.frameY) {
-          nextIndex = index;
-        }
-      });
+      if (!isAtPageBottom) {
+        rulerTicks.forEach((tick, index) => {
+          if (readingY >= tick.frameY) {
+            nextIndex = index;
+          }
+        });
+      }
 
       setActiveTickIndex((currentIndex) => currentIndex === nextIndex ? currentIndex : nextIndex);
     };
@@ -202,11 +207,9 @@ export default function SancordaCaseStudy() {
   return (
     <main className={styles.page} ref={pageRef} aria-label="Sancorda case study">
       <header className={styles.topNav} aria-label="Top Navigation Bar">
-        <a
+        <span
           className={styles.navDot}
-          href="/"
-          aria-label="Home"
-          onPointerEnter={(event) => playHoverSound(event.currentTarget)}
+          aria-hidden="true"
         />
         <nav className={styles.navLinks} aria-label="Primary navigation">
           <a href="/" onPointerEnter={(event) => playHoverSound(event.currentTarget)}>Home</a>

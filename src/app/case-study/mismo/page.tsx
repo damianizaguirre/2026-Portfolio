@@ -249,11 +249,9 @@ export default function MismoCaseStudy() {
   return (
     <main className={styles.page} ref={pageRef} aria-label="Mismo case study">
       <header className={styles.topNav} aria-label="Top Navigation Bar">
-        <a
+        <span
           className={styles.navDot}
-          href="/"
-          aria-label="Home"
-          onPointerEnter={(event) => playHoverSound(event.currentTarget)}
+          aria-hidden="true"
         />
         <nav className={styles.navLinks} aria-label="Primary navigation">
           <a href="/" onPointerEnter={(event) => playHoverSound(event.currentTarget)}>Home</a>
