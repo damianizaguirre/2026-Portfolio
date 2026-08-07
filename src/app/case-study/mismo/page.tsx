@@ -444,15 +444,27 @@ export default function MismoCaseStudy() {
           <div className={styles.wideSlot} />
           <img
             className={styles.researchIcon}
-            src="/images/mismo/research-app-voice-memos.png"
-            alt=""
-            style={{ left: 592 }}
+            src="/images/mismo/research-app-apple-voice-memos.png"
+            alt="Apple Voice Memos app icon"
+            style={{ left: 645 }}
           />
           <img
             className={styles.researchIcon}
-            src="/images/mismo/research-app-notes.png"
-            alt=""
-            style={{ left: 744 }}
+            src="/images/mismo/research-app-otter-ai.png"
+            alt="Otter app icon"
+            style={{ left: 821 }}
+          />
+          <img
+            className={styles.researchIcon}
+            src="/images/mismo/research-app-audiopen.png"
+            alt="AudioPen app icon"
+            style={{ left: 997 }}
+          />
+          <img
+            className={styles.researchIcon}
+            src="/images/mismo/research-app-voicenotes.png"
+            alt="Voicenotes app icon"
+            style={{ left: 1173 }}
           />
 
           <p className={styles.sectionKicker} style={{ left: 395, top: 4871 }}>
