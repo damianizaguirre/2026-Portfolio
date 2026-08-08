@@ -1550,7 +1550,7 @@
 
         .name {
           left: 47px;
-          top: 189px;
+          top: calc(189px + var(--hero-y-offset));
           width: 221px;
           height: 23px;
           font-size: 17.888px;
@@ -1560,7 +1560,7 @@
 
         .role {
           left: 47px;
-          top: 218.07px;
+          top: calc(218.07px + var(--hero-y-offset));
           width: 167px;
           height: 17px;
           font-size: 13.416px;
@@ -1570,7 +1570,7 @@
 
         .currently-label {
           left: 47px;
-          top: 255.52px;
+          top: calc(255.52px + var(--hero-y-offset));
           width: 77px;
           height: 15px;
           font-size: 11.18px;
@@ -1580,7 +1580,7 @@
 
         .currently-copy {
           left: 47px;
-          top: 275.64px;
+          top: calc(275.64px + var(--hero-y-offset));
           width: 309px;
           height: auto;
           color: #5b5b5b;
@@ -1592,7 +1592,7 @@
 
         .dotted-map-frame {
           left: 47px;
-          top: 328px;
+          top: calc(328px + var(--hero-y-offset));
           width: 309px;
           height: 138px;
           border-width: 0.4px;
@@ -1601,7 +1601,7 @@
 
         .time-card {
           left: 47px;
-          top: 473px;
+          top: calc(473px + var(--hero-y-offset));
           width: 136px;
           height: 85px;
           border-width: 0.396px;
@@ -1656,7 +1656,7 @@
 
         .music-card {
           left: 190px;
-          top: 473px;
+          top: calc(473px + var(--hero-y-offset));
           width: 166px;
           height: 85px;
           border-width: 0.4px;
@@ -1714,7 +1714,7 @@
 
         .damian-llm-card {
           left: 47px;
-          top: 565px;
+          top: calc(565px + var(--hero-y-offset));
           width: 309px;
           height: 170px;
           border-width: 0.595px;
@@ -1791,19 +1791,19 @@
         }
 
         .project-card[data-project="mismo"] {
-          top: 877px;
+          top: calc(877px + var(--project-y-offset));
         }
 
         .project-card[data-project="carfully"] {
-          top: 1153px;
+          top: calc(1153px + var(--project-y-offset));
         }
 
         .project-card[data-project="integra"] {
-          top: 1420px;
+          top: calc(1420px + var(--project-y-offset));
         }
 
         .project-card[data-project="sancorda"] {
-          top: 1687px;
+          top: calc(1687px + var(--project-y-offset));
         }
 
         .project-thumbnail {
@@ -2200,6 +2200,10 @@
       // Mobile frame ("Porfolio Mobile Version (Home)"). Kept in sync with the
       // --frame-width/--frame-height overrides in the max-width:700px block.
       const mobileFrameWidth = 402;
+      const mobileHeroTop = 189;
+      const mobileHeroBottom = 735;
+      const mobileProjectStart = 877;
+      const mobileProjectFoldGap = 48;
       const mobileQuery = window.matchMedia("(max-width: 700px)");
       // Past ~450px the mobile frame would start scaling up past its design
       // size, so cap it and let .viewport center the leftover width.
@@ -2287,15 +2291,19 @@
       const clickSoftPlayers = [];
       const hoverSoundLastPlayed = new WeakMap();
       function syncScale() {
-        // The mobile frame lays everything out at fixed coordinates, so the
-        // hero/project offsets that centre the desktop fold don't apply.
         if (mobileQuery.matches) {
-          root.style.setProperty(
-            "--scale",
-            String(Math.min(window.innerWidth / mobileFrameWidth, mobileMaxScale)),
+          const nextScale = Math.min(window.innerWidth / mobileFrameWidth, mobileMaxScale);
+          const viewportHeightInFrame = window.innerHeight / nextScale;
+          const heroCenter = (mobileHeroTop + mobileHeroBottom) / 2;
+          const heroOffset = Math.round(viewportHeightInFrame * 0.53 - heroCenter);
+          const projectOffset = Math.max(
+            0,
+            Math.round(viewportHeightInFrame + mobileProjectFoldGap - mobileProjectStart),
           );
-          root.style.setProperty("--hero-y-offset", "0px");
-          root.style.setProperty("--project-y-offset", "0px");
+
+          root.style.setProperty("--scale", String(nextScale));
+          root.style.setProperty("--hero-y-offset", `${heroOffset}px`);
+          root.style.setProperty("--project-y-offset", `${projectOffset}px`);
           return;
         }
 
