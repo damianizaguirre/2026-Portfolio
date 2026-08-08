@@ -1514,6 +1514,377 @@
         pointer-events: none;
       }
 
+      /* ------------------------------------------------------------------
+         Mobile layout ("Porfolio Mobile Version (Home)", 402x2388).
+
+         Same architecture as desktop -- one absolutely positioned frame
+         scaled to fit the viewport -- just with the mobile frame's own
+         geometry. Cards whose internals are laid out in desktop pixels
+         (project thumbnails, the thinking orb, the LLM chat layer) are
+         scaled by the ratio between the two frames rather than being
+         re-positioned child by child.
+         ------------------------------------------------------------------ */
+      @media (max-width: 700px) {
+        :root {
+          --frame-width: 402;
+          --frame-height: 2388;
+        }
+
+        .viewport {
+          margin: 0 auto;
+        }
+
+        /* Nav collapses to just the morph dot (23px in the mobile frame,
+           45px natively -- scaling keeps the expanded menu proportional). */
+        .desktop-links {
+          display: none;
+        }
+
+        .top-nav {
+          left: calc(20px * var(--scale));
+          top: calc(70px * var(--scale));
+          width: auto;
+          height: auto;
+          transform: scale(calc(var(--scale) * 0.5111));
+        }
+
+        .name {
+          left: 47px;
+          top: 189px;
+          width: 221px;
+          height: 23px;
+          font-size: 17.888px;
+          line-height: normal;
+          font-weight: 500;
+        }
+
+        .role {
+          left: 47px;
+          top: 218.07px;
+          width: 167px;
+          height: 17px;
+          font-size: 13.416px;
+          line-height: normal;
+          font-weight: 400;
+        }
+
+        .currently-label {
+          left: 47px;
+          top: 255.52px;
+          width: 77px;
+          height: 15px;
+          font-size: 11.18px;
+          line-height: normal;
+          font-weight: 500;
+        }
+
+        .currently-copy {
+          left: 47px;
+          top: 275.64px;
+          width: 309px;
+          height: auto;
+          color: #5b5b5b;
+          font-size: 13.416px;
+          line-height: normal;
+          font-weight: 300;
+          white-space: normal;
+        }
+
+        .dotted-map-frame {
+          left: 47px;
+          top: 328px;
+          width: 309px;
+          height: 138px;
+          border-width: 0.4px;
+          border-radius: 3.96px;
+        }
+
+        .time-card {
+          left: 47px;
+          top: 473px;
+          width: 136px;
+          height: 85px;
+          border-width: 0.396px;
+          border-radius: 3.964px;
+          box-shadow: 0 0 0.396px rgba(149, 149, 149, 0.25);
+        }
+
+        .time-digit,
+        .time-colon,
+        .time-card.has-two-digit-hour .time-digit,
+        .time-card.has-two-digit-hour .time-colon {
+          font-size: 52.573px;
+        }
+
+        .time-digit.hour-one,
+        .time-card.has-two-digit-hour .time-digit.hour-one {
+          left: 19px;
+          top: 10px;
+          width: 41.355px;
+          height: 65.898px;
+        }
+
+        .time-colon,
+        .time-card.has-two-digit-hour .time-colon {
+          left: 52.08px;
+          top: 10.19px;
+        }
+
+        .time-digit.minute-ten,
+        .time-card.has-two-digit-hour .time-digit.minute-ten {
+          left: 56.19px;
+          top: 10.56px;
+          width: 39.701px;
+          height: 65.039px;
+        }
+
+        .time-digit.minute-one,
+        .time-card.has-two-digit-hour .time-digit.minute-one {
+          left: 86.16px;
+          top: 10.6px;
+          width: 31.658px;
+          height: 64.851px;
+        }
+
+        .time-digit.hour-ten,
+        .time-card.has-two-digit-hour .time-digit.hour-ten {
+          left: -6px;
+          top: 10px;
+          width: 30px;
+          height: 65.898px;
+        }
+
+        .music-card {
+          left: 190px;
+          top: 473px;
+          width: 166px;
+          height: 85px;
+          border-width: 0.4px;
+          border-radius: 3.96px;
+          box-shadow: 0 0 0.4px rgba(0, 0, 0, 0.25);
+          --music-meta-left: 89px;
+          --music-meta-width: 68px;
+        }
+
+        /* The mobile card is plain white -- no blurred album-art wash. */
+        .music-card-gradient {
+          display: none;
+        }
+
+        .album-art {
+          left: 6.6px;
+          top: 10.6px;
+          width: 64.421px;
+          height: 64.709px;
+          border-radius: 4.948px;
+        }
+
+        .track-title {
+          top: 24.6px;
+          height: 14px;
+          font-size: 10.6px;
+        }
+
+        .track-artist {
+          top: 38.74px;
+          height: 9px;
+          font-size: 7.067px;
+        }
+
+        .progress-track,
+        .progress-fill {
+          top: 55px;
+          height: 5px;
+          border-radius: 3.125px;
+        }
+
+        .progress-track {
+          width: 53px;
+        }
+
+        .progress-fill {
+          width: 13.729px;
+        }
+
+        /* Not present in the mobile frame. */
+        .track-time,
+        .play-button {
+          display: none;
+        }
+
+        .damian-llm-card {
+          left: 47px;
+          top: 565px;
+          width: 309px;
+          height: 170px;
+          border-width: 0.595px;
+          border-radius: 5.954px;
+          box-shadow: 0 0 0.595px rgba(149, 149, 149, 0.25);
+        }
+
+        /* Orb renders at its native 64px, scaled down to the frame's 37.26px. */
+        .damian-llm-avatar {
+          left: 134.57px;
+          top: 29.41px;
+          width: 64px;
+          height: 64px;
+          transform: scale(0.5822);
+          transform-origin: top left;
+        }
+
+        .damian-llm-title {
+          left: 101.97px;
+          top: 73.32px;
+          width: auto;
+          height: 17px;
+          font-size: 13.307px;
+        }
+
+        .damian-llm-copy {
+          left: 49.4px;
+          top: 93.94px;
+          width: 208.253px;
+          height: 12px;
+          font-size: 9.315px;
+        }
+
+        .damian-llm-button {
+          left: 95.41px;
+          top: 117.41px;
+          width: 115.544px;
+          height: 26.664px;
+          border-radius: 17.776px;
+        }
+
+        .damian-llm-button-label {
+          top: 5.33px;
+          font-size: 12.443px;
+        }
+
+        /* The chat layer keeps its desktop internals and is scaled by the
+           card ratio (309/519), so the whole open state stays consistent
+           without re-positioning every chip, bubble and composer control.
+           The mobile card is proportionally taller than the desktop one, so
+           the scaled layer is nudged down to sit centred rather than leaving
+           all the slack below the composer. */
+        .damian-llm-chat {
+          transform: translateY(21px) scale(0.5954);
+          transform-origin: top left;
+        }
+
+        .damian-llm-card[data-open="true"] .damian-llm-button {
+          left: 14.89px;
+          top: calc(var(--llm-composer-top) * 0.5954 + 21px);
+          width: 249.47px;
+          height: calc(var(--llm-composer-height) * 0.5954);
+        }
+
+        .project-card {
+          width: 309px;
+          height: 243.5px;
+        }
+
+        /* Matches the specificity of the desktop [data-project] rules so the
+           shared left edge actually wins. */
+        .project-card[data-project] {
+          left: 47px;
+        }
+
+        .project-card[data-project="mismo"] {
+          top: 877px;
+        }
+
+        .project-card[data-project="carfully"] {
+          top: 1153px;
+        }
+
+        .project-card[data-project="integra"] {
+          top: 1420px;
+        }
+
+        .project-card[data-project="sancorda"] {
+          top: 1687px;
+        }
+
+        .project-thumbnail {
+          width: 309px;
+          height: 206.8px;
+          border-width: 0.4px;
+          border-radius: 3.96px;
+        }
+
+        /* 309/780 == 206.8/522, so one uniform scale reproduces every
+           per-project crop already tuned for desktop. transform only scales
+           the box, so each offset is scaled by the same factor by hand. */
+        .project-thumbnail img,
+        .project-thumbnail video {
+          transform: scale(0.3962);
+          transform-origin: top left;
+        }
+
+        .project-card:hover .project-thumbnail img,
+        .project-card:hover .project-thumbnail video {
+          transform: scale(0.3962);
+        }
+
+        .project-card[data-project="mismo"] .project-thumbnail video {
+          left: 80.82px;
+          top: -90.73px;
+        }
+
+        .project-card[data-project="carfully"] .project-thumbnail img {
+          left: 28.53px;
+          top: 21.39px;
+        }
+
+        .project-card[data-project="integra"] .project-thumbnail img {
+          left: 39.62px;
+          top: 38.83px;
+        }
+
+        .project-card[data-project="sancorda"] .project-thumbnail img {
+          left: 39.62px;
+          top: 38.43px;
+        }
+
+        .project-title {
+          top: 216.7px;
+          height: 15px;
+          font-size: 11.409px;
+          line-height: normal;
+        }
+
+        .project-year {
+          top: 231.53px;
+          height: 12px;
+          font-size: 9.127px;
+          line-height: normal;
+        }
+
+        .social-link {
+          top: 2122px;
+          width: 65.826px;
+          height: 65.826px;
+          border-radius: 14.723px;
+        }
+
+        .social-link.instagram {
+          left: 41px;
+        }
+
+        .social-link.x {
+          left: 126.06px;
+        }
+
+        .social-link.linkedin {
+          left: 211.11px;
+        }
+
+        .social-link.mail {
+          left: 296.17px;
+        }
+      }
+
       @media (prefers-reduced-motion: reduce) {
         .t-morph,
         .t-morph-plus,
@@ -1826,6 +2197,13 @@
       const heroVerticalLift = 56;
       const projectStart = 1082;
       const projectFoldGap = 54;
+      // Mobile frame ("Porfolio Mobile Version (Home)"). Kept in sync with the
+      // --frame-width/--frame-height overrides in the max-width:700px block.
+      const mobileFrameWidth = 402;
+      const mobileQuery = window.matchMedia("(max-width: 700px)");
+      // Past ~450px the mobile frame would start scaling up past its design
+      // size, so cap it and let .viewport center the leftover width.
+      const mobileMaxScale = 1.12;
       const morph = document.querySelector("#nav-morph");
       const morphToggle = document.querySelector("#nav-morph-toggle");
       const morphItems = Array.from(document.querySelectorAll(".morph-item"));
@@ -1909,6 +2287,18 @@
       const clickSoftPlayers = [];
       const hoverSoundLastPlayed = new WeakMap();
       function syncScale() {
+        // The mobile frame lays everything out at fixed coordinates, so the
+        // hero/project offsets that centre the desktop fold don't apply.
+        if (mobileQuery.matches) {
+          root.style.setProperty(
+            "--scale",
+            String(Math.min(window.innerWidth / mobileFrameWidth, mobileMaxScale)),
+          );
+          root.style.setProperty("--hero-y-offset", "0px");
+          root.style.setProperty("--project-y-offset", "0px");
+          return;
+        }
+
         const nextScale = Math.min(window.innerWidth / frameWidth, 1);
         const viewportHeightInFrame = window.innerHeight / nextScale;
         const heroOffset = Math.round((viewportHeightInFrame - designViewportHeight) / 2) - heroVerticalLift;
@@ -2973,6 +3363,11 @@
         window.setTimeout(advancePreviewMinute, 420);
       }
       window.addEventListener("resize", () => {
+        syncScale();
+        syncTrackTitlePan();
+      });
+      // Crossing the breakpoint swaps which frame's geometry is in play.
+      mobileQuery.addEventListener("change", () => {
         syncScale();
         syncTrackTitlePan();
       });
