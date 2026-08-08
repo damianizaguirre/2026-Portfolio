@@ -4,7 +4,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import styles from "./integra-case-study.module.css";
 
 const frameWidth = 1920;
-const frameHeight = 9579;
+// The Figma frame is 9579 tall, but that leaves a 344px gap under the closing
+// team photos. Trimmed to a 150px tail to match the Sancorda study.
+const frameHeight = 9385;
 const rulerActivationRatio = 0.18;
 
 const rulerTicks = [

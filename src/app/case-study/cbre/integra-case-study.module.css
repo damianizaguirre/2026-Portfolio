@@ -1,6 +1,6 @@
 .page {
   --frame-width: 1920;
-  --frame-height: 9579;
+  --frame-height: 9385;
   --scale: 1;
   min-height: calc(var(--frame-height) * 1px * var(--scale));
   background: #fbfbfb;
