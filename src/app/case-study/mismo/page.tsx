@@ -32,6 +32,7 @@ const sectionNavItems = sectionLabels.map((label, index) => ({
   label,
   tickIndex: rulerTicks.findIndex((tick) => tick.type === "section" && tick.section === index),
 }));
+const tickLabelCenterOffset = 2;
 
 // @soundcn/click-soft, CC0 sound by Kenney.
 const clickSoftSoundDataUri =
@@ -303,7 +304,11 @@ export default function MismoCaseStudy() {
         >
           <ol className={styles.rulerList}>
             {sectionNavItems.map((item, index) => (
-              <li className={activeTick.section === index ? styles.rulerListActive : ""} key={item.label}>
+              <li
+                className={activeTick.section === index ? styles.rulerListActive : ""}
+                key={item.label}
+                style={{ top: (rulerTicks[item.tickIndex]?.y ?? 0) + tickLabelCenterOffset }}
+              >
                 <button
                   className={styles.rulerListButton}
                   type="button"

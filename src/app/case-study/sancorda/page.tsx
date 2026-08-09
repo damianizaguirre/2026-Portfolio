@@ -25,6 +25,7 @@ const sectionNavItems = rulerTicks.map((tick, index) => ({
   label: tick.label,
   tickIndex: index,
 }));
+const tickLabelCenterOffset = 2;
 
 // @soundcn/click-soft, CC0 sound by Kenney.
 const clickSoftSoundDataUri =
@@ -256,7 +257,11 @@ export default function SancordaCaseStudy() {
         >
           <ol className={styles.rulerList}>
             {sectionNavItems.map((item, index) => (
-              <li className={activeTickIndex === item.tickIndex ? styles.rulerListActive : ""} key={item.label}>
+              <li
+                className={activeTickIndex === item.tickIndex ? styles.rulerListActive : ""}
+                key={item.label}
+                style={{ top: (rulerTicks[item.tickIndex]?.y ?? 0) + tickLabelCenterOffset }}
+              >
                 <button
                   className={styles.rulerListButton}
                   type="button"
