@@ -309,9 +309,11 @@
 .rulerList {
   position: absolute;
   left: 19px;
-  top: 0;
+  top: 21px;
+  display: flex;
   width: 84px;
-  height: 206px;
+  flex-direction: column;
+  gap: 16px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -319,13 +321,6 @@
   font-size: 14px;
   font-weight: 400;
   line-height: 1.15;
-}
-
-.rulerList li {
-  position: absolute;
-  left: 0;
-  transform: translateY(-50%);
-  white-space: nowrap;
 }
 
 .rulerListButton {
