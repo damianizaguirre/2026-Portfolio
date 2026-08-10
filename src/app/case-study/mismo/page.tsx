@@ -330,11 +330,10 @@ export default function MismoCaseStudy() {
               muted
               loop
               playsInline
-              preload="auto"
+              preload="metadata"
               poster="/assets/figma-home/mismo-poster.png"
             >
-              <source src="/assets/figma-home/mismo-preview.mov" type="video/quicktime" />
-              <source src="/assets/figma-home/mismo-preview-clean-white-60fps.mp4" type="video/mp4" />
+              <source src="/assets/figma-home/mismo-preview-lite.mp4" type="video/mp4" />
             </video>
           </section>
 
@@ -451,7 +450,7 @@ export default function MismoCaseStudy() {
             style={{ left: 645 }}
             onPointerEnter={(event) => playHoverSound(event.currentTarget)}
           >
-            <img
+            <img loading="lazy" decoding="async"
               className={styles.researchIcon}
               src="/images/mismo/research-app-apple-voice-memos.png"
               alt=""
@@ -466,7 +465,7 @@ export default function MismoCaseStudy() {
             style={{ left: 821 }}
             onPointerEnter={(event) => playHoverSound(event.currentTarget)}
           >
-            <img
+            <img loading="lazy" decoding="async"
               className={styles.researchIcon}
               src="/images/mismo/research-app-otter-ai.png"
               alt=""
@@ -481,7 +480,7 @@ export default function MismoCaseStudy() {
             style={{ left: 997 }}
             onPointerEnter={(event) => playHoverSound(event.currentTarget)}
           >
-            <img
+            <img loading="lazy" decoding="async"
               className={styles.researchIcon}
               src="/images/mismo/research-app-audiopen.png"
               alt=""
@@ -496,7 +495,7 @@ export default function MismoCaseStudy() {
             style={{ left: 1173 }}
             onPointerEnter={(event) => playHoverSound(event.currentTarget)}
           >
-            <img
+            <img loading="lazy" decoding="async"
               className={styles.researchIcon}
               src="/images/mismo/research-app-voicenotes.png"
               alt=""

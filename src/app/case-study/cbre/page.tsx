@@ -273,7 +273,7 @@ export default function CBRECaseStudy() {
           <h1 className={styles.title}>Integra - An employee centered solution</h1>
 
           <section className={styles.heroCard} aria-label="Integra hero preview">
-            <img
+            <img loading="eager" decoding="async"
               className={styles.plainImage}
               src="/images/integra/hero.png"
               alt="Integra team dashboard"
@@ -333,7 +333,7 @@ export default function CBRECaseStudy() {
             Gathering our research, final demo, and present our solution.
           </p>
 
-          <img
+          <img loading="lazy" decoding="async"
             className={styles.plainImage}
             src="/images/integra/double-diamond.png"
             alt="Double diamond design process: Discover, Define, Develop, Deliver"
@@ -369,7 +369,7 @@ export default function CBRECaseStudy() {
             Core Flows
           </p>
 
-          <img
+          <img loading="lazy" decoding="async"
             className={styles.plainImage}
             src="/images/integra/dashboard.png"
             alt="Integra manager dashboard"
@@ -383,7 +383,7 @@ export default function CBRECaseStudy() {
             team&rsquo;s weekly progress, and employee&rsquo;s in distress and options to help them.
           </p>
 
-          <img
+          <img loading="lazy" decoding="async"
             className={styles.plainImage}
             src="/images/integra/virtual-room.png"
             alt="Integra virtual room"
@@ -398,7 +398,7 @@ export default function CBRECaseStudy() {
             space, and see the team&rsquo;s chat located on the top of the page.
           </p>
 
-          <img
+          <img loading="lazy" decoding="async"
             className={styles.plainImage}
             src="/images/integra/task-board.png"
             alt="Integra task board and analytics"
@@ -424,7 +424,7 @@ export default function CBRECaseStudy() {
             activities from a range of High-Engagement to Low-Engagement and from Autonomous to
             Leader-Driven.
           </p>
-          <img
+          <img loading="lazy" decoding="async"
             className={styles.plainImage}
             src="/images/integra/bifocal.png"
             alt="Bifocal analysis mapping wellness products by engagement and autonomy"
@@ -444,7 +444,7 @@ export default function CBRECaseStudy() {
             products that also provided solutions within the same category. We researched what they
             had and what they lacked, forming a large but concise analysis.
           </p>
-          <img
+          <img loading="lazy" decoding="async"
             className={styles.roundedImage}
             src="/images/integra/feature-comparison.png"
             alt="Feature comparison chart of current workplace wellness products"
@@ -459,7 +459,7 @@ export default function CBRECaseStudy() {
             products that also provided solutions within the same category. We researched what they
             had and what they lacked, forming a large but concise analysis.
           </p>
-          <img
+          <img loading="lazy" decoding="async"
             className={styles.roundedImage}
             src="/images/integra/journey-sentiment.png"
             alt="User journey and sentiment map"
@@ -473,19 +473,19 @@ export default function CBRECaseStudy() {
             As a team we brainstormed the main set of features and the possible layouts the product
             could have.
           </p>
-          <img
+          <img loading="lazy" decoding="async"
             className={styles.roundedImage}
             src="/images/integra/wireframe-1.png"
             alt="Early wireframe exploration one"
             style={{ left: 414, top: 8092, width: 335, height: 446 }}
           />
-          <img
+          <img loading="lazy" decoding="async"
             className={styles.roundedImage}
             src="/images/integra/wireframe-2.png"
             alt="Early wireframe exploration two"
             style={{ left: 805, top: 8092, width: 338, height: 451 }}
           />
-          <img
+          <img loading="lazy" decoding="async"
             className={styles.roundedImage}
             src="/images/integra/wireframe-3.png"
             alt="Early wireframe exploration three"
@@ -505,13 +505,13 @@ export default function CBRECaseStudy() {
             fast research, designing, and presenting. Thankful for my teammates Dung &amp; Ajith
             for being amazing and working hard! Looking forward to doing another challenge.
           </p>
-          <img
+          <img loading="lazy" decoding="async"
             className={styles.roundedImage}
             src="/images/integra/team-1.png"
             alt="The team presenting at the CBRE design challenge"
             style={{ left: 414, top: 8905, width: 532, height: 330 }}
           />
-          <img
+          <img loading="lazy" decoding="async"
             className={styles.roundedImage}
             src="/images/integra/team-2.png"
             alt="The team celebrating the CBRE design challenge win"

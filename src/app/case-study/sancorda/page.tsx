@@ -277,7 +277,7 @@ export default function SancordaCaseStudy() {
           <h1 className={styles.title}>Interactive Medical PlanningPlatform</h1>
 
           <section className={styles.heroCard} aria-label="Sancorda hero preview">
-            <img
+            <img loading="eager" decoding="async"
               className={styles.heroImage}
               src="/images/sancorda/hero-recon-ai.png"
               alt="Sancorda medical planning interface"
@@ -321,6 +321,8 @@ export default function SancordaCaseStudy() {
           <section className={styles.imageCard} style={{ left: 395, top: 1517 }} aria-label="What is Sancorda visual">
             <div className={styles.whatImageFrame}>
               <img
+                loading="lazy"
+                decoding="async"
                 className={styles.whatImage}
                 src="/images/sancorda/what-is-sancorda.png"
                 alt="Overview of the Sancorda platform"
@@ -352,7 +354,7 @@ export default function SancordaCaseStudy() {
             well as features to avoid.
           </p>
 
-          <img
+          <img loading="lazy" decoding="async"
             className={styles.wideImage}
             src="/images/sancorda/competitor-analysis.png"
             alt="Competitor analysis of medical software products"
@@ -362,7 +364,7 @@ export default function SancordaCaseStudy() {
           <h2 className={styles.sectionTitle} style={{ left: 395, top: 3378, width: 1022 }}>
             Initial User Flow for Recon ST
           </h2>
-          <img
+          <img loading="lazy" decoding="async"
             className={styles.wideImage}
             src="/images/sancorda/user-flow-recon-st.png"
             alt="Initial user flow for Recon ST"
@@ -372,7 +374,7 @@ export default function SancordaCaseStudy() {
           <h2 className={styles.sectionTitle} style={{ left: 396, top: 4123, width: 1022 }}>
             Initial User Flow for Recon AI
           </h2>
-          <img
+          <img loading="lazy" decoding="async"
             className={styles.wideImage}
             src="/images/sancorda/user-flow-recon-ai.png"
             alt="Initial user flow for Recon AI"
@@ -390,7 +392,7 @@ export default function SancordaCaseStudy() {
             that this software was going to have a data-heavy dashboard, I was excited and
             interested in figuring out the different combinations of data layouts.
           </p>
-          <img
+          <img loading="lazy" decoding="async"
             className={styles.designDemoImage}
             src="/images/sancorda/sancorda-frames.png"
             alt="Layout explorations for the Sancorda dashboard"
@@ -405,7 +407,7 @@ export default function SancordaCaseStudy() {
             different variations of the components were designed to maintain visual clarity
             throughout the demo journey due to its data-heavy dashboards.
           </p>
-          <img
+          <img loading="lazy" decoding="async"
             className={styles.designImage}
             src="/images/sancorda/design-style.png"
             alt="Sancorda design style and icon system"

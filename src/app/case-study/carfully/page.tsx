@@ -282,9 +282,9 @@ export default function CarfullyCaseStudy() {
 
           <section className={styles.heroCard} aria-label="Carfully hero preview">
             <div className={styles.heroScreen}>
-              <img src="/images/carfully/landing-page.png" alt="" />
+              <img src="/images/carfully/landing-page.png" alt="" loading="eager" decoding="async" />
             </div>
-            <img
+            <img loading="eager" decoding="async"
               className={styles.heroMacbook}
               src="/images/carfully/macbook-pro.png"
               alt="Carfully landing page shown on a MacBook Pro"
@@ -342,7 +342,7 @@ export default function CarfullyCaseStudy() {
             Coreflows
           </p>
 
-          <img
+          <img loading="lazy" decoding="async"
             className={styles.coreflowShot}
             src="/images/carfully/home-page-quiz.png"
             alt="Carfully home page after the initial quiz"
@@ -355,7 +355,7 @@ export default function CarfullyCaseStudy() {
             After completing an onboarding questioner, the user is placed in 1 of 3 tracks.
           </p>
 
-          <img
+          <img loading="lazy" decoding="async"
             className={styles.coreflowShot}
             src="/images/carfully/car-readiness-15.png"
             alt="Carfully learning modules"
@@ -369,7 +369,7 @@ export default function CarfullyCaseStudy() {
             purchasing a vehicle.
           </p>
 
-          <img
+          <img loading="lazy" decoding="async"
             className={styles.coreflowShot}
             src="/images/carfully/car-readiness-17.png"
             alt="Carfully financial help statistics"
@@ -394,7 +394,7 @@ export default function CarfullyCaseStudy() {
             issues within them, these being: Confusion about affordability, Lack of transparency,
             and Limited Financial Literacy.
           </p>
-          <img
+          <img loading="lazy" decoding="async"
             className={styles.outlinedImage}
             src="/images/carfully/competitor-analysis.png"
             alt="Competitive analysis of car-selling websites"
@@ -408,7 +408,7 @@ export default function CarfullyCaseStudy() {
             With over 100+ survey respondents, my team and I better understood the unique needs
             and challenges of first-time car buyers.
           </p>
-          <img
+          <img loading="lazy" decoding="async"
             className={styles.roundedImage}
             src="/images/carfully/survey-results.png"
             alt="Survey results from first-time car buyers"
@@ -453,7 +453,7 @@ export default function CarfullyCaseStudy() {
             Mapping out the whole user journey, my team and I designed the different types of
             pages we wanted to include.
           </p>
-          <img
+          <img loading="lazy" decoding="async"
             className={styles.roundedImage}
             src="/images/carfully/wireframes.png"
             alt="Initial wireframes mapping the Carfully user journey"
@@ -468,7 +468,7 @@ export default function CarfullyCaseStudy() {
             professional tones that mirror Capital One&apos;s identity to establish a foundation of
             trust and transparency.
           </p>
-          <img
+          <img loading="lazy" decoding="async"
             className={styles.wideImage}
             src="/images/carfully/brand-identity.png"
             alt="Carfully brand identity and color scheme"
