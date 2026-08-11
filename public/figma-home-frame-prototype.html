@@ -1517,79 +1517,6 @@
         pointer-events: none;
       }
 
-      .bottom-clear-cue {
-        position: fixed;
-        left: 50%;
-        bottom: max(18px, env(safe-area-inset-bottom));
-        z-index: 120;
-        width: 34px;
-        height: 34px;
-        display: grid;
-        place-items: center;
-        padding: 0;
-        border: 1px solid rgba(255, 255, 255, 0.72);
-        border-radius: 999px;
-        background:
-          linear-gradient(145deg, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0.24)),
-          rgba(255, 255, 255, 0.32);
-        color: rgba(32, 32, 32, 0.48);
-        box-shadow:
-          inset 0 1px 0 rgba(255, 255, 255, 0.86),
-          inset 0 -8px 18px rgba(255, 255, 255, 0.18),
-          0 8px 24px rgba(0, 0, 0, 0.08);
-        -webkit-backdrop-filter: blur(20px) saturate(1.5);
-        backdrop-filter: blur(20px) saturate(1.5);
-        cursor: pointer;
-        transform: translateX(-50%) translateY(0) scale(1);
-        opacity: 1;
-        transition:
-          opacity 240ms ease,
-          transform 360ms cubic-bezier(0.22, 1, 0.36, 1),
-          border-color 220ms ease,
-          background 220ms ease;
-        animation: bottom-clear-cue-float 1.9s ease-in-out infinite;
-      }
-
-      .bottom-clear-cue::after {
-        content: "";
-        position: absolute;
-        inset: 3px 7px 17px;
-        border-radius: 999px;
-        background: linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0));
-        pointer-events: none;
-      }
-
-      .bottom-clear-cue svg {
-        position: relative;
-        z-index: 1;
-        width: 13px;
-        height: 13px;
-        stroke-width: 2.2;
-      }
-
-      .bottom-clear-cue:hover {
-        transform: translateX(-50%) translateY(-2px) scale(1.03);
-        color: rgba(24, 24, 24, 0.62);
-        border-color: rgba(255, 255, 255, 0.86);
-      }
-
-      .bottom-clear-cue.is-hidden {
-        opacity: 0;
-        pointer-events: none;
-        transform: translateX(-50%) translateY(12px) scale(0.82);
-        animation-play-state: paused;
-      }
-
-      @keyframes bottom-clear-cue-float {
-        0%,
-        100% {
-          transform: translateX(-50%) translateY(0) scale(1);
-        }
-        50% {
-          transform: translateX(-50%) translateY(-5px) scale(1.015);
-        }
-      }
-
       /* ------------------------------------------------------------------
          Mobile layout ("Porfolio Mobile Version (Home)", 402x2388).
 
@@ -1959,17 +1886,6 @@
         .social-link.mail {
           left: 296.17px;
         }
-
-        .bottom-clear-cue {
-          width: 30px;
-          height: 30px;
-          bottom: max(13px, env(safe-area-inset-bottom));
-        }
-
-        .bottom-clear-cue svg {
-          width: 12px;
-          height: 12px;
-        }
       }
 
       @media (prefers-reduced-motion: reduce) {
@@ -1990,7 +1906,6 @@
         .damian-llm-copy,
         .damian-llm-button,
         .damian-llm-button-label,
-        .bottom-clear-cue,
         .damian-llm-chat-heading,
         .damian-llm-chat-title,
         .damian-llm-back,
@@ -2272,12 +2187,6 @@
       </main>
     </div>
 
-    <button class="bottom-clear-cue" id="bottom-clear-cue" type="button" aria-label="Scroll to app icons">
-      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M4.75 6.5 8 9.75l3.25-3.25" />
-      </svg>
-    </button>
-
     <script>
       if ("scrollRestoration" in history) {
         history.scrollRestoration = "manual";
@@ -2332,8 +2241,6 @@
       const musicCard = document.querySelector(".music-card");
       const projectVideos = Array.from(document.querySelectorAll(".project-thumbnail video"));
       const projectCards = Array.from(document.querySelectorAll(".project-card"));
-      const bottomClearCue = document.querySelector("#bottom-clear-cue");
-      const socialIconsAnchor = document.querySelector("#social-icons");
       const damianLlmCard = document.querySelector(".damian-llm-card");
       const damianLlmStart = document.querySelector(".damian-llm-button");
       const damianLlmTitle = document.querySelector(".damian-llm-chat-title");
@@ -2342,7 +2249,7 @@
       const damianLlmSend = document.querySelector(".damian-llm-send");
       const damianLlmBack = document.querySelector(".damian-llm-back");
       const damianLlmChips = Array.from(document.querySelectorAll(".damian-llm-chip"));
-      const hoverSoundTargets = Array.from(document.querySelectorAll("#nav-morph-toggle, #bottom-clear-cue, .desktop-links a, .morph-item, .project-card, .social-link, .play-button, .damian-llm-button, .damian-llm-send, .damian-llm-back, .damian-llm-chip"));
+      const hoverSoundTargets = Array.from(document.querySelectorAll("#nav-morph-toggle, .desktop-links a, .morph-item, .project-card, .social-link, .play-button, .damian-llm-button, .damian-llm-send, .damian-llm-back, .damian-llm-chip"));
       const params = new URLSearchParams(window.location.search);
       const centralTimeFormatter = new Intl.DateTimeFormat("en-US", {
         timeZone: "America/Chicago",
@@ -2416,32 +2323,6 @@
         root.style.setProperty("--scale", String(nextScale));
         root.style.setProperty("--hero-y-offset", `${heroOffset}px`);
         root.style.setProperty("--project-y-offset", `${projectOffset}px`);
-      }
-
-      function getElementPageTop(element) {
-        return element.getBoundingClientRect().top + window.scrollY;
-      }
-
-      function initBottomClearCue() {
-        if (!bottomClearCue || !socialIconsAnchor) {
-          return;
-        }
-
-        bottomClearCue.addEventListener("click", () => {
-          playHoverSound(bottomClearCue);
-          const targetY = Math.max(0, getElementPageTop(socialIconsAnchor) - window.innerHeight * 0.48);
-          window.scrollTo({ top: targetY, behavior: "smooth" });
-        });
-
-        const syncCueVisibility = () => {
-          const iconTop = socialIconsAnchor.getBoundingClientRect().top;
-          const iconsAreArriving = iconTop < window.innerHeight * 0.88;
-          bottomClearCue.classList.toggle("is-hidden", iconsAreArriving);
-        };
-
-        syncCueVisibility();
-        window.addEventListener("scroll", syncCueVisibility, { passive: true });
-        window.addEventListener("resize", syncCueVisibility);
       }
 
       function setDamianLlmOpen(nextOpen) {
@@ -3480,7 +3361,6 @@
       });
 
       syncScale();
-      initBottomClearCue();
       initDamianLlmCard();
       initProjectVideos();
       initHoverSounds();
