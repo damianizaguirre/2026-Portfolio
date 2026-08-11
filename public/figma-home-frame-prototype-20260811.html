@@ -1,0 +1,3512 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Home Page Figma Frame Prototype</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@500&display=swap");
+
+      :root {
+        --frame-width: 1920;
+        --frame-height: 3721;
+        --scale: 1;
+        --hero-y-offset: 0px;
+        --project-y-offset: 0px;
+        --morph-open-dur: 350ms;
+        --morph-close-dur: 250ms;
+        --morph-ease: cubic-bezier(0.34, 1.25, 0.64, 1);
+        --morph-close-ease: cubic-bezier(0.22, 1, 0.36, 1);
+        --morph-r-closed: 50px;
+        --morph-r-open: 20px;
+        --morph-fade-dur: 200ms;
+        --morph-slide: 30px;
+        --morph-rotate: 45deg;
+        --morph-scale: 0.97;
+        --morph-blur: 2px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        min-width: 320px;
+        min-height: 100%;
+        background: #FBFBFB;
+        color: #000000;
+        font-family:
+          "Geist",
+          -apple-system,
+          BlinkMacSystemFont,
+          "SF Pro Display",
+          Inter,
+          system-ui,
+          sans-serif;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: geometricPrecision;
+      }
+
+      .viewport {
+        width: calc(var(--frame-width) * 1px * var(--scale));
+        height: calc(var(--frame-height) * 1px * var(--scale));
+        overflow: hidden;
+      }
+
+      .figma-frame {
+        position: relative;
+        width: calc(var(--frame-width) * 1px);
+        height: calc(var(--frame-height) * 1px);
+        overflow: hidden;
+        background: #FBFBFB;
+        transform: scale(var(--scale));
+        transform-origin: top left;
+      }
+
+      .top-nav {
+        position: fixed;
+        left: calc(67px * var(--scale));
+        top: 0;
+        width: 1787px;
+        height: 67px;
+        z-index: 100;
+        overflow: visible;
+        transform: scale(var(--scale));
+        transform-origin: top left;
+      }
+
+      .morph-anchor {
+        position: absolute;
+        left: 0;
+        top: 11px;
+        width: 212px;
+        height: 204px;
+        z-index: 2;
+        pointer-events: none;
+      }
+
+      .t-morph {
+        position: relative;
+        width: 45px;
+        height: 45px;
+        overflow: hidden;
+        border: 1px solid #efefef;
+        border-radius: var(--morph-r-closed);
+        background: #71dd88;
+        box-shadow: none;
+        pointer-events: auto;
+        transition:
+          width var(--morph-close-dur) var(--morph-close-ease),
+          height var(--morph-close-dur) var(--morph-close-ease),
+          border-radius var(--morph-close-dur) var(--morph-close-ease),
+          box-shadow var(--morph-close-dur) var(--morph-close-ease);
+      }
+
+      .t-morph[data-open="true"] {
+        width: 183px;
+        height: 172px;
+        border-radius: var(--morph-r-open);
+        box-shadow: 0 14px 38px rgba(0, 0, 0, 0.08);
+        transition:
+          width var(--morph-open-dur) var(--morph-ease),
+          height var(--morph-open-dur) var(--morph-ease),
+          border-radius var(--morph-open-dur) var(--morph-ease),
+          box-shadow var(--morph-open-dur) var(--morph-ease);
+      }
+
+      .t-morph-plus {
+        position: absolute;
+        inset: auto 0 0 auto;
+        width: 45px;
+        height: 45px;
+        display: grid;
+        place-items: center;
+        border: 0;
+        background: transparent;
+        cursor: pointer;
+        color: transparent;
+        transition:
+          opacity var(--morph-fade-dur) var(--morph-close-ease),
+          transform var(--morph-open-dur) var(--morph-close-ease),
+          filter var(--morph-fade-dur) var(--morph-close-ease);
+      }
+
+      .t-morph-plus svg {
+        width: 15px;
+        height: 15px;
+        opacity: 0;
+        transition: transform var(--morph-open-dur) var(--morph-close-ease);
+      }
+
+      .t-morph[data-open="true"] .t-morph-plus {
+        opacity: 0;
+        transform: translateY(calc(-1 * var(--morph-slide)));
+        filter: blur(var(--morph-blur));
+        pointer-events: none;
+      }
+
+      .t-morph[data-open="true"] .t-morph-plus svg {
+        transform: scale(var(--morph-scale)) rotate(var(--morph-rotate));
+      }
+
+      .t-morph-menu {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        align-content: start;
+        gap: 4px;
+        padding: 14px;
+        opacity: 0;
+        transform: translateY(var(--morph-slide)) translateX(8px) scale(var(--morph-scale));
+        filter: blur(var(--morph-blur));
+        pointer-events: none;
+        transition:
+          opacity var(--morph-fade-dur) var(--morph-close-ease),
+          transform var(--morph-open-dur) var(--morph-close-ease),
+          filter var(--morph-fade-dur) var(--morph-close-ease);
+      }
+
+      .t-morph[data-open="true"] .t-morph-menu {
+        opacity: 1;
+        transform: translateY(0) translateX(0) scale(1);
+        filter: blur(0);
+        pointer-events: auto;
+      }
+
+      .morph-item {
+        min-height: 32px;
+        border: 0;
+        border-radius: 10px;
+        padding: 0 10px;
+        background: transparent;
+        color: #ffffff;
+        font-family: "Geist", system-ui, sans-serif;
+        font-size: 16px;
+        line-height: 1;
+        font-weight: 500;
+        text-align: left;
+        cursor: pointer;
+        transition:
+          background-color 160ms ease,
+          transform 160ms ease;
+      }
+
+      .morph-item:hover {
+        background: rgba(255, 255, 255, 0.18);
+      }
+
+      .morph-item:active {
+        transform: scale(0.98);
+      }
+
+      .desktop-links {
+        position: absolute;
+        left: 1465px;
+        top: 17px;
+        width: 322px;
+        height: 34px;
+        display: flex;
+        align-items: center;
+        gap: 70px;
+        padding: 4px 0;
+        color: #000000;
+        font-size: 20px;
+        line-height: 26px;
+        font-weight: 300;
+        white-space: nowrap;
+      }
+
+      .desktop-links a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .name,
+      .role,
+      .currently-label,
+      .currently-copy {
+        position: absolute;
+        margin: 0;
+        color: #000000;
+        font-style: normal;
+        letter-spacing: 0;
+        white-space: nowrap;
+      }
+
+      .name {
+        left: 488px;
+        top: calc(205px + var(--hero-y-offset));
+        width: 253px;
+        height: 42px;
+        font-size: 32px;
+        line-height: 42px;
+        font-weight: 500;
+      }
+
+      .role {
+        left: 488px;
+        top: calc(257px + var(--hero-y-offset));
+        width: 188px;
+        height: 31px;
+        font-size: 24px;
+        line-height: 31px;
+        font-weight: 300;
+      }
+
+      .currently-label {
+        left: 488px;
+        top: calc(324px + var(--hero-y-offset));
+        width: 87px;
+        height: 26px;
+        font-size: 20px;
+        line-height: 26px;
+        font-weight: 500;
+      }
+
+      .currently-copy {
+        left: 488px;
+        top: calc(360px + var(--hero-y-offset));
+        width: 944px;
+        height: 31px;
+        font-size: 24px;
+        line-height: 31px;
+        font-weight: 300;
+      }
+
+      .dotted-map-frame {
+        position: absolute;
+        left: 488px;
+        top: calc(451px + var(--hero-y-offset));
+        width: 510px;
+        height: 261px;
+        overflow: hidden;
+        border: 1px solid #efefef;
+        border-radius: 10px;
+        background: #ffffff;
+      }
+
+      .music-card,
+      .time-card {
+        position: absolute;
+        overflow: hidden;
+        border: 1px solid #efefef;
+        border-radius: 10px;
+        background: #ffffff;
+        box-shadow: 0 0 1px rgba(149, 149, 149, 0.25);
+      }
+
+      .music-card {
+        left: 1019px;
+        top: calc(451px + var(--hero-y-offset));
+        width: 413px;
+        height: 261px;
+        --music-meta-left: 200px;
+        --music-meta-width: 184px;
+        --progress-start: #38594d;
+        --progress-mid: #8c6152;
+        --progress-end: #e84d99;
+      }
+
+      .music-card-gradient {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        background: #ffffff;
+      }
+
+      .music-card-gradient-current {
+        opacity: 1;
+      }
+
+      .music-card-gradient-next {
+        opacity: 0;
+        transition: opacity 760ms cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      .music-card.is-gradient-transitioning .music-card-gradient-next {
+        opacity: 1;
+      }
+
+      .album-art {
+        position: absolute;
+        left: 25px;
+        top: 50px;
+        width: 159.286px;
+        height: 160px;
+        z-index: 1;
+        border-radius: 12.233px;
+        object-fit: cover;
+        pointer-events: none;
+        background: #f0f0f0;
+      }
+
+      /* Honest loading state: before the first real /api/now-playing response
+         lands, show a neutral pulse instead of a specific placeholder track —
+         a plausible-looking wrong song reads as "broken", a pulse reads as
+         "loading". Stops the moment .is-spotify-live is added. */
+      @keyframes music-card-loading-pulse {
+        0%, 100% { opacity: 0.55; }
+        50% { opacity: 0.9; }
+      }
+
+      .music-card:not(.is-spotify-live) .album-art,
+      .music-card:not(.is-spotify-live) .track-title,
+      .music-card:not(.is-spotify-live) .track-artist,
+      .music-card:not(.is-spotify-live) .progress-track {
+        animation: music-card-loading-pulse 1.6s ease-in-out infinite;
+      }
+
+      .music-card:not(.is-spotify-live) .progress-fill {
+        opacity: 0;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .music-card:not(.is-spotify-live) .album-art,
+        .music-card:not(.is-spotify-live) .track-title,
+        .music-card:not(.is-spotify-live) .track-artist,
+        .music-card:not(.is-spotify-live) .progress-track {
+          animation: none;
+        }
+      }
+
+      .album-art-next {
+        opacity: 0;
+        transition: opacity 540ms cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      .music-card.is-cover-transitioning .album-art-next {
+        opacity: 1;
+      }
+
+      .song-meta-motion {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+        transition:
+          opacity 460ms cubic-bezier(0.22, 1, 0.36, 1),
+          transform 460ms cubic-bezier(0.22, 1, 0.36, 1),
+          filter 460ms cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      .song-meta-current {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+      }
+
+      .song-meta-next {
+        opacity: 0;
+        transform: translateY(4px);
+        filter: blur(1px);
+      }
+
+      .music-card.is-meta-transitioning .song-meta-current {
+        opacity: 0;
+        transform: translateY(-4px);
+        filter: blur(1px);
+      }
+
+      .music-card.is-meta-transitioning .song-meta-next {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+      }
+
+      .track-title,
+      .track-artist,
+      .track-time,
+      .play-label {
+        position: absolute;
+        z-index: 1;
+        margin: 0;
+        letter-spacing: 0;
+        white-space: nowrap;
+      }
+
+      .track-title {
+        left: var(--music-meta-left);
+        top: 68px;
+        width: var(--music-meta-width);
+        height: 24px;
+        overflow: hidden;
+        color: #000000;
+        font-size: 18.636px;
+        line-height: normal;
+        font-weight: 600;
+        text-align: center;
+        text-overflow: ellipsis;
+      }
+
+      .track-title-text {
+        display: inline-block;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        vertical-align: top;
+      }
+
+      .track-title.is-panning {
+        text-align: left;
+        text-overflow: clip;
+        -webkit-mask-image: linear-gradient(90deg, transparent 0, #000000 14px, #000000 calc(100% - 14px), transparent 100%);
+        mask-image: linear-gradient(90deg, transparent 0, #000000 14px, #000000 calc(100% - 14px), transparent 100%);
+      }
+
+      .track-title.is-panning .track-title-text {
+        max-width: none;
+        overflow: visible;
+        text-overflow: clip;
+        animation: track-title-pan var(--title-pan-duration, 8s) linear infinite;
+        will-change: transform;
+      }
+
+      @keyframes track-title-pan {
+        0%,
+        16% {
+          transform: translateX(0);
+        }
+
+        66%,
+        84% {
+          transform: translateX(calc(-1 * var(--title-pan-distance, 0px)));
+        }
+
+        100% {
+          transform: translateX(0);
+        }
+      }
+
+      .track-artist {
+        left: var(--music-meta-left);
+        top: 92.848px;
+        width: var(--music-meta-width);
+        height: 17px;
+        overflow: hidden;
+        color: #b1b1b1;
+        font-size: 12.424px;
+        line-height: normal;
+        font-weight: 500;
+        text-align: center;
+        text-overflow: ellipsis;
+      }
+
+      .progress-track,
+      .progress-fill {
+        position: absolute;
+        left: var(--music-meta-left);
+        top: 123px;
+        height: 8.855px;
+        z-index: 1;
+        border-radius: 5.534px;
+      }
+
+      .progress-track {
+        width: 183.74px;
+        background: #d9d9d9;
+      }
+
+      .progress-fill {
+        width: 47.595px;
+        background: linear-gradient(90deg, var(--progress-start) 0%, var(--progress-mid) 45%, var(--progress-end) 100%);
+        transition: background 280ms ease;
+      }
+
+      .track-time {
+        top: 139px;
+        color: #000000;
+        font-size: 13px;
+        line-height: normal;
+        font-weight: 300;
+      }
+
+      .track-time.current {
+        left: var(--music-meta-left);
+      }
+
+      .track-time.duration {
+        left: 356px;
+      }
+
+      .play-button {
+        position: absolute;
+        left: 252px;
+        top: 165px;
+        width: 78px;
+        height: 26px;
+        z-index: 1;
+        overflow: hidden;
+        border: 0;
+        padding: 0;
+        border-radius: 17.789px;
+        appearance: none;
+        background: #393939;
+        cursor: pointer;
+        font-family: inherit;
+        transition:
+          background-color 160ms ease,
+          transform 160ms ease;
+      }
+
+      .play-button:hover {
+        background: #4a4a4a;
+      }
+
+      .play-button:active {
+        transform: scale(0.97);
+      }
+
+      .play-button img {
+        position: absolute;
+        left: 17px;
+        top: 7px;
+        width: 11.996px;
+        height: 11.996px;
+      }
+
+      .play-label {
+        left: 37px;
+        top: 5px;
+        color: #ffffff;
+        font-size: 12.172px;
+        line-height: normal;
+        font-weight: 500;
+      }
+
+      .spotify-status {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        clip-path: inset(50%);
+        white-space: nowrap;
+      }
+
+      .time-card {
+        left: 488px;
+        top: calc(730px + var(--hero-y-offset));
+        width: 404px;
+        height: 215px;
+      }
+
+      .time-digit,
+      .time-colon {
+        position: absolute;
+        margin: 0;
+        font-family:
+          ui-rounded,
+          "SF Pro Rounded",
+          ".SFNSRounded",
+          "SF Pro Display",
+          -apple-system,
+          BlinkMacSystemFont,
+          system-ui,
+          sans-serif;
+        font-size: 149.622px;
+        line-height: normal;
+        font-weight: 900;
+        letter-spacing: 0;
+        white-space: nowrap;
+      }
+
+      .time-digit {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 2;
+        transition:
+          left 620ms cubic-bezier(0.18, 0.9, 0.2, 1),
+          top 620ms cubic-bezier(0.18, 0.9, 0.2, 1),
+          width 620ms cubic-bezier(0.18, 0.9, 0.2, 1),
+          height 620ms cubic-bezier(0.18, 0.9, 0.2, 1),
+          font-size 620ms cubic-bezier(0.18, 0.9, 0.2, 1),
+          opacity 220ms ease;
+      }
+
+      .time-digit.hour-ten {
+        left: 24px;
+        top: 17px;
+        width: 86px;
+        height: 184px;
+        color: #71dd88;
+        opacity: 0;
+        transform: rotate(-3.5deg);
+        transform-origin: 50% 50%;
+      }
+
+      .time-card.has-two-digit-hour .time-digit.hour-ten {
+        opacity: 1;
+      }
+
+      .time-digit.hour-one {
+        left: 62px;
+        top: 14px;
+        width: 116.22px;
+        height: 187.123px;
+        color: #71dd88;
+        transform: rotate(5deg);
+        transform-origin: 50% 50%;
+      }
+
+      .time-digit.minute-ten {
+        left: 167.8px;
+        top: 15.68px;
+        width: 111.519px;
+        height: 184.717px;
+        color: #2e8660;
+        transform: rotate(-3.43deg);
+        transform-origin: 50% 50%;
+        z-index: 1;
+      }
+
+      .time-digit.minute-one {
+        left: 253.12px;
+        top: 15.7px;
+        width: 88.239px;
+        height: 184.13px;
+        color: #71dd88;
+        transform: rotate(4.31deg);
+        transform-origin: 50% 50%;
+      }
+
+      .time-colon {
+        left: 156.12px;
+        top: 14.53px;
+        color: rgba(200, 200, 200, 0.46);
+        z-index: 3;
+        animation: colon-blink 1800ms steps(1, end) infinite;
+        transition:
+          left 620ms cubic-bezier(0.18, 0.9, 0.2, 1),
+          top 620ms cubic-bezier(0.18, 0.9, 0.2, 1),
+          font-size 620ms cubic-bezier(0.18, 0.9, 0.2, 1);
+      }
+
+      .time-card.has-two-digit-hour .time-digit,
+      .time-card.has-two-digit-hour .time-colon {
+        font-size: 136px;
+      }
+
+      .time-card.has-two-digit-hour .time-digit.hour-ten {
+        left: 32px;
+        top: 20px;
+        width: 80px;
+        height: 174px;
+      }
+
+      .time-card.has-two-digit-hour .time-digit.hour-one {
+        left: 88px;
+        top: 15px;
+        width: 100px;
+        height: 178px;
+        color: #71dd88;
+      }
+
+      .time-card.has-two-digit-hour .time-colon {
+        left: 166px;
+        top: 22px;
+      }
+
+      .time-card.has-two-digit-hour .time-digit.minute-ten {
+        left: 174px;
+        top: 22px;
+        width: 102px;
+        height: 172px;
+      }
+
+      .time-card.has-two-digit-hour .time-digit.minute-one {
+        left: 252px;
+        top: 19px;
+        width: 86px;
+        height: 174px;
+      }
+
+      .time-digit-current,
+      .time-digit-next {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        will-change: transform, opacity;
+      }
+
+      .time-digit-next {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .time-digit.is-changing .time-digit-current {
+        animation: time-roll-out 620ms cubic-bezier(0.16, 0.92, 0.2, 1) both;
+      }
+
+      .time-digit.is-changing .time-digit-next {
+        animation: time-roll-in 620ms cubic-bezier(0.16, 0.92, 0.2, 1) both;
+      }
+
+      @keyframes time-roll-out {
+        0% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+
+        100% {
+          opacity: 0.16;
+          transform: translateY(-100%);
+        }
+      }
+
+      @keyframes time-roll-in {
+        0% {
+          opacity: 0.16;
+          transform: translateY(100%);
+        }
+
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes colon-blink {
+        0%,
+        48% {
+          opacity: 1;
+        }
+
+        50%,
+        100% {
+          opacity: 0.34;
+        }
+      }
+
+      .dotted-map-frame iframe {
+        display: block;
+        width: 100%;
+        height: 100%;
+        border: 0;
+        border-radius: inherit;
+        background: #ffffff;
+      }
+
+      .damian-llm-card {
+        position: absolute;
+        left: 913px;
+        top: calc(730px + var(--hero-y-offset));
+        width: 519px;
+        height: 215px;
+        --llm-composer-height: 30px;
+        --llm-composer-top: 161px;
+        --llm-input-width: 216px;
+        overflow: hidden;
+        border: 1px solid #efefef;
+        border-radius: 10px;
+        background: #ffffff;
+        box-shadow: 0 0 1px rgba(149, 149, 149, 0.25);
+      }
+
+      .damian-llm-layer {
+        position: absolute;
+        inset: 0;
+      }
+
+      .damian-llm-intro {
+        z-index: 1;
+      }
+
+      .damian-llm-chat {
+        z-index: 2;
+        pointer-events: none;
+      }
+
+      .damian-llm-avatar {
+        position: absolute;
+        left: 227px;
+        top: 21px;
+        width: 64px;
+        height: 64px;
+        display: block;
+        border: 0;
+        background: transparent;
+        pointer-events: none;
+        transition:
+          opacity 220ms cubic-bezier(0.22, 1, 0.36, 1),
+          transform 360ms cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      .damian-llm-title,
+      .damian-llm-copy,
+      .damian-llm-button-label,
+      .damian-llm-chat-title,
+      .damian-llm-chat-copy,
+      .damian-llm-chip-label,
+      .damian-llm-input,
+      .damian-llm-message {
+        position: absolute;
+        margin: 0;
+        letter-spacing: 0;
+        line-height: normal;
+        white-space: nowrap;
+      }
+
+      .damian-llm-title {
+        left: 182px;
+        top: 91px;
+        width: 155px;
+        height: 26px;
+        color: #000000;
+        font-size: 20px;
+        font-weight: 600;
+        transition:
+          opacity 220ms cubic-bezier(0.22, 1, 0.36, 1),
+          transform 360ms cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      .damian-llm-copy {
+        left: 103px;
+        top: 122px;
+        width: 313px;
+        height: 18px;
+        color: #5b5b5b;
+        font-size: 14px;
+        font-weight: 400;
+        text-align: center;
+        transition:
+          opacity 220ms cubic-bezier(0.22, 1, 0.36, 1),
+          transform 360ms cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      .damian-llm-button {
+        position: absolute;
+        left: 194px;
+        top: 159px;
+        width: 130px;
+        height: 30px;
+        overflow: hidden;
+        border: 0;
+        border-radius: 20px;
+        appearance: none;
+        background: #393939;
+        color: #ffffff;
+        cursor: pointer;
+        font: inherit;
+        transition:
+          left 360ms cubic-bezier(0.38, 1.45, 0.58, 1),
+          top 360ms cubic-bezier(0.38, 1.45, 0.58, 1),
+          width 360ms cubic-bezier(0.38, 1.45, 0.58, 1),
+          height 360ms cubic-bezier(0.38, 1.45, 0.58, 1),
+          background-color 260ms ease,
+          border-color 260ms ease,
+          transform 160ms ease;
+      }
+
+      .damian-llm-button:hover {
+        background: #2f2f2f;
+      }
+
+      .damian-llm-button:active {
+        transform: scale(0.98);
+      }
+
+      .damian-llm-button-label {
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #ffffff;
+        font-size: 14px;
+        line-height: 1;
+        font-weight: 500;
+        text-align: center;
+        transition:
+          opacity 180ms ease,
+          transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      .damian-llm-chat-heading {
+        position: absolute;
+        left: 25px;
+        top: 14px;
+        width: 166px;
+        height: 26px;
+        opacity: 0;
+        transform: translateY(8px);
+        transition:
+          opacity 220ms ease,
+          transform 360ms cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      .damian-llm-chat-title {
+        left: 0;
+        top: 0;
+        width: 127px;
+        height: 26px;
+        color: #000000;
+        font-size: 20px;
+        font-weight: 600;
+        transition:
+          left 220ms cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      .damian-llm-info {
+        position: absolute;
+        left: 132px;
+        top: 7px;
+        width: 13px;
+        height: 13px;
+        display: block;
+        cursor: help;
+        opacity: 0.55;
+        transition:
+          opacity 160ms ease,
+          left 220ms cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      .damian-llm-info:hover {
+        opacity: 1;
+      }
+
+      .damian-llm-info img {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+
+      .damian-llm-back {
+        position: absolute;
+        left: 0;
+        top: 6px;
+        width: 14px;
+        height: 14px;
+        display: grid;
+        place-items: center;
+        border: 0;
+        padding: 0;
+        background: transparent;
+        color: #000000;
+        cursor: pointer;
+        opacity: 0;
+        pointer-events: none;
+        transform: translateX(5px) scale(0.94);
+        transition:
+          opacity 180ms ease,
+          transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      .damian-llm-back svg {
+        width: 14px;
+        height: 14px;
+        stroke-width: 2.2;
+      }
+
+      .damian-llm-card[data-open="true"] .damian-llm-chat-heading:hover .damian-llm-back,
+      .damian-llm-card[data-open="true"] .damian-llm-chat-heading:focus-within .damian-llm-back {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateX(0) scale(1);
+      }
+
+      .damian-llm-card[data-open="true"] .damian-llm-chat-heading:hover .damian-llm-chat-title,
+      .damian-llm-card[data-open="true"] .damian-llm-chat-heading:focus-within .damian-llm-chat-title {
+        left: 20px;
+      }
+
+      .damian-llm-card[data-open="true"] .damian-llm-chat-heading:hover .damian-llm-info,
+      .damian-llm-card[data-open="true"] .damian-llm-chat-heading:focus-within .damian-llm-info {
+        left: 152px;
+      }
+
+      .damian-llm-chat-copy {
+        left: 25px;
+        top: 43px;
+        width: 216px;
+        height: 18px;
+        color: #5b5b5b;
+        font-size: 14px;
+        font-weight: 400;
+        opacity: 0;
+        transform: translateY(8px);
+        transition:
+          opacity 220ms ease 50ms,
+          transform 360ms cubic-bezier(0.22, 1, 0.36, 1) 50ms;
+      }
+
+      .damian-llm-chip {
+        position: absolute;
+        top: 68px;
+        height: 24px;
+        overflow: hidden;
+        border: 1.2px solid #efefef;
+        border-radius: 24px;
+        background: #fafafa;
+        opacity: 0;
+        transform: translateY(7px) scale(0.98);
+        transition:
+          opacity 240ms ease,
+          transform 360ms cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      .damian-llm-chip.mismo {
+        left: 26px;
+        width: 122.4px;
+        transition-delay: 60ms;
+      }
+
+      .damian-llm-chip.work {
+        left: 158px;
+        width: 144px;
+        transition-delay: 90ms;
+      }
+
+      .damian-llm-chip.tools {
+        left: 311.6px;
+        width: 92.4px;
+        transition-delay: 120ms;
+      }
+
+      .damian-llm-chip-label {
+        top: 3.6px;
+        height: 14.4px;
+        color: #8e8d8d;
+        font-size: 12px;
+        font-weight: 400;
+      }
+
+      .damian-llm-chip.mismo .damian-llm-chip-label {
+        left: 18px;
+        width: 85.2px;
+      }
+
+      .damian-llm-chip.work .damian-llm-chip-label {
+        left: 18px;
+        width: 105.6px;
+      }
+
+      .damian-llm-chip.tools .damian-llm-chip-label {
+        left: 13.77px;
+        top: 4.51px;
+        width: 61.2px;
+      }
+
+      .damian-llm-thread {
+        position: absolute;
+        left: 25px;
+        top: 34px;
+        width: 469px;
+        height: 121px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        align-items: flex-start;
+        overflow-y: auto;
+        padding: 1px 0 8px;
+        opacity: 0;
+        pointer-events: none;
+        scrollbar-width: none;
+        transform: translateY(10px);
+        -webkit-mask-image: linear-gradient(to bottom, transparent 0, rgba(0, 0, 0, 0.38) 8px, #000000 20px, #000000 calc(100% - 18px), rgba(0, 0, 0, 0.42) calc(100% - 8px), transparent 100%);
+        mask-image: linear-gradient(to bottom, transparent 0, rgba(0, 0, 0, 0.38) 8px, #000000 20px, #000000 calc(100% - 18px), rgba(0, 0, 0, 0.42) calc(100% - 8px), transparent 100%);
+        transition:
+          opacity 240ms ease,
+          transform 340ms cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      .damian-llm-thread::-webkit-scrollbar {
+        display: none;
+      }
+
+      .damian-llm-message {
+        position: static;
+        max-width: 253px;
+        overflow: visible;
+        border-radius: 10px;
+        padding: 8px 18px;
+        font-size: 12px;
+        line-height: 15px;
+        font-weight: 400;
+        white-space: normal;
+      }
+
+      .damian-llm-message.user {
+        align-self: flex-end;
+        max-width: 244px;
+        background: #393939;
+        color: #ffffff;
+        text-align: right;
+      }
+
+      .damian-llm-message.bot {
+        align-self: flex-start;
+        border: 1px solid #efefef;
+        background: #fafafa;
+        color: #393939;
+      }
+
+      .damian-llm-typing {
+        display: inline-flex;
+        gap: 3px;
+        vertical-align: middle;
+      }
+
+      .damian-llm-typing span {
+        width: 4px;
+        height: 4px;
+        border-radius: 999px;
+        background: #8e8d8d;
+        animation: damian-llm-dot-pulse 900ms ease-in-out infinite;
+      }
+
+      .damian-llm-typing span:nth-child(2) {
+        animation-delay: 120ms;
+      }
+
+      .damian-llm-typing span:nth-child(3) {
+        animation-delay: 240ms;
+      }
+
+      @keyframes damian-llm-dot-pulse {
+        0%,
+        100% {
+          opacity: 0.32;
+          transform: translateY(0);
+        }
+
+        50% {
+          opacity: 1;
+          transform: translateY(-2px);
+        }
+      }
+
+      .damian-llm-input-shell {
+        position: absolute;
+        left: 25px;
+        top: var(--llm-composer-top);
+        width: 419px;
+        height: var(--llm-composer-height);
+        overflow: hidden;
+        border: 1px solid #efefef;
+        border-radius: 20px;
+        background: #ffffff;
+        opacity: 0;
+        pointer-events: none;
+        transform: scaleX(0.31);
+        transform-origin: 193px center;
+        transition:
+          opacity 140ms ease,
+          height 280ms cubic-bezier(0.22, 1, 0.36, 1),
+          top 280ms cubic-bezier(0.22, 1, 0.36, 1),
+          transform 360ms cubic-bezier(0.38, 1.45, 0.58, 1);
+      }
+
+      .damian-llm-input {
+        left: 18px;
+        top: 5px;
+        width: var(--llm-input-width);
+        height: calc(var(--llm-composer-height) - 10px);
+        overflow-y: auto;
+        border: 0;
+        outline: 0;
+        padding: 0;
+        resize: none;
+        background: transparent;
+        color: #393939;
+        font-family: inherit;
+        font-size: 14px;
+        line-height: 18px;
+        font-weight: 400;
+        opacity: 0;
+        transform: translateX(10px);
+        white-space: pre-wrap;
+        scrollbar-width: none;
+        transition:
+          opacity 240ms ease 250ms,
+          width 220ms cubic-bezier(0.22, 1, 0.36, 1),
+          height 280ms cubic-bezier(0.22, 1, 0.36, 1),
+          transform 380ms cubic-bezier(0.22, 1, 0.36, 1) 230ms;
+      }
+
+      .damian-llm-input::-webkit-scrollbar {
+        display: none;
+      }
+
+      .damian-llm-input::placeholder {
+        color: #a5a5a5;
+      }
+
+      .damian-llm-send {
+        position: absolute;
+        left: 458px;
+        top: calc(var(--llm-composer-top) + var(--llm-composer-height) - 30px);
+        width: 30px;
+        height: 30px;
+        overflow: hidden;
+        border: 0;
+        border-radius: 999px;
+        padding: 0;
+        background: transparent;
+        cursor: pointer;
+        opacity: 0;
+        transform: translateX(-30px) scale(0.8);
+        transition:
+          opacity 240ms ease 260ms,
+          top 280ms cubic-bezier(0.22, 1, 0.36, 1),
+          transform 320ms cubic-bezier(0.38, 1.45, 0.58, 1) 220ms;
+      }
+
+      .damian-llm-send img {
+        display: block;
+        width: 30px;
+        height: 30px;
+      }
+
+      .damian-llm-card[data-open="true"] .damian-llm-avatar,
+      .damian-llm-card[data-open="true"] .damian-llm-title,
+      .damian-llm-card[data-open="true"] .damian-llm-copy {
+        opacity: 0;
+        transform: translateY(-8px) scale(0.98);
+      }
+
+      .damian-llm-card[data-open="true"] .damian-llm-button {
+        left: 25px;
+        top: var(--llm-composer-top);
+        width: 419px;
+        height: var(--llm-composer-height);
+        border: 1px solid #efefef;
+        background: #ffffff;
+        pointer-events: none;
+      }
+
+      .damian-llm-card[data-open="true"] .damian-llm-button-label {
+        opacity: 0;
+        transform: translateX(-12px);
+      }
+
+      .damian-llm-card[data-open="true"] .damian-llm-chat {
+        pointer-events: auto;
+      }
+
+      .damian-llm-card[data-open="true"] .damian-llm-input-shell {
+        opacity: 1;
+        pointer-events: auto;
+        transform: scaleX(1);
+      }
+
+      .damian-llm-card[data-open="true"] .damian-llm-input,
+      .damian-llm-card[data-open="true"] .damian-llm-chat-heading,
+      .damian-llm-card[data-open="true"] .damian-llm-chat-copy,
+      .damian-llm-card[data-open="true"] .damian-llm-chip,
+      .damian-llm-card[data-open="true"] .damian-llm-send {
+        opacity: 1;
+        transform: translate(0) scale(1);
+      }
+
+      .damian-llm-card[data-sent="true"] .damian-llm-chat-copy,
+      .damian-llm-card[data-sent="true"] .damian-llm-chip {
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(-8px) scale(0.98);
+      }
+
+      .damian-llm-card[data-sent="true"] .damian-llm-thread {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(0);
+      }
+
+      .damian-llm-card[data-returning="true"] .damian-llm-back {
+        opacity: 0;
+        pointer-events: none;
+        transform: translateX(5px) scale(0.94);
+      }
+
+      .damian-llm-card[data-returning="true"] .damian-llm-chat-title {
+        left: 0;
+      }
+
+      .damian-llm-card[data-returning="true"] .damian-llm-chat-heading,
+      .damian-llm-card[data-returning="true"] .damian-llm-chat-copy,
+      .damian-llm-card[data-returning="true"] .damian-llm-chip,
+      .damian-llm-card[data-returning="true"] .damian-llm-thread,
+      .damian-llm-card[data-returning="true"] .damian-llm-input,
+      .damian-llm-card[data-returning="true"] .damian-llm-input-shell,
+      .damian-llm-card[data-returning="true"] .damian-llm-send {
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(-6px) scale(0.98);
+        transition-duration: 180ms;
+      }
+
+      .damian-llm-card[data-returning="true"] .damian-llm-avatar,
+      .damian-llm-card[data-returning="true"] .damian-llm-title,
+      .damian-llm-card[data-returning="true"] .damian-llm-copy,
+      .damian-llm-card[data-returning="true"] .damian-llm-button-label {
+        opacity: 0;
+        transform: translateY(6px) scale(0.98);
+        transition-duration: 120ms;
+      }
+
+      .project-card {
+        position: absolute;
+        width: 780px;
+        height: 594px;
+      }
+
+      .project-card[data-href] {
+        cursor: pointer;
+      }
+
+      .project-card[data-project="mismo"] {
+        left: 112px;
+        top: calc(1082px + var(--project-y-offset));
+      }
+
+      .project-card[data-project="carfully"] {
+        left: 1030px;
+        top: calc(1087px + var(--project-y-offset));
+      }
+
+      .project-card[data-project="integra"] {
+        left: 112px;
+        top: calc(1742px + var(--project-y-offset));
+      }
+
+      .project-card[data-project="sancorda"] {
+        left: 1030px;
+        top: calc(1742px + var(--project-y-offset));
+      }
+
+      .project-thumbnail {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 780px;
+        height: 522px;
+        overflow: hidden;
+        border-radius: 10px;
+        border: 1px solid #efefef;
+        background: #ffffff;
+      }
+
+      .project-thumbnail img,
+      .project-thumbnail video {
+        position: absolute;
+        display: block;
+        max-width: none;
+        pointer-events: none;
+        transform: translateZ(0) scale(var(--project-media-scale, 1));
+        transform-origin: center center;
+        transition: transform 380ms cubic-bezier(0.22, 1, 0.36, 1);
+        will-change: transform;
+      }
+
+      .project-card:hover .project-thumbnail img,
+      .project-card:hover .project-thumbnail video {
+        --project-media-scale: 1.018;
+      }
+
+      .project-card[data-project="mismo"] .project-thumbnail video {
+        left: 204px;
+        top: -229px;
+        width: 373px;
+        height: 720.452px;
+        object-fit: cover;
+        backface-visibility: hidden;
+      }
+
+      .project-card[data-project="carfully"] .project-thumbnail img {
+        left: 72px;
+        top: 54px;
+        width: 636.824px;
+        height: 414px;
+        object-fit: contain;
+      }
+
+      .project-card[data-project="integra"] .project-thumbnail img {
+        left: 100px;
+        top: 98px;
+        width: 580.943px;
+        height: 326.781px;
+        object-fit: contain;
+      }
+
+      .project-card[data-project="sancorda"] .project-thumbnail img {
+        left: 100px;
+        top: 97px;
+        width: 581px;
+        height: 327.039px;
+        object-fit: contain;
+      }
+
+      .project-title,
+      .project-year {
+        position: absolute;
+        left: 0;
+        margin: 0;
+        white-space: nowrap;
+      }
+
+      .project-title {
+        top: 547px;
+        height: 26px;
+        color: #000000;
+        font-size: 20px;
+        line-height: 26px;
+        font-weight: 400;
+      }
+
+      .project-year {
+        top: 573px;
+        height: 21px;
+        color: #949494;
+        font-size: 16px;
+        line-height: 21px;
+        font-weight: 300;
+      }
+
+      .social-link {
+        position: absolute;
+        top: 3024.544px;
+        width: 86px;
+        height: 86px;
+        display: block;
+        overflow: hidden;
+        border: 0;
+        border-radius: 19.238px;
+        background: transparent;
+        box-shadow: none;
+        text-decoration: none;
+        transform: translateZ(0);
+        transition:
+          transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
+          box-shadow 260ms cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      .social-link:hover {
+        transform: translateY(-3px) translateZ(0);
+        box-shadow: 0 14px 30px rgba(0, 0, 0, 0.1);
+      }
+
+      .social-link:active {
+        transform: translateY(-1px) scale(0.985) translateZ(0);
+      }
+
+      .social-link.instagram {
+        left: 720.544px;
+      }
+
+      .social-link.x {
+        left: 851.184px;
+      }
+
+      .social-link.linkedin {
+        left: 981.824px;
+      }
+
+      .social-link.mail {
+        left: 1112.454px;
+      }
+
+      .social-link img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        pointer-events: none;
+      }
+
+      .bottom-clear-cue {
+        position: fixed;
+        left: 50%;
+        bottom: max(18px, env(safe-area-inset-bottom));
+        z-index: 120;
+        width: 34px;
+        height: 34px;
+        display: grid;
+        place-items: center;
+        padding: 0;
+        border: 1px solid rgba(255, 255, 255, 0.72);
+        border-radius: 999px;
+        background:
+          linear-gradient(145deg, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0.24)),
+          rgba(255, 255, 255, 0.32);
+        color: rgba(32, 32, 32, 0.48);
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.86),
+          inset 0 -8px 18px rgba(255, 255, 255, 0.18),
+          0 8px 24px rgba(0, 0, 0, 0.08);
+        -webkit-backdrop-filter: blur(20px) saturate(1.5);
+        backdrop-filter: blur(20px) saturate(1.5);
+        cursor: pointer;
+        transform: translateX(-50%) translateY(0) scale(1);
+        opacity: 1;
+        transition:
+          opacity 240ms ease,
+          transform 360ms cubic-bezier(0.22, 1, 0.36, 1),
+          border-color 220ms ease,
+          background 220ms ease;
+        animation: bottom-clear-cue-float 1.9s ease-in-out infinite;
+      }
+
+      .bottom-clear-cue::after {
+        content: "";
+        position: absolute;
+        inset: 3px 7px 17px;
+        border-radius: 999px;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0));
+        pointer-events: none;
+      }
+
+      .bottom-clear-cue svg {
+        position: relative;
+        z-index: 1;
+        width: 13px;
+        height: 13px;
+        stroke-width: 2.2;
+      }
+
+      .bottom-clear-cue:hover {
+        transform: translateX(-50%) translateY(-2px) scale(1.03);
+        color: rgba(24, 24, 24, 0.62);
+        border-color: rgba(255, 255, 255, 0.86);
+      }
+
+      .bottom-clear-cue.is-hidden {
+        opacity: 0;
+        pointer-events: none;
+        transform: translateX(-50%) translateY(12px) scale(0.82);
+        animation-play-state: paused;
+      }
+
+      @keyframes bottom-clear-cue-float {
+        0%,
+        100% {
+          transform: translateX(-50%) translateY(0) scale(1);
+        }
+        50% {
+          transform: translateX(-50%) translateY(-5px) scale(1.015);
+        }
+      }
+
+      /* ------------------------------------------------------------------
+         Mobile layout ("Porfolio Mobile Version (Home)", 402x2388).
+
+         Same architecture as desktop -- one absolutely positioned frame
+         scaled to fit the viewport -- just with the mobile frame's own
+         geometry. Cards whose internals are laid out in desktop pixels
+         (project thumbnails, the thinking orb, the LLM chat layer) are
+         scaled by the ratio between the two frames rather than being
+         re-positioned child by child.
+         ------------------------------------------------------------------ */
+      @media (max-width: 700px) {
+        :root {
+          --frame-width: 402;
+          --frame-height: 2388;
+        }
+
+        .viewport {
+          margin: 0 auto;
+        }
+
+        /* Nav collapses to just the morph dot (23px in the mobile frame,
+           45px natively -- scaling keeps the expanded menu proportional). */
+        .desktop-links {
+          display: none;
+        }
+
+        .top-nav {
+          left: calc(20px * var(--scale));
+          top: calc(70px * var(--scale));
+          width: auto;
+          height: auto;
+          transform: scale(calc(var(--scale) * 0.5111));
+        }
+
+        .name {
+          left: 47px;
+          top: calc(189px + var(--hero-y-offset));
+          width: 221px;
+          height: 23px;
+          font-size: 17.888px;
+          line-height: normal;
+          font-weight: 500;
+        }
+
+        .role {
+          left: 47px;
+          top: calc(218.07px + var(--hero-y-offset));
+          width: 167px;
+          height: 17px;
+          font-size: 13.416px;
+          line-height: normal;
+          font-weight: 400;
+        }
+
+        .currently-label {
+          left: 47px;
+          top: calc(255.52px + var(--hero-y-offset));
+          width: 77px;
+          height: 15px;
+          font-size: 11.18px;
+          line-height: normal;
+          font-weight: 500;
+        }
+
+        .currently-copy {
+          left: 47px;
+          top: calc(275.64px + var(--hero-y-offset));
+          width: 309px;
+          height: auto;
+          color: #5b5b5b;
+          font-size: 13.416px;
+          line-height: normal;
+          font-weight: 300;
+          white-space: normal;
+        }
+
+        .dotted-map-frame {
+          left: 47px;
+          top: calc(328px + var(--hero-y-offset));
+          width: 309px;
+          height: 138px;
+          border-width: 0.4px;
+          border-radius: 3.96px;
+        }
+
+        .time-card {
+          left: 47px;
+          top: calc(473px + var(--hero-y-offset));
+          width: 136px;
+          height: 85px;
+          border-width: 0.396px;
+          border-radius: 3.964px;
+          box-shadow: 0 0 0.396px rgba(149, 149, 149, 0.25);
+        }
+
+        .time-digit,
+        .time-colon,
+        .time-card.has-two-digit-hour .time-digit,
+        .time-card.has-two-digit-hour .time-colon {
+          font-size: 52.573px;
+        }
+
+        .time-digit.hour-one,
+        .time-card.has-two-digit-hour .time-digit.hour-one {
+          left: 19px;
+          top: 10px;
+          width: 41.355px;
+          height: 65.898px;
+        }
+
+        .time-colon,
+        .time-card.has-two-digit-hour .time-colon {
+          left: 52.08px;
+          top: 10.19px;
+        }
+
+        .time-digit.minute-ten,
+        .time-card.has-two-digit-hour .time-digit.minute-ten {
+          left: 56.19px;
+          top: 10.56px;
+          width: 39.701px;
+          height: 65.039px;
+        }
+
+        .time-digit.minute-one,
+        .time-card.has-two-digit-hour .time-digit.minute-one {
+          left: 86.16px;
+          top: 10.6px;
+          width: 31.658px;
+          height: 64.851px;
+        }
+
+        .time-digit.hour-ten,
+        .time-card.has-two-digit-hour .time-digit.hour-ten {
+          left: -6px;
+          top: 10px;
+          width: 30px;
+          height: 65.898px;
+        }
+
+        .music-card {
+          left: 190px;
+          top: calc(473px + var(--hero-y-offset));
+          width: 166px;
+          height: 85px;
+          border-width: 0.4px;
+          border-radius: 3.96px;
+          box-shadow: 0 0 0.4px rgba(0, 0, 0, 0.25);
+          --music-meta-left: 89px;
+          --music-meta-width: 68px;
+        }
+
+        /* The mobile card is plain white -- no blurred album-art wash. */
+        .music-card-gradient {
+          display: none;
+        }
+
+        .album-art {
+          left: 6.6px;
+          top: 10.6px;
+          width: 64.421px;
+          height: 64.709px;
+          border-radius: 4.948px;
+        }
+
+        .track-title {
+          top: 24.6px;
+          height: 14px;
+          font-size: 10.6px;
+        }
+
+        .track-artist {
+          top: 38.74px;
+          height: 9px;
+          font-size: 7.067px;
+        }
+
+        .progress-track,
+        .progress-fill {
+          top: 55px;
+          height: 5px;
+          border-radius: 3.125px;
+        }
+
+        .progress-track {
+          width: 53px;
+        }
+
+        .progress-fill {
+          width: 13.729px;
+        }
+
+        /* Not present in the mobile frame. */
+        .track-time,
+        .play-button {
+          display: none;
+        }
+
+        .damian-llm-card {
+          left: 47px;
+          top: calc(565px + var(--hero-y-offset));
+          width: 309px;
+          height: 170px;
+          border-width: 0.595px;
+          border-radius: 5.954px;
+          box-shadow: 0 0 0.595px rgba(149, 149, 149, 0.25);
+        }
+
+        /* Orb renders at its native 64px, scaled down to the frame's 37.26px. */
+        .damian-llm-avatar {
+          left: 134.57px;
+          top: 29.41px;
+          width: 64px;
+          height: 64px;
+          transform: scale(0.5822);
+          transform-origin: top left;
+        }
+
+        .damian-llm-title {
+          left: 101.97px;
+          top: 73.32px;
+          width: auto;
+          height: 17px;
+          font-size: 13.307px;
+        }
+
+        .damian-llm-copy {
+          left: 49.4px;
+          top: 93.94px;
+          width: 208.253px;
+          height: 12px;
+          font-size: 9.315px;
+        }
+
+        .damian-llm-button {
+          left: 95.41px;
+          top: 117.41px;
+          width: 115.544px;
+          height: 26.664px;
+          border-radius: 17.776px;
+        }
+
+        .damian-llm-button-label {
+          inset: 0;
+          font-size: 12.443px;
+        }
+
+        /* The chat layer keeps its desktop internals and is scaled by the
+           card ratio (309/519), so the whole open state stays consistent
+           without re-positioning every chip, bubble and composer control.
+           The mobile card is proportionally taller than the desktop one, so
+           the scaled layer is nudged down to sit centred rather than leaving
+           all the slack below the composer. */
+        .damian-llm-chat {
+          transform: translateY(21px) scale(0.5954);
+          transform-origin: top left;
+        }
+
+        .damian-llm-card[data-open="true"] .damian-llm-button {
+          left: 14.89px;
+          top: calc(var(--llm-composer-top) * 0.5954 + 21px);
+          width: 249.47px;
+          height: calc(var(--llm-composer-height) * 0.5954);
+        }
+
+        .project-card {
+          width: 309px;
+          height: 243.5px;
+        }
+
+        /* Matches the specificity of the desktop [data-project] rules so the
+           shared left edge actually wins. */
+        .project-card[data-project] {
+          left: 47px;
+        }
+
+        .project-card[data-project="mismo"] {
+          top: calc(877px + var(--project-y-offset));
+        }
+
+        .project-card[data-project="carfully"] {
+          top: calc(1153px + var(--project-y-offset));
+        }
+
+        .project-card[data-project="integra"] {
+          top: calc(1420px + var(--project-y-offset));
+        }
+
+        .project-card[data-project="sancorda"] {
+          top: calc(1687px + var(--project-y-offset));
+        }
+
+        .project-thumbnail {
+          width: 309px;
+          height: 206.8px;
+          border-width: 0.4px;
+          border-radius: 3.96px;
+        }
+
+        /* 309/780 == 206.8/522, so one uniform scale reproduces every
+           per-project crop already tuned for desktop. transform only scales
+           the box, so each offset is scaled by the same factor by hand. */
+        .project-thumbnail img,
+        .project-thumbnail video {
+          transform: scale(0.3962);
+          transform-origin: top left;
+        }
+
+        .project-card:hover .project-thumbnail img,
+        .project-card:hover .project-thumbnail video {
+          transform: scale(0.3962);
+        }
+
+        .project-card[data-project="mismo"] .project-thumbnail video {
+          left: 80.82px;
+          top: -90.73px;
+        }
+
+        .project-card[data-project="carfully"] .project-thumbnail img {
+          left: 28.53px;
+          top: 21.39px;
+        }
+
+        .project-card[data-project="integra"] .project-thumbnail img {
+          left: 39.62px;
+          top: 38.83px;
+        }
+
+        .project-card[data-project="sancorda"] .project-thumbnail img {
+          left: 39.62px;
+          top: 38.43px;
+        }
+
+        .project-title {
+          top: 216.7px;
+          height: 15px;
+          font-size: 11.409px;
+          line-height: normal;
+        }
+
+        .project-year {
+          top: 231.53px;
+          height: 12px;
+          font-size: 9.127px;
+          line-height: normal;
+        }
+
+        .social-link {
+          top: 2122px;
+          width: 65.826px;
+          height: 65.826px;
+          border-radius: 14.723px;
+        }
+
+        .social-link.instagram {
+          left: 41px;
+        }
+
+        .social-link.x {
+          left: 126.06px;
+        }
+
+        .social-link.linkedin {
+          left: 211.11px;
+        }
+
+        .social-link.mail {
+          left: 296.17px;
+        }
+
+        .bottom-clear-cue {
+          width: 30px;
+          height: 30px;
+          bottom: max(13px, env(safe-area-inset-bottom));
+        }
+
+        .bottom-clear-cue svg {
+          width: 12px;
+          height: 12px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .t-morph,
+        .t-morph-plus,
+        .t-morph-plus svg,
+        .t-morph-menu,
+        .morph-item,
+        .time-digit,
+        .time-colon,
+        .time-digit-current,
+        .time-digit-next,
+        .project-thumbnail img,
+        .project-thumbnail video,
+        .social-link,
+        .damian-llm-avatar,
+        .damian-llm-title,
+        .damian-llm-copy,
+        .damian-llm-button,
+        .damian-llm-button-label,
+        .bottom-clear-cue,
+        .damian-llm-chat-heading,
+        .damian-llm-chat-title,
+        .damian-llm-back,
+        .damian-llm-chat-copy,
+        .damian-llm-chip,
+        .damian-llm-thread,
+        .damian-llm-input-shell,
+        .damian-llm-input,
+        .damian-llm-send,
+        .damian-llm-typing span {
+          transition: none !important;
+          animation: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="top-nav" aria-label="Top Navigation Bar">
+      <div class="morph-anchor">
+        <div class="t-morph" data-open="false" id="nav-morph">
+          <div class="t-morph-menu" aria-label="Circle menu">
+            <button class="morph-item" type="button">Home</button>
+            <button class="morph-item" type="button">About</button>
+            <button class="morph-item" type="button">Resume</button>
+          </div>
+          <button
+            class="t-morph-plus"
+            type="button"
+            id="nav-morph-toggle"
+            aria-label="Open navigation menu"
+            aria-expanded="false"
+          >
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" aria-hidden="true">
+              <path d="M8 3v10" />
+              <path d="M3 8h10" />
+            </svg>
+          </button>
+        </div>
+      </div>
+      <nav class="desktop-links" aria-label="Primary navigation">
+        <a href="#">Home</a>
+        <a href="#">About</a>
+        <a href="#">Resume</a>
+      </nav>
+    </header>
+
+    <div class="viewport" aria-label="Scaled preview of the Figma frame">
+      <main class="figma-frame" aria-label="Home Page Final 2026">
+        <h1 class="name">Damian Izaguirre</h1>
+        <p class="role">Product Designer</p>
+        <p class="currently-label">Currently</p>
+        <p class="currently-copy">
+          Designing and building meaningful products, giving data life through meaningful design.
+        </p>
+        <div class="dotted-map-frame" aria-label="Interactive dotted map">
+          <iframe
+            title="Interactive dotted map"
+            src="./dotted-map-repel.html?embed=1"
+            loading="eager"
+          ></iframe>
+        </div>
+        <section class="music-card" aria-label="Music card">
+          <div class="music-card-gradient music-card-gradient-current" id="spotify-gradient-current" aria-hidden="true"></div>
+          <div class="music-card-gradient music-card-gradient-next" id="spotify-gradient-next" aria-hidden="true"></div>
+          <img class="album-art album-art-current" id="spotify-album-art" alt="" crossorigin="anonymous" />
+          <img class="album-art album-art-next" id="spotify-album-art-next" alt="" crossorigin="anonymous" />
+          <div class="song-meta-motion song-meta-current" id="spotify-meta-current">
+            <p class="track-title" id="spotify-track-title">
+              <span class="track-title-text" id="spotify-track-title-text"></span>
+            </p>
+            <p class="track-artist" id="spotify-track-artist"></p>
+            <div class="progress-track" aria-hidden="true"></div>
+            <div class="progress-fill" id="spotify-progress-fill" aria-hidden="true"></div>
+            <p class="track-time current" id="spotify-progress-current">0:00</p>
+            <p class="track-time duration" id="spotify-progress-duration">0:00</p>
+          </div>
+          <div class="song-meta-motion song-meta-next" id="spotify-meta-next" aria-hidden="true">
+            <p class="track-title">
+              <span class="track-title-text" data-song-meta="title"></span>
+            </p>
+            <p class="track-artist" data-song-meta="artist"></p>
+            <div class="progress-track" aria-hidden="true"></div>
+            <div class="progress-fill" data-song-meta="progress" aria-hidden="true"></div>
+            <p class="track-time current" data-song-meta="current"></p>
+            <p class="track-time duration" data-song-meta="duration"></p>
+          </div>
+          <button class="play-button" type="button" id="spotify-action" aria-label="Spotify">
+            <img src="./assets/figma-home/icon-play-bold.svg" alt="" />
+            <span class="play-label" id="spotify-action-label">Play</span>
+          </button>
+          <p class="spotify-status" id="spotify-status">Loading…</p>
+        </section>
+        <section class="time-card" id="central-time-card" aria-label="Current U.S. Central Time" aria-live="polite">
+          <p class="time-digit hour-ten" data-time-part="hour-ten" aria-hidden="true">
+            <span class="time-digit-current"></span>
+            <span class="time-digit-next"></span>
+          </p>
+          <p class="time-digit hour-one" data-time-part="hour-one">
+            <span class="time-digit-current">9</span>
+            <span class="time-digit-next"></span>
+          </p>
+          <p class="time-colon">:</p>
+          <p class="time-digit minute-ten" data-time-part="minute-ten">
+            <span class="time-digit-current">4</span>
+            <span class="time-digit-next"></span>
+          </p>
+          <p class="time-digit minute-one" data-time-part="minute-one">
+            <span class="time-digit-current">1</span>
+            <span class="time-digit-next"></span>
+          </p>
+        </section>
+        <section class="damian-llm-card" data-open="false" data-sent="false" aria-label="DamianLLM card">
+          <div class="damian-llm-layer damian-llm-intro" aria-hidden="true">
+            <iframe
+              class="damian-llm-avatar"
+              title="Thinking orb"
+              src="/thinking-orb"
+              aria-hidden="true"
+            ></iframe>
+            <p class="damian-llm-title">Ask DamianLLM</p>
+            <p class="damian-llm-copy">A small AI trained on myself, incase I’m asleep</p>
+            <button class="damian-llm-button" type="button" aria-label="Start chatting with DamianLLM">
+              <span class="damian-llm-button-label">Start Chatting</span>
+            </button>
+          </div>
+          <div class="damian-llm-layer damian-llm-chat">
+            <div class="damian-llm-chat-heading">
+              <button class="damian-llm-back" type="button" aria-label="Back to Ask DamianLLM">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" aria-hidden="true">
+                  <path d="M10 3.5 5.5 8l4.5 4.5" />
+                </svg>
+              </button>
+              <p class="damian-llm-chat-title">Chat with me</p>
+              <span class="damian-llm-info" title="A small AI trained on myself, incase I’m asleep. Messages are sent to Anthropic to generate replies.">
+                <img src="./assets/figma-home/icon-info-outline.svg" alt="About DamianLLM" />
+              </span>
+            </div>
+            <p class="damian-llm-chat-copy">Pick a question or write your own</p>
+            <button class="damian-llm-chip mismo" type="button" data-question="What’s Mismo?">
+              <span class="damian-llm-chip-label">What’s Mismo?</span>
+            </button>
+            <button class="damian-llm-chip work" type="button" data-question="Available for work?">
+              <span class="damian-llm-chip-label">Available for work?</span>
+            </button>
+            <button class="damian-llm-chip tools" type="button" data-question="Your tools?">
+              <span class="damian-llm-chip-label">Your tools?</span>
+            </button>
+            <div class="damian-llm-thread" aria-live="polite"></div>
+            <div class="damian-llm-input-shell">
+              <textarea class="damian-llm-input" rows="1" spellcheck="false" placeholder="Type your question..."></textarea>
+            </div>
+            <button class="damian-llm-send" type="button" aria-label="Send question">
+              <img src="./assets/figma-home/damian-llm-send.svg" alt="" />
+            </button>
+          </div>
+        </section>
+
+        <section
+          class="project-card"
+          data-project="mismo"
+          data-href="/case-study/mismo"
+          id="projects"
+          role="link"
+          tabindex="0"
+          aria-label="Open Mismo case study"
+        >
+          <div class="project-thumbnail">
+            <video
+              autoplay
+              muted
+              loop
+              playsinline
+              preload="none"
+              poster="./assets/figma-home/mismo-poster.png"
+              aria-label="Mismo app preview"
+            >
+              <source src="./assets/figma-home/mismo-preview-lite.mp4" type="video/mp4" />
+            </video>
+          </div>
+          <p class="project-title">Mismo</p>
+          <p class="project-year">2026</p>
+        </section>
+
+        <section
+          class="project-card"
+          data-project="carfully"
+          data-href="/case-study/carfully"
+          role="link"
+          tabindex="0"
+          aria-label="Open Carfully case study"
+        >
+          <div class="project-thumbnail">
+            <img
+              src="./assets/figma-home/carfully-selected.png"
+              alt="Carfully auto-financing tool interface"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+          <p class="project-title">Carfully</p>
+          <p class="project-year">2025</p>
+        </section>
+
+        <section
+          class="project-card"
+          data-project="integra"
+          data-href="/case-study/cbre"
+          role="link"
+          tabindex="0"
+          aria-label="Open Integra case study"
+        >
+          <div class="project-thumbnail">
+            <img
+              src="./assets/figma-home/integra-selected.png"
+              alt="Integra workplace dashboard and virtual office"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+          <p class="project-title">Integra</p>
+          <p class="project-year">2025</p>
+        </section>
+
+        <section
+          class="project-card"
+          data-project="sancorda"
+          data-href="/case-study/sancorda"
+          role="link"
+          tabindex="0"
+          aria-label="Open Sancorda Medical case study"
+        >
+          <div class="project-thumbnail">
+            <img
+              src="./assets/figma-home/sancorda-selected.png"
+              alt="Sancorda Medical 3D platform interface"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+          <p class="project-title">Sancorda Medical</p>
+          <p class="project-year">2025</p>
+        </section>
+
+        <a
+          class="social-link instagram"
+          id="social-icons"
+          href="https://instagram.com/damianpizaguirre"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Open Damian's Instagram"
+        >
+          <img src="./assets/social-icons/instagram.jpg" alt="" loading="lazy" />
+        </a>
+        <a
+          class="social-link x"
+          href="https://x.com/damianizaguirre"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Open Damian's X profile"
+        >
+          <img src="./assets/social-icons/x.jpg" alt="" loading="lazy" />
+        </a>
+        <a
+          class="social-link linkedin"
+          href="https://linkedin.com/in/damianizaguirre"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Open Damian's LinkedIn"
+        >
+          <img src="./assets/social-icons/linkedin.jpg" alt="" loading="lazy" />
+        </a>
+        <a
+          class="social-link mail"
+          href="mailto:izaguirredamian20@gmail.com"
+          aria-label="Email Damian"
+        >
+          <img src="./assets/social-icons/mail.jpg" alt="" loading="lazy" />
+        </a>
+      </main>
+    </div>
+
+    <button class="bottom-clear-cue" id="bottom-clear-cue" type="button" aria-label="Scroll to app icons">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M4.75 6.5 8 9.75l3.25-3.25" />
+      </svg>
+    </button>
+
+    <script>
+      if ("scrollRestoration" in history) {
+        history.scrollRestoration = "manual";
+      }
+
+      if (!window.location.hash) {
+        window.scrollTo(0, 0);
+      }
+
+      const root = document.documentElement;
+      const frameWidth = 1920;
+      const designViewportHeight = 1080;
+      const heroVerticalLift = 56;
+      const projectStart = 1082;
+      const projectFoldGap = 54;
+      // Mobile frame ("Porfolio Mobile Version (Home)"). Kept in sync with the
+      // --frame-width/--frame-height overrides in the max-width:700px block.
+      const mobileFrameWidth = 402;
+      const mobileHeroTop = 189;
+      const mobileHeroBottom = 735;
+      const mobileProjectStart = 877;
+      const mobileProjectFoldGap = 48;
+      const mobileQuery = window.matchMedia("(max-width: 700px)");
+      // Past ~450px the mobile frame would start scaling up past its design
+      // size, so cap it and let .viewport center the leftover width.
+      const mobileMaxScale = 1.12;
+      const morph = document.querySelector("#nav-morph");
+      const morphToggle = document.querySelector("#nav-morph-toggle");
+      const morphItems = Array.from(document.querySelectorAll(".morph-item"));
+      const timeCard = document.querySelector("#central-time-card");
+      const timeSlots = Array.from(document.querySelectorAll("[data-time-part]"));
+      const spotifyAlbumArt = document.querySelector("#spotify-album-art");
+      const spotifyAlbumArtNext = document.querySelector("#spotify-album-art-next");
+      const spotifyGradientCurrent = document.querySelector("#spotify-gradient-current");
+      const spotifyGradientNext = document.querySelector("#spotify-gradient-next");
+      const spotifyMetaCurrent = document.querySelector("#spotify-meta-current");
+      const spotifyMetaNext = document.querySelector("#spotify-meta-next");
+      const spotifyMetaNextTitle = spotifyMetaNext.querySelector("[data-song-meta='title']");
+      const spotifyMetaNextArtist = spotifyMetaNext.querySelector("[data-song-meta='artist']");
+      const spotifyMetaNextProgress = spotifyMetaNext.querySelector("[data-song-meta='progress']");
+      const spotifyMetaNextCurrent = spotifyMetaNext.querySelector("[data-song-meta='current']");
+      const spotifyMetaNextDuration = spotifyMetaNext.querySelector("[data-song-meta='duration']");
+      const spotifyTrackTitle = document.querySelector("#spotify-track-title");
+      const spotifyTrackTitleText = document.querySelector("#spotify-track-title-text");
+      const spotifyTrackArtist = document.querySelector("#spotify-track-artist");
+      const spotifyProgressFill = document.querySelector("#spotify-progress-fill");
+      const spotifyProgressCurrent = document.querySelector("#spotify-progress-current");
+      const spotifyProgressDuration = document.querySelector("#spotify-progress-duration");
+      const spotifyAction = document.querySelector("#spotify-action");
+      const spotifyActionLabel = document.querySelector("#spotify-action-label");
+      const spotifyStatus = document.querySelector("#spotify-status");
+      const musicCard = document.querySelector(".music-card");
+      const projectVideos = Array.from(document.querySelectorAll(".project-thumbnail video"));
+      const projectCards = Array.from(document.querySelectorAll(".project-card"));
+      const bottomClearCue = document.querySelector("#bottom-clear-cue");
+      const socialIconsAnchor = document.querySelector("#social-icons");
+      const damianLlmCard = document.querySelector(".damian-llm-card");
+      const damianLlmStart = document.querySelector(".damian-llm-button");
+      const damianLlmTitle = document.querySelector(".damian-llm-chat-title");
+      const damianLlmInput = document.querySelector(".damian-llm-input");
+      const damianLlmThread = document.querySelector(".damian-llm-thread");
+      const damianLlmSend = document.querySelector(".damian-llm-send");
+      const damianLlmBack = document.querySelector(".damian-llm-back");
+      const damianLlmChips = Array.from(document.querySelectorAll(".damian-llm-chip"));
+      const hoverSoundTargets = Array.from(document.querySelectorAll("#nav-morph-toggle, #bottom-clear-cue, .desktop-links a, .morph-item, .project-card, .social-link, .play-button, .damian-llm-button, .damian-llm-send, .damian-llm-back, .damian-llm-chip"));
+      const params = new URLSearchParams(window.location.search);
+      const centralTimeFormatter = new Intl.DateTimeFormat("en-US", {
+        timeZone: "America/Chicago",
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+      });
+      let previewTime = parsePreviewTime(params.get("time"));
+      let spotifyTrackUrl = "";
+      let spotifyPlayback = null;
+      const spotifyProgressTrackWidth = 183.74;
+      const spotifyDefaultProgressWidth = 0;
+      const spotifyDefaultProgressColors = {
+        start: "#38594d",
+        mid: "#8c6152",
+        end: "#e84d99",
+      };
+      const spotifyDefaultCard = {
+        albumArt: spotifyAlbumArt.src,
+        title: spotifyTrackTitleText.textContent,
+        artist: spotifyTrackArtist.textContent,
+        current: spotifyProgressCurrent.textContent,
+        duration: spotifyProgressDuration.textContent,
+      };
+      let trackTitleMeasureFrame = 0;
+      let spotifyLastSampledAlbumArt = "";
+      let musicGradientTransitionTimer = 0;
+      let albumArtTransitionTimer = 0;
+      let songMetaTransitionTimer = 0;
+      let spotifyUpdateSequence = 0;
+      let spotifyRenderedTrackKey = `${spotifyDefaultCard.title}|${spotifyDefaultCard.artist}|${spotifyDefaultCard.duration}`;
+      let damianLlmReturnTimer = 0;
+      const llmComposerBottom = 191;
+      const damianLlmHistory = [];
+      // @soundcn/click-soft, CC0 sound by Kenney.
+      const clickSoftSound = {
+        dataUri:
+          "data:audio/mpeg;base64,SUQzBAAAAAAAIlRTU0UAAAAOAAADTGF2ZjYyLjMuMTAwAAAAAAAAAAAAAAD/+1DAAAAAAAAAAAAAAAAAAAAAAABJbmZvAAAADwAAAAIAAAJxAKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr//////////////////////////////////////////////////////////////////wAAAABMYXZjNjIuMTEAAAAAAAAAAAAAAAAkBYYAAAAAAAACcU7MYgYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//tQxAAACghZUlTHgAGDlWufHzAAAVWgJg3EszX3mlF95pSk7enve+GBDEMNMg4R8BLACwAsA7BVjjOhDEMQxWKx5EcJwfB/KBiU8/wI7QH+BHaA/ynv6PB8/LgQEMgD78CHO/oGiAIBAQBAYFAA1hDi4z22DmJ7Et+PSEd1f8Y4PmLI5uDYKAWyCmBlSZJ3gAmD0RBEUDS/HKFzC5iZIr/5FTIvE0Yl3/8ipkXi8Yl0u/xEFQVER7/WCoiCoKiL/4VBURPOqgAQuacbblgZh//7UsQEg8aUBv9cMIAgAAA0gAAABIKqErhFDZUNQ7PRK4S8s8r1HiuGlHuSnenrcW9yvO/PcFflep5XqPKfrO9NTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV",
+      };
+      const clickSoftVolume = 0.576;
+      let hoverAudioContext = null;
+      let hoverAudioBufferPromise = null;
+      let clickSoftPlayerIndex = 0;
+      const clickSoftPlayers = [];
+      const hoverSoundLastPlayed = new WeakMap();
+      function syncScale() {
+        if (mobileQuery.matches) {
+          const nextScale = Math.min(window.innerWidth / mobileFrameWidth, mobileMaxScale);
+          const viewportHeightInFrame = window.innerHeight / nextScale;
+          const heroCenter = (mobileHeroTop + mobileHeroBottom) / 2;
+          const heroOffset = Math.round(viewportHeightInFrame * 0.53 - heroCenter);
+          const projectOffset = Math.max(
+            0,
+            Math.round(viewportHeightInFrame + mobileProjectFoldGap - mobileProjectStart),
+          );
+
+          root.style.setProperty("--scale", String(nextScale));
+          root.style.setProperty("--hero-y-offset", `${heroOffset}px`);
+          root.style.setProperty("--project-y-offset", `${projectOffset}px`);
+          return;
+        }
+
+        const nextScale = Math.min(window.innerWidth / frameWidth, 1);
+        const viewportHeightInFrame = window.innerHeight / nextScale;
+        const heroOffset = Math.round((viewportHeightInFrame - designViewportHeight) / 2) - heroVerticalLift;
+        const projectOffset = Math.max(
+          0,
+          Math.round(viewportHeightInFrame + projectFoldGap - projectStart),
+        );
+
+        root.style.setProperty("--scale", String(nextScale));
+        root.style.setProperty("--hero-y-offset", `${heroOffset}px`);
+        root.style.setProperty("--project-y-offset", `${projectOffset}px`);
+      }
+
+      function getElementPageTop(element) {
+        return element.getBoundingClientRect().top + window.scrollY;
+      }
+
+      function initBottomClearCue() {
+        if (!bottomClearCue || !socialIconsAnchor) {
+          return;
+        }
+
+        bottomClearCue.addEventListener("click", () => {
+          playHoverSound(bottomClearCue);
+          const targetY = Math.max(0, getElementPageTop(socialIconsAnchor) - window.innerHeight * 0.48);
+          window.scrollTo({ top: targetY, behavior: "smooth" });
+        });
+
+        const syncCueVisibility = () => {
+          const iconTop = socialIconsAnchor.getBoundingClientRect().top;
+          const iconsAreArriving = iconTop < window.innerHeight * 0.88;
+          bottomClearCue.classList.toggle("is-hidden", iconsAreArriving);
+        };
+
+        syncCueVisibility();
+        window.addEventListener("scroll", syncCueVisibility, { passive: true });
+        window.addEventListener("resize", syncCueVisibility);
+      }
+
+      function setDamianLlmOpen(nextOpen) {
+        if (!damianLlmCard) {
+          return;
+        }
+
+        if (nextOpen) {
+          window.clearTimeout(damianLlmReturnTimer);
+          damianLlmCard.dataset.returning = "false";
+        }
+
+        damianLlmCard.dataset.open = String(nextOpen);
+
+        if (nextOpen) {
+          window.requestAnimationFrame(() => {
+            damianLlmInput?.focus({ preventScroll: true });
+          });
+        }
+      }
+
+      function syncDamianLlmComposer() {
+        if (!damianLlmCard || !damianLlmInput) {
+          return;
+        }
+
+        const value = damianLlmInput.value.trim();
+        const minHeight = 30;
+        const maxHeight = 66;
+
+        // Measure how tall the content actually wants to be -- shrink first
+        // so scrollHeight reflects the real content height rather than
+        // whatever height was previously forced, then grow only as far as
+        // that requires. Typing a single short line should never expand the
+        // box; it should only grow once the text actually wraps.
+        damianLlmInput.style.height = "18px";
+        const contentHeight = damianLlmInput.scrollHeight + 10;
+        const height = Math.max(minHeight, Math.min(maxHeight, contentHeight));
+        const top = llmComposerBottom - height;
+
+        damianLlmCard.style.setProperty("--llm-composer-height", `${height}px`);
+        damianLlmCard.style.setProperty("--llm-composer-top", `${top}px`);
+        damianLlmCard.style.setProperty("--llm-input-width", value ? "375px" : "216px");
+        damianLlmInput.style.height = `${height - 10}px`;
+      }
+
+      function getDamianLlmTypingMarkup() {
+        return '<span class="damian-llm-typing" aria-label="DamianLLM is typing"><span></span><span></span><span></span></span>';
+      }
+
+      function appendDamianLlmBubble(kind, content, isHtml = false) {
+        const bubble = document.createElement("p");
+        bubble.className = `damian-llm-message ${kind}`;
+
+        if (isHtml) {
+          bubble.innerHTML = content;
+        } else {
+          bubble.textContent = content;
+        }
+
+        damianLlmThread.appendChild(bubble);
+        return bubble;
+      }
+
+      function scrollDamianLlmThreadToBottom() {
+        window.requestAnimationFrame(() => {
+          damianLlmThread?.scrollTo({ top: damianLlmThread.scrollHeight, behavior: "smooth" });
+        });
+      }
+
+      const damianLlmFallbackReply =
+        "I’d probably start by talking through the design decisions, then show the work behind them.";
+
+      async function fetchDamianLlmReply(question) {
+        try {
+          const response = await fetch("/api/damian-llm", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message: question, history: damianLlmHistory }),
+          });
+          const data = await response.json();
+          return typeof data.reply === "string" && data.reply ? data.reply : damianLlmFallbackReply;
+        } catch (error) {
+          return damianLlmFallbackReply;
+        }
+      }
+
+      function sendDamianLlmMessage(messageOverride = "") {
+        if (!damianLlmCard || !damianLlmInput || !damianLlmThread || !damianLlmTitle) {
+          return;
+        }
+
+        const value = (messageOverride || damianLlmInput.value).trim();
+
+        if (!value) {
+          setDamianLlmOpen(true);
+          return;
+        }
+
+        appendDamianLlmBubble("user", value);
+        const botBubble = appendDamianLlmBubble("bot", getDamianLlmTypingMarkup(), true);
+
+        damianLlmCard.dataset.sent = "true";
+        damianLlmTitle.textContent = "DamianLLM";
+        damianLlmInput.value = "";
+        damianLlmInput.placeholder = "Ask a follow-up...";
+        setDamianLlmOpen(true);
+        syncDamianLlmComposer();
+        scrollDamianLlmThreadToBottom();
+
+        fetchDamianLlmReply(value).then((reply) => {
+          if (damianLlmCard.dataset.sent !== "true") {
+            return;
+          }
+
+          damianLlmHistory.push({ role: "user", content: value });
+          damianLlmHistory.push({ role: "assistant", content: reply });
+          botBubble.textContent = reply;
+          scrollDamianLlmThreadToBottom();
+        });
+      }
+
+      function resetDamianLlmCard() {
+        if (!damianLlmCard || !damianLlmInput || !damianLlmThread || !damianLlmTitle) {
+          return;
+        }
+
+        damianLlmInput.value = "";
+        damianLlmInput.placeholder = "Type your question...";
+        damianLlmTitle.textContent = "Chat with me";
+        damianLlmCard.dataset.returning = "true";
+        damianLlmCard.dataset.sent = "false";
+        syncDamianLlmComposer();
+        setDamianLlmOpen(false);
+
+        window.clearTimeout(damianLlmReturnTimer);
+        damianLlmReturnTimer = window.setTimeout(() => {
+          damianLlmThread.replaceChildren();
+          damianLlmCard.dataset.returning = "false";
+          damianLlmHistory.length = 0;
+        }, 420);
+      }
+
+      function initDamianLlmCard() {
+        if (!damianLlmCard || !damianLlmStart || !damianLlmInput || !damianLlmSend) {
+          return;
+        }
+
+        damianLlmStart.addEventListener("click", () => setDamianLlmOpen(true));
+        damianLlmSend.addEventListener("click", () => sendDamianLlmMessage());
+        damianLlmBack?.addEventListener("click", resetDamianLlmCard);
+        damianLlmInput.addEventListener("input", syncDamianLlmComposer);
+        damianLlmInput.addEventListener("keydown", (event) => {
+          if (event.key !== "Enter" || event.shiftKey) {
+            return;
+          }
+
+          event.preventDefault();
+          sendDamianLlmMessage();
+        });
+        damianLlmChips.forEach((chip) => {
+          chip.addEventListener("click", () => {
+            sendDamianLlmMessage(chip.dataset.question || chip.textContent || "");
+          });
+        });
+        syncDamianLlmComposer();
+      }
+
+      function initProjectVideos() {
+        projectVideos.forEach((video) => {
+          video.loop = true;
+          video.muted = true;
+          video.playsInline = true;
+
+          const playVideo = () => {
+            const playPromise = video.play();
+            if (playPromise) {
+              playPromise.catch(() => {});
+            }
+          };
+
+          video.addEventListener("ended", () => {
+            video.currentTime = 0;
+            playVideo();
+          });
+          video.addEventListener("canplay", playVideo, { once: true });
+        });
+      }
+
+      function getHoverAudioContext() {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+
+        if (!AudioContextClass) {
+          return null;
+        }
+
+        if (!hoverAudioContext) {
+          hoverAudioContext = new AudioContextClass();
+        }
+
+        return hoverAudioContext;
+      }
+
+      function decodeClickSoftSound() {
+        const audioContext = getHoverAudioContext();
+
+        if (!audioContext) {
+          return null;
+        }
+
+        if (!hoverAudioBufferPromise) {
+          const base64 = clickSoftSound.dataUri.split(",")[1];
+          const binaryString = atob(base64);
+          const bytes = new Uint8Array(binaryString.length);
+
+          for (let index = 0; index < binaryString.length; index += 1) {
+            bytes[index] = binaryString.charCodeAt(index);
+          }
+
+          hoverAudioBufferPromise = audioContext
+            .decodeAudioData(bytes.buffer.slice(0))
+            .catch((error) => {
+              hoverAudioBufferPromise = null;
+              throw error;
+            });
+        }
+
+        return hoverAudioBufferPromise;
+      }
+
+      async function unlockHoverAudio() {
+        const audioContext = getHoverAudioContext();
+
+        primeClickSoftFallback();
+
+        if (audioContext?.state === "suspended") {
+          try {
+            await audioContext.resume();
+          } catch {
+            return false;
+          }
+        }
+
+        try {
+          await decodeClickSoftSound();
+        } catch {
+          return false;
+        }
+
+        return audioContext?.state === "running";
+      }
+
+      function getClickSoftFallbackPlayer() {
+        if (!clickSoftPlayers.length) {
+          for (let index = 0; index < 6; index += 1) {
+            const player = new Audio(clickSoftSound.dataUri);
+            player.preload = "auto";
+            player.volume = clickSoftVolume;
+            clickSoftPlayers.push(player);
+          }
+        }
+
+        const player = clickSoftPlayers[clickSoftPlayerIndex];
+        clickSoftPlayerIndex = (clickSoftPlayerIndex + 1) % clickSoftPlayers.length;
+        return player;
+      }
+
+      function primeClickSoftFallback() {
+        const player = getClickSoftFallbackPlayer();
+        const previousVolume = player.volume;
+
+        player.volume = 0;
+        const playPromise = player.play();
+
+        if (!playPromise) {
+          player.pause();
+          player.currentTime = 0;
+          player.volume = previousVolume;
+          return;
+        }
+
+        playPromise
+          .then(() => {
+            player.pause();
+            player.currentTime = 0;
+            player.volume = previousVolume;
+          })
+          .catch(() => {
+            player.volume = previousVolume;
+          });
+      }
+
+      function playClickSoftFallback() {
+        const player = getClickSoftFallbackPlayer();
+
+        player.volume = clickSoftVolume;
+        player.currentTime = 0;
+        player.play().catch(() => {});
+      }
+
+      async function playNavigationHoverSound(target) {
+        const now = performance.now();
+        const lastPlayed = hoverSoundLastPlayed.get(target) || 0;
+
+        if (now - lastPlayed < 120) {
+          return;
+        }
+
+        hoverSoundLastPlayed.set(target, now);
+        const isAudioReady = await unlockHoverAudio();
+
+        if (!isAudioReady || !hoverAudioContext) {
+          playClickSoftFallback();
+          return;
+        }
+
+        try {
+          const buffer = await decodeClickSoftSound();
+          const source = hoverAudioContext.createBufferSource();
+          const gain = hoverAudioContext.createGain();
+
+          source.buffer = buffer;
+          gain.gain.value = clickSoftVolume;
+          source.connect(gain);
+          gain.connect(hoverAudioContext.destination);
+          source.start(hoverAudioContext.currentTime);
+        } catch {
+          playClickSoftFallback();
+        }
+      }
+
+      function initHoverSounds() {
+        const hasHover = window.matchMedia("(hover: hover)");
+
+        document.addEventListener("pointerdown", () => {
+          unlockHoverAudio();
+        }, { passive: true });
+        document.addEventListener("mousedown", () => {
+          unlockHoverAudio();
+        }, { passive: true });
+        document.addEventListener("click", () => {
+          unlockHoverAudio();
+        }, { passive: true });
+        document.addEventListener("keydown", () => {
+          unlockHoverAudio();
+        });
+        hoverSoundTargets.forEach((target) => {
+          target.addEventListener("mouseenter", () => {
+            if (!hasHover.matches) {
+              return;
+            }
+
+            playNavigationHoverSound(target).catch(() => {});
+          });
+          target.addEventListener("pointerenter", (event) => {
+            if (!hasHover.matches || event.pointerType === "touch") {
+              return;
+            }
+
+            playNavigationHoverSound(target).catch(() => {});
+          });
+        });
+      }
+
+      function initProjectCardLinks() {
+        projectCards.forEach((card) => {
+          const href = card.dataset.href;
+
+          if (!href) {
+            return;
+          }
+
+          card.addEventListener("click", () => {
+            window.location.href = href;
+          });
+          card.addEventListener("keydown", (event) => {
+            if (event.key !== "Enter" && event.key !== " ") {
+              return;
+            }
+
+            event.preventDefault();
+            window.location.href = href;
+          });
+        });
+      }
+
+      function setMorphOpen(nextOpen) {
+        morph.dataset.open = String(nextOpen);
+        morphToggle.setAttribute("aria-expanded", String(nextOpen));
+        morphToggle.setAttribute("aria-label", nextOpen ? "Close navigation menu" : "Open navigation menu");
+      }
+
+      function syncCentralTime() {
+        const formattedTime = previewTime || centralTimeFormatter
+          .format(new Date())
+          .replace(/\s?(AM|PM)$/i, "");
+        const [hourText, minuteText] = formattedTime.split(":");
+        const hasTwoDigitHour = hourText.length > 1;
+        const parts = {
+          "hour-ten": hasTwoDigitHour ? hourText[0] : "",
+          "hour-one": hasTwoDigitHour ? hourText[1] : hourText[0],
+          "minute-ten": minuteText[0],
+          "minute-one": minuteText[1],
+        };
+
+        timeCard.classList.toggle("has-two-digit-hour", hasTwoDigitHour);
+        timeSlots.forEach((slot) => setTimeDigit(slot, parts[slot.dataset.timePart]));
+        timeCard.setAttribute("aria-label", `${formattedTime} U.S. Central Time`);
+      }
+
+      function parsePreviewTime(value) {
+        if (!value) {
+          return "";
+        }
+
+        const match = value.match(/^([1-9]|1[0-2]):([0-5][0-9])$/);
+
+        if (!match) {
+          return "";
+        }
+
+        return `${match[1]}:${match[2]}`;
+      }
+
+      function advancePreviewMinute() {
+        if (!previewTime) {
+          return;
+        }
+
+        const [hourText, minuteText] = previewTime.split(":");
+        let hour = Number(hourText);
+        let minute = Number(minuteText) + 1;
+
+        if (minute > 59) {
+          minute = 0;
+          hour = hour === 12 ? 1 : hour + 1;
+        }
+
+        previewTime = `${hour}:${String(minute).padStart(2, "0")}`;
+        syncCentralTime();
+      }
+
+      function setTimeDigit(slot, nextValue = "") {
+        const current = slot.querySelector(".time-digit-current");
+        const next = slot.querySelector(".time-digit-next");
+        const currentValue = current.textContent;
+        const isEmpty = nextValue === "";
+
+        slot.classList.toggle("is-empty", isEmpty);
+
+        if (currentValue === nextValue || isEmpty) {
+          current.textContent = nextValue;
+          next.textContent = "";
+          slot.classList.remove("is-changing");
+          return;
+        }
+
+        next.textContent = nextValue;
+        slot.classList.remove("is-changing");
+        void slot.offsetWidth;
+        slot.classList.add("is-changing");
+
+        window.setTimeout(() => {
+          current.textContent = nextValue;
+          next.textContent = "";
+          slot.classList.remove("is-changing");
+        }, 700);
+      }
+
+      function setSpotifyStatus(message) {
+        spotifyStatus.textContent = message;
+      }
+
+      function syncTrackTitlePan() {
+        const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+        if (trackTitleMeasureFrame) {
+          window.cancelAnimationFrame(trackTitleMeasureFrame);
+          trackTitleMeasureFrame = 0;
+        }
+
+        spotifyTrackTitle.classList.remove("is-panning");
+        spotifyTrackTitle.style.removeProperty("--title-pan-distance");
+        spotifyTrackTitle.style.removeProperty("--title-pan-duration");
+
+        if (reduceMotion) {
+          return;
+        }
+
+        trackTitleMeasureFrame = window.requestAnimationFrame(() => {
+          trackTitleMeasureFrame = 0;
+          const overflow = spotifyTrackTitleText.scrollWidth - spotifyTrackTitle.clientWidth;
+
+          if (overflow <= 2) {
+            return;
+          }
+
+          const panDistance = Math.ceil(overflow + 8);
+          const panDuration = Math.max(7, Math.min(14, 5.5 + panDistance / 18));
+
+          spotifyTrackTitle.style.setProperty("--title-pan-distance", `${panDistance}px`);
+          spotifyTrackTitle.style.setProperty("--title-pan-duration", `${panDuration.toFixed(2)}s`);
+          spotifyTrackTitle.classList.add("is-panning");
+        });
+      }
+
+      function setSpotifyProgressColors(colors) {
+        musicCard.style.setProperty("--progress-start", colors.start);
+        musicCard.style.setProperty("--progress-mid", colors.mid);
+        musicCard.style.setProperty("--progress-end", colors.end);
+      }
+
+      function hexToRgb(hex) {
+        const normalized = hex.replace("#", "");
+        const value = Number.parseInt(normalized.length === 3
+          ? normalized.split("").map((character) => character + character).join("")
+          : normalized, 16);
+
+        return {
+          r: (value >> 16) & 255,
+          g: (value >> 8) & 255,
+          b: value & 255,
+        };
+      }
+
+      function hexToRgba(hex, alpha) {
+        const { r, g, b } = hexToRgb(hex);
+        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+      }
+
+      function createMusicCardGradient(colors) {
+        return [
+          `radial-gradient(circle at 35% 49%, ${hexToRgba(colors.end, 0.18)} 0%, transparent 36%)`,
+          `radial-gradient(circle at 78% 22%, ${hexToRgba(colors.mid, 0.13)} 0%, transparent 42%)`,
+          `linear-gradient(135deg, ${hexToRgba(colors.start, 0.1)} 0%, rgba(255, 255, 255, 0.94) 48%, ${hexToRgba(colors.end, 0.08)} 100%)`,
+          "#ffffff",
+        ].join(", ");
+      }
+
+      function setMusicCardGradient(colors, { animate = true } = {}) {
+        const gradient = createMusicCardGradient(colors);
+
+        if (musicGradientTransitionTimer) {
+          window.clearTimeout(musicGradientTransitionTimer);
+          musicGradientTransitionTimer = 0;
+        }
+
+        if (!animate || spotifyGradientCurrent.style.background === "") {
+          spotifyGradientCurrent.style.background = gradient;
+          spotifyGradientNext.style.background = gradient;
+          musicCard.classList.remove("is-gradient-transitioning");
+          return;
+        }
+
+        spotifyGradientNext.style.background = gradient;
+        musicCard.classList.add("is-gradient-transitioning");
+
+        musicGradientTransitionTimer = window.setTimeout(() => {
+          musicGradientTransitionTimer = 0;
+          spotifyGradientCurrent.style.background = gradient;
+          musicCard.classList.remove("is-gradient-transitioning");
+        }, 780);
+      }
+
+      function setSpotifyPalette(colors, options = {}) {
+        setSpotifyProgressColors(colors);
+        setMusicCardGradient(colors, options);
+      }
+
+      function normalizeSpotifyImageSource(src) {
+        if (!src) {
+          return "";
+        }
+
+        try {
+          return new URL(src, window.location.href).href;
+        } catch {
+          return src;
+        }
+      }
+
+      function isSameSpotifyImageSource(a, b) {
+        return normalizeSpotifyImageSource(a) === normalizeSpotifyImageSource(b);
+      }
+
+      async function preloadSpotifyImage(src) {
+        const image = new Image();
+        image.crossOrigin = "anonymous";
+        image.decoding = "async";
+        image.src = src;
+
+        if (image.decode) {
+          await image.decode();
+          return image;
+        }
+
+        await new Promise((resolve, reject) => {
+          image.onload = resolve;
+          image.onerror = reject;
+        });
+        return image;
+      }
+
+      async function transitionSpotifyAlbumArt(src, { animate = true, skipDecode = false } = {}) {
+        if (!src || isSameSpotifyImageSource(spotifyAlbumArt.src, src)) {
+          return;
+        }
+
+        const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+        if (albumArtTransitionTimer) {
+          window.clearTimeout(albumArtTransitionTimer);
+          albumArtTransitionTimer = 0;
+        }
+
+        if (!animate || reduceMotion) {
+          spotifyAlbumArt.src = src;
+          spotifyAlbumArtNext.removeAttribute("src");
+          musicCard.classList.remove("is-cover-transitioning");
+          return;
+        }
+
+        spotifyAlbumArtNext.src = src;
+
+        try {
+          if (!skipDecode) {
+            await spotifyAlbumArtNext.decode();
+          }
+        } catch {
+          spotifyAlbumArt.src = src;
+          spotifyAlbumArtNext.removeAttribute("src");
+          return;
+        }
+
+        musicCard.classList.add("is-cover-transitioning");
+
+        albumArtTransitionTimer = window.setTimeout(() => {
+          albumArtTransitionTimer = 0;
+          spotifyAlbumArt.src = src;
+          musicCard.classList.remove("is-cover-transitioning");
+          window.setTimeout(() => {
+            spotifyAlbumArtNext.removeAttribute("src");
+          }, 80);
+        }, 560);
+      }
+
+      function clamp(value, min = 0, max = 255) {
+        return Math.max(min, Math.min(max, value));
+      }
+
+      function rgbToHex(color) {
+        return `#${[color.r, color.g, color.b]
+          .map((value) => Math.round(clamp(value)).toString(16).padStart(2, "0"))
+          .join("")}`;
+      }
+
+      function mixRgb(a, b, ratio = 0.5) {
+        return {
+          r: a.r + (b.r - a.r) * ratio,
+          g: a.g + (b.g - a.g) * ratio,
+          b: a.b + (b.b - a.b) * ratio,
+        };
+      }
+
+      function shadeRgb(color, amount = 0) {
+        const target = amount < 0 ? 0 : 255;
+        const ratio = Math.abs(amount);
+
+        return mixRgb(color, { r: target, g: target, b: target }, ratio);
+      }
+
+      function getColorDistance(a, b) {
+        return Math.hypot(a.r - b.r, a.g - b.g, a.b - b.b);
+      }
+
+      function rgbToHsl(r, g, b) {
+        r /= 255;
+        g /= 255;
+        b /= 255;
+
+        const max = Math.max(r, g, b);
+        const min = Math.min(r, g, b);
+        let h = 0;
+        let s = 0;
+        const l = (max + min) / 2;
+
+        if (max !== min) {
+          const delta = max - min;
+          s = l > 0.5 ? delta / (2 - max - min) : delta / (max + min);
+
+          if (max === r) {
+            h = (g - b) / delta + (g < b ? 6 : 0);
+          } else if (max === g) {
+            h = (b - r) / delta + 2;
+          } else {
+            h = (r - g) / delta + 4;
+          }
+
+          h /= 6;
+        }
+
+        return { h, s, l };
+      }
+
+      function createProgressPaletteFromPixels(pixels) {
+        const buckets = new Map();
+
+        for (let index = 0; index < pixels.length; index += 4) {
+          const alpha = pixels[index + 3];
+
+          if (alpha < 180) {
+            continue;
+          }
+
+          const r = pixels[index];
+          const g = pixels[index + 1];
+          const b = pixels[index + 2];
+          const { s, l } = rgbToHsl(r, g, b);
+
+          if (s < 0.08 || l < 0.08 || l > 0.93) {
+            continue;
+          }
+
+          const key = `${Math.round(r / 24)}:${Math.round(g / 24)}:${Math.round(b / 24)}`;
+          const bucket = buckets.get(key) || { r: 0, g: 0, b: 0, count: 0, score: 0 };
+          const contrastScore = Math.min(1, (Math.max(r, g, b) - Math.min(r, g, b)) / 128);
+          const balanceScore = 1 - Math.abs(l - 0.52);
+          const pixelScore = 1 + s * 2 + contrastScore + balanceScore;
+
+          bucket.r += r;
+          bucket.g += g;
+          bucket.b += b;
+          bucket.count += 1;
+          bucket.score += pixelScore;
+          buckets.set(key, bucket);
+        }
+
+        const colors = Array.from(buckets.values())
+          .map((bucket) => ({
+            color: {
+              r: bucket.r / bucket.count,
+              g: bucket.g / bucket.count,
+              b: bucket.b / bucket.count,
+            },
+            score: bucket.score,
+          }))
+          .sort((a, b) => b.score - a.score);
+
+        if (!colors.length) {
+          return spotifyDefaultProgressColors;
+        }
+
+        const primary = colors[0].color;
+        const accent = colors.find(({ color }) => getColorDistance(primary, color) > 72)?.color
+          || colors[1]?.color
+          || shadeRgb(primary, 0.32);
+        const mid = mixRgb(primary, accent, 0.45);
+
+        return {
+          start: rgbToHex(shadeRgb(primary, -0.18)),
+          mid: rgbToHex(mid),
+          end: rgbToHex(shadeRgb(accent, 0.12)),
+        };
+      }
+
+      async function updateSpotifyProgressColorsFromAlbumArt(src) {
+        const normalizedSrc = normalizeSpotifyImageSource(src);
+
+        if (!src || normalizedSrc === spotifyLastSampledAlbumArt) {
+          return;
+        }
+
+        const image = new Image();
+        image.crossOrigin = "anonymous";
+        image.decoding = "async";
+        image.src = src;
+
+        await image.decode();
+        spotifyLastSampledAlbumArt = normalizedSrc;
+
+        const canvas = document.createElement("canvas");
+        const context = canvas.getContext("2d", { willReadFrequently: true });
+
+        if (!context) {
+          return;
+        }
+
+        canvas.width = 48;
+        canvas.height = 48;
+        context.drawImage(image, 0, 0, canvas.width, canvas.height);
+        const pixels = context.getImageData(0, 0, canvas.width, canvas.height).data;
+        setSpotifyPalette(createProgressPaletteFromPixels(pixels));
+      }
+
+      function resetSpotifyCardToDefault() {
+        if (songMetaTransitionTimer) {
+          window.clearTimeout(songMetaTransitionTimer);
+          songMetaTransitionTimer = 0;
+        }
+
+        spotifyPlayback = null;
+        spotifyTrackUrl = "";
+        spotifyAlbumArt.src = spotifyDefaultCard.albumArt;
+        spotifyAlbumArtNext.removeAttribute("src");
+        spotifyTrackTitleText.textContent = spotifyDefaultCard.title;
+        spotifyTrackArtist.textContent = spotifyDefaultCard.artist;
+        spotifyProgressFill.style.width = `${spotifyDefaultProgressWidth}px`;
+        spotifyProgressCurrent.textContent = spotifyDefaultCard.current;
+        spotifyProgressDuration.textContent = spotifyDefaultCard.duration;
+        spotifyActionLabel.textContent = "Play";
+        spotifyAction.setAttribute("aria-label", "Connect Spotify");
+        setSpotifyPalette(spotifyDefaultProgressColors, { animate: false });
+        spotifyLastSampledAlbumArt = "";
+        spotifyRenderedTrackKey = `${spotifyDefaultCard.title}|${spotifyDefaultCard.artist}|${spotifyDefaultCard.duration}`;
+        musicCard.classList.remove("is-spotify-live", "is-cover-transitioning", "is-gradient-transitioning", "is-meta-transitioning");
+        syncTrackTitlePan();
+      }
+
+      function formatDuration(ms = 0) {
+        const totalSeconds = Math.max(0, Math.floor(ms / 1000));
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = String(totalSeconds % 60).padStart(2, "0");
+        return `${minutes}:${seconds}`;
+      }
+
+      function createSpotifyCardState(data) {
+        if (!data?.title) {
+          return null;
+        }
+
+        const durationMs = data.durationMs || 0;
+        const progressMs = data.progressMs || 0;
+        const percent = durationMs ? (Math.max(0, Math.min(progressMs, durationMs)) / durationMs) * 100 : 0;
+
+        return {
+          key: `${data.title}|${data.artist}|${durationMs}|${data.albumArt || ""}`,
+          title: data.title || "Spotify",
+          artist: data.artist || "Spotify",
+          image: normalizeSpotifyImageSource(data.albumArt),
+          trackUrl: data.trackUrl || "",
+          durationMs,
+          progressMs,
+          isPlaying: Boolean(data.isPlaying),
+          currentLabel: formatDuration(progressMs),
+          durationLabel: formatDuration(durationMs),
+          progressWidth: spotifyProgressTrackWidth * (Math.max(0, Math.min(percent, 100)) / 100),
+        };
+      }
+
+      function writeCurrentSpotifyMeta(state) {
+        spotifyTrackTitleText.textContent = state.title;
+        spotifyTrackArtist.textContent = state.artist;
+        spotifyProgressFill.style.width = `${state.progressWidth.toFixed(2)}px`;
+        spotifyProgressCurrent.textContent = state.currentLabel;
+        spotifyProgressDuration.textContent = state.durationLabel;
+        spotifyRenderedTrackKey = state.key;
+        syncTrackTitlePan();
+      }
+
+      function writeNextSpotifyMeta(state) {
+        spotifyMetaNextTitle.textContent = state.title;
+        spotifyMetaNextArtist.textContent = state.artist;
+        spotifyMetaNextProgress.style.width = `${state.progressWidth.toFixed(2)}px`;
+        spotifyMetaNextCurrent.textContent = state.currentLabel;
+        spotifyMetaNextDuration.textContent = state.durationLabel;
+      }
+
+      function transitionSpotifyMeta(state, { animate = true } = {}) {
+        const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        const shouldAnimate = animate && !reduceMotion && state.key !== spotifyRenderedTrackKey;
+
+        if (songMetaTransitionTimer) {
+          window.clearTimeout(songMetaTransitionTimer);
+          songMetaTransitionTimer = 0;
+        }
+
+        musicCard.classList.remove("is-meta-transitioning");
+
+        if (!shouldAnimate) {
+          writeCurrentSpotifyMeta(state);
+          return;
+        }
+
+        writeNextSpotifyMeta(state);
+        void spotifyMetaNext.offsetWidth;
+        musicCard.classList.add("is-meta-transitioning");
+
+        songMetaTransitionTimer = window.setTimeout(() => {
+          songMetaTransitionTimer = 0;
+          writeCurrentSpotifyMeta(state);
+          musicCard.classList.remove("is-meta-transitioning");
+          // writeCurrentSpotifyMeta just painted a static width computed at fetch
+          // time, which is already stale by this 520ms transition. Re-sync from
+          // the live playback clock immediately instead of waiting up to 1s for
+          // the next interval tick, so there's no visible catch-up jump.
+          updateSpotifyProgress();
+        }, 520);
+      }
+
+      function updateSpotifyProgress() {
+        if (!spotifyPlayback) {
+          return;
+        }
+
+        if (musicCard.classList.contains("is-meta-transitioning")) {
+          return;
+        }
+
+        const elapsed = spotifyPlayback.isPlaying ? Date.now() - spotifyPlayback.syncedAt : 0;
+        const progress = Math.min(spotifyPlayback.progressMs + elapsed, spotifyPlayback.durationMs);
+        const percent = spotifyPlayback.durationMs ? (progress / spotifyPlayback.durationMs) * 100 : 0;
+        const progressWidth = spotifyProgressTrackWidth * (Math.max(0, Math.min(percent, 100)) / 100);
+
+        spotifyProgressFill.style.width = `${progressWidth.toFixed(2)}px`;
+        spotifyProgressCurrent.textContent = formatDuration(progress);
+        spotifyProgressDuration.textContent = formatDuration(spotifyPlayback.durationMs);
+      }
+
+      async function syncSpotifyNowPlaying() {
+        // Talks only to our own /api/now-playing route — the Spotify refresh
+        // token lives server-side (Vercel env var) so visitors never see any
+        // OAuth/client-ID prompt. This just mirrors whatever that route returns.
+        try {
+          const response = await fetch("/api/now-playing", { cache: "no-store" });
+
+          if (!response.ok) {
+            setSpotifyStatus("Spotify sync unavailable");
+            return;
+          }
+
+          const data = await response.json();
+
+          if (!data?.ok || !data.title) {
+            resetSpotifyCardToDefault();
+            setSpotifyStatus("Nothing playing right now");
+            return;
+          }
+
+          updateSpotifyCard(data, {
+            status: data.isPlaying ? "Live from Spotify" : "Paused on Spotify",
+          });
+        } catch {
+          setSpotifyStatus("Spotify sync unavailable");
+        }
+      }
+
+      function updateSpotifyCard(data, options = {}) {
+        // Stamp the instant we actually received this progress_ms from Spotify.
+        // Album art preloading below is a real, unbounded-latency network request —
+        // if we wait until it resolves to start the local progress clock, every new
+        // track's bar starts already behind by however long the image took to load,
+        // and only catches up (visibly jumps) on the next 15s poll.
+        const fetchedAt = Date.now();
+        const state = createSpotifyCardState(data);
+
+        if (!state) {
+          return;
+        }
+
+        const animate = options.animate !== false;
+        const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        const shouldPreloadCover = animate
+          && !reduceMotion
+          && state.image
+          && !isSameSpotifyImageSource(spotifyAlbumArt.src, state.image);
+        const sequence = ++spotifyUpdateSequence;
+
+        const renderSpotifyState = ({ coverReady = false, animateCover = animate } = {}) => {
+          if (sequence !== spotifyUpdateSequence) {
+            return;
+          }
+
+          transitionSpotifyAlbumArt(state.image, { animate: animateCover, skipDecode: coverReady }).catch(() => {
+            spotifyAlbumArt.src = state.image;
+          });
+          transitionSpotifyMeta(state, { animate });
+          updateSpotifyProgressColorsFromAlbumArt(state.image)
+            .catch(() => setSpotifyPalette(spotifyDefaultProgressColors));
+          spotifyTrackUrl = state.trackUrl;
+          musicCard.classList.add("is-spotify-live");
+          spotifyPlayback = {
+            durationMs: state.durationMs,
+            progressMs: state.progressMs,
+            isPlaying: state.isPlaying,
+            syncedAt: fetchedAt,
+          };
+          updateSpotifyProgress();
+          spotifyActionLabel.textContent = "Play";
+          spotifyAction.setAttribute("aria-label", spotifyTrackUrl ? "Open current Spotify track" : "Spotify");
+          setSpotifyStatus(options.status || (state.isPlaying ? "Live from Spotify" : "Paused on Spotify"));
+        };
+
+        if (!shouldPreloadCover) {
+          renderSpotifyState({ coverReady: true });
+          return;
+        }
+
+        preloadSpotifyImage(state.image)
+          .then(() => renderSpotifyState({ coverReady: true }))
+          .catch(() => renderSpotifyState({ animateCover: false }));
+      }
+
+      async function initSpotifySync() {
+        try {
+          await syncSpotifyNowPlaying();
+        } catch {
+          setSpotifyStatus("Spotify sync unavailable");
+        }
+      }
+
+      morphToggle.addEventListener("click", (event) => {
+        event.stopPropagation();
+        setMorphOpen(morph.dataset.open !== "true");
+      });
+
+      morphItems.forEach((item) => {
+        item.addEventListener("click", () => setMorphOpen(false));
+      });
+
+      spotifyAction.addEventListener("click", () => {
+        if (spotifyTrackUrl) {
+          window.open(spotifyTrackUrl, "_blank", "noopener,noreferrer");
+        }
+      });
+
+      document.addEventListener("click", (event) => {
+        if (!morph.contains(event.target)) {
+          setMorphOpen(false);
+        }
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+          setMorphOpen(false);
+        }
+      });
+
+      syncScale();
+      initBottomClearCue();
+      initDamianLlmCard();
+      initProjectVideos();
+      initHoverSounds();
+      initProjectCardLinks();
+      syncTrackTitlePan();
+      syncCentralTime();
+      initSpotifySync();
+      document.fonts?.ready.then(syncTrackTitlePan).catch(() => {});
+      if (params.get("menu") === "open") {
+        setMorphOpen(true);
+      }
+      if (previewTime && params.get("rollover") === "1") {
+        window.setTimeout(advancePreviewMinute, 420);
+      }
+      window.addEventListener("resize", () => {
+        syncScale();
+        syncTrackTitlePan();
+      });
+      // Crossing the breakpoint swaps which frame's geometry is in play.
+      mobileQuery.addEventListener("change", () => {
+        syncScale();
+        syncTrackTitlePan();
+      });
+      window.setInterval(syncCentralTime, 1000);
+      window.setInterval(updateSpotifyProgress, 1000);
+      window.setInterval(syncSpotifyNowPlaying, 15_000);
+    </script>
+  </body>
+</html>
