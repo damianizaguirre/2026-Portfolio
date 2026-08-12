@@ -472,7 +472,7 @@ export function CoverFlow({
         onDragEnd={onDragEnd}
       >
         <div
-          className="relative flex h-full w-full items-center justify-center pointer-events-none"
+          className="relative flex min-h-0 w-full flex-1 items-center justify-center pointer-events-none"
           style={{ transformStyle: "preserve-3d", perspective: 1000 }}
         >
           {items.map((item, index) => (
@@ -497,8 +497,8 @@ export function CoverFlow({
           ))}
         </div>
 
-        <div className="absolute bottom-2 left-0 right-0 z-40 flex flex-col items-center justify-center pointer-events-none">
-          <AnimatePresence>
+        <div className="relative z-40 mt-3 h-14 w-full shrink-0 pointer-events-none">
+          <AnimatePresence mode="wait">
             <motion.div
               key={activeIndex}
               initial={{ opacity: 0, y: prefersReducedMotion ? 0 : 8 }}
@@ -508,7 +508,7 @@ export function CoverFlow({
                 duration: prefersReducedMotion ? 0 : 0.18,
                 ease: [0.23, 1, 0.32, 1],
               }}
-              className="text-center absolute inset-x-0"
+              className="absolute inset-x-0 top-0 px-6 text-center"
             >
               <h3 className="text-2xl font-semibold tracking-tight drop-shadow-md text-zinc-900 dark:text-zinc-100">
                 {items[activeIndex]?.title}
