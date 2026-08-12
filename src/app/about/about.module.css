@@ -227,6 +227,11 @@
   top: 1996px;
   width: 949px;
   height: 507px;
+  overflow: hidden;
+  border: 1px solid #efefef;
+  border-radius: 10px;
+  background: #ffffff;
+  box-shadow: none;
   display: grid;
   place-items: center;
   padding: 26px 0 58px;
