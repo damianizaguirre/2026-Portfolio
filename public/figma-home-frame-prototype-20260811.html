@@ -2333,8 +2333,8 @@
       const musicCard = document.querySelector(".music-card");
       const projectVideos = Array.from(document.querySelectorAll(".project-thumbnail video"));
       const projectCards = Array.from(document.querySelectorAll(".project-card"));
+      const topNav = document.querySelector(".top-nav");
       const desktopLinkItems = Array.from(document.querySelectorAll(".desktop-links a"));
-      const navContrastTargets = Array.from(document.querySelectorAll(".project-card[data-project] .project-thumbnail img, .project-card[data-project] .project-thumbnail video"));
       const bottomClearCue = document.querySelector("#bottom-clear-cue");
       const socialIconsAnchor = document.querySelector("#social-icons");
       const projectsAnchor = document.querySelector("#projects");
@@ -2427,36 +2427,62 @@
       }
 
       function initAdaptiveNavLinks() {
-        if (!desktopLinkItems.length || !navContrastTargets.length) {
+        if (!topNav || !desktopLinkItems.length) {
           return;
         }
 
         let adaptiveNavFrame = 0;
         const darkProjectIds = new Set(["mismo", "sancorda"]);
+
+        const samplePointsForLink = (link) => {
+          const rect = link.getBoundingClientRect();
+          const y = rect.top + rect.height / 2;
+          return [
+            [rect.left + rect.width / 2, y],
+            [rect.left + Math.min(8, rect.width * 0.25), y],
+            [rect.right - Math.min(8, rect.width * 0.25), y],
+          ];
+        };
+
+        const isDarkSurface = (element) => {
+          if (!element) {
+            return false;
+          }
+
+          const project = element.closest?.(".project-card[data-project]");
+          const isProjectMedia = element.matches?.(".project-thumbnail img, .project-thumbnail video");
+          if (project && isProjectMedia) {
+            return darkProjectIds.has(project.dataset.project);
+          }
+
+          const backgroundElement = element.closest?.(".music-card, .time-card, .damian-llm-card, .project-thumbnail, .figma-frame, body");
+          const background = backgroundElement ? window.getComputedStyle(backgroundElement).backgroundColor : "";
+          const rgba = background.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([.\d]+))?\)/);
+          if (!rgba || Number(rgba[4] ?? 1) < 0.2) {
+            return false;
+          }
+
+          const red = Number(rgba[1]);
+          const green = Number(rgba[2]);
+          const blue = Number(rgba[3]);
+          const brightness = (red * 299 + green * 587 + blue * 114) / 1000;
+          return brightness < 118;
+        };
+
         const syncAdaptiveNavLinks = () => {
           adaptiveNavFrame = 0;
-          const targetRects = navContrastTargets.map((target) => {
-            const project = target.closest(".project-card");
-            return {
-              rect: target.getBoundingClientRect(),
-              isDark: darkProjectIds.has(project?.dataset.project),
-            };
-          });
+          const previousVisibility = topNav.style.visibility;
+          topNav.style.visibility = "hidden";
 
           desktopLinkItems.forEach((link) => {
-            const rect = link.getBoundingClientRect();
-            const linkCenterX = rect.left + rect.width / 2;
-            const linkCenterY = rect.top + rect.height / 2;
-            const isOnDarkVisual = targetRects.some(({ rect: targetRect, isDark }) => (
-              isDark &&
-              linkCenterX >= targetRect.left &&
-              linkCenterX <= targetRect.right &&
-              linkCenterY >= targetRect.top &&
-              linkCenterY <= targetRect.bottom
+            const isOnDarkVisual = samplePointsForLink(link).some(([x, y]) => (
+              isDarkSurface(document.elementFromPoint(x, y))
             ));
 
             link.classList.toggle("is-on-dark", isOnDarkVisual);
           });
+
+          topNav.style.visibility = previousVisibility;
         };
 
         const requestAdaptiveNavSync = () => {
