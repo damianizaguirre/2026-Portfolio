@@ -211,7 +211,7 @@
         align-items: center;
         gap: 70px;
         padding: 4px 0;
-        color: #ffffff;
+        color: #000000;
         font-size: 20px;
         line-height: 26px;
         font-weight: 300;
@@ -220,8 +220,13 @@
 
       .desktop-links a {
         color: inherit;
-        mix-blend-mode: difference;
         text-decoration: none;
+        transition: color 180ms ease, text-shadow 180ms ease;
+      }
+
+      .desktop-links a.is-on-dark {
+        color: #ffffff;
+        text-shadow: 0 1px 10px rgba(0, 0, 0, 0.28);
       }
 
       .name,
@@ -2328,6 +2333,8 @@
       const musicCard = document.querySelector(".music-card");
       const projectVideos = Array.from(document.querySelectorAll(".project-thumbnail video"));
       const projectCards = Array.from(document.querySelectorAll(".project-card"));
+      const desktopLinkItems = Array.from(document.querySelectorAll(".desktop-links a"));
+      const navContrastTargets = Array.from(document.querySelectorAll(".project-thumbnail"));
       const bottomClearCue = document.querySelector("#bottom-clear-cue");
       const socialIconsAnchor = document.querySelector("#social-icons");
       const projectsAnchor = document.querySelector("#projects");
@@ -2417,6 +2424,44 @@
 
       function getElementPageTop(element) {
         return element.getBoundingClientRect().top + window.scrollY;
+      }
+
+      function initAdaptiveNavLinks() {
+        if (!desktopLinkItems.length || !navContrastTargets.length) {
+          return;
+        }
+
+        let adaptiveNavFrame = 0;
+        const syncAdaptiveNavLinks = () => {
+          adaptiveNavFrame = 0;
+          const targetRects = navContrastTargets.map((target) => target.getBoundingClientRect());
+
+          desktopLinkItems.forEach((link) => {
+            const rect = link.getBoundingClientRect();
+            const linkCenterX = rect.left + rect.width / 2;
+            const linkCenterY = rect.top + rect.height / 2;
+            const isOnDarkVisual = targetRects.some((targetRect) => (
+              linkCenterX >= targetRect.left &&
+              linkCenterX <= targetRect.right &&
+              linkCenterY >= targetRect.top &&
+              linkCenterY <= targetRect.bottom
+            ));
+
+            link.classList.toggle("is-on-dark", isOnDarkVisual);
+          });
+        };
+
+        const requestAdaptiveNavSync = () => {
+          if (adaptiveNavFrame) {
+            return;
+          }
+
+          adaptiveNavFrame = window.requestAnimationFrame(syncAdaptiveNavLinks);
+        };
+
+        syncAdaptiveNavLinks();
+        window.addEventListener("scroll", requestAdaptiveNavSync, { passive: true });
+        window.addEventListener("resize", requestAdaptiveNavSync);
       }
 
       function initBottomClearCue() {
@@ -3482,6 +3527,7 @@
       });
 
       syncScale();
+      initAdaptiveNavLinks();
       initBottomClearCue();
       initDamianLlmCard();
       initProjectVideos();
