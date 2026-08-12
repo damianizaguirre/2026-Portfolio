@@ -2972,12 +2972,7 @@
       }
 
       function createMusicCardGradient(colors) {
-        return [
-          `radial-gradient(circle at 35% 49%, ${hexToRgba(colors.end, 0.18)} 0%, transparent 36%)`,
-          `radial-gradient(circle at 78% 22%, ${hexToRgba(colors.mid, 0.13)} 0%, transparent 42%)`,
-          `linear-gradient(135deg, ${hexToRgba(colors.start, 0.1)} 0%, rgba(255, 255, 255, 0.94) 48%, ${hexToRgba(colors.end, 0.08)} 100%)`,
-          "#ffffff",
-        ].join(", ");
+        return "#ffffff";
       }
 
       function setMusicCardGradient(colors, { animate = true } = {}) {
