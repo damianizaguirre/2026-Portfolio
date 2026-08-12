@@ -121,7 +121,6 @@ export default function About() {
               items={recentListens}
               itemWidth={320}
               itemHeight={320}
-              enableReflection
               enableAudio
               className={styles.coverFlow}
             />
