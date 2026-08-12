@@ -21,9 +21,10 @@ const movies = [
 ];
 
 const recentListens = [
-  { id: 1, image: "/cover1.webp", title: "Album One", subtitle: "Artist" },
-  { id: 2, image: "/cover2.webp", title: "Album Two", subtitle: "Artist" },
-  { id: 3, image: "/cover3.webp", title: "Album Three", subtitle: "Artist" },
+  { id: 1, image: "/about/album1.jpg", title: "The Hellp Riviera", subtitle: "The Hellp" },
+  { id: 2, image: "/about/album2.jpg", title: "April Mixtape 2", subtitle: "Snow Strippers" },
+  { id: 3, image: "/about/album3.jpg", title: "Coastal Grooves", subtitle: "Blood Orange" },
+  { id: 4, image: "/about/album4.jpg", title: "Donnie Darko", subtitle: "Michael Andrews" },
 ];
 
 function useFrameScale() {
