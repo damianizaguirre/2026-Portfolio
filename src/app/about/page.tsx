@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { CoverFlow } from "@/components/ui/CoverFlow";
 import styles from "./about.module.css";
 
 const frameWidth = 1920;
@@ -17,6 +18,12 @@ const movies = [
   { src: "/images/about/movie-2.png", alt: "Favorite movie poster two", left: 253, width: 157 },
   { src: "/images/about/movie-3.png", alt: "Favorite movie poster three", left: 447, width: 155 },
   { src: "/images/about/movie-4.png", alt: "Favorite movie poster four", left: 639, width: 159 },
+];
+
+const recentListens = [
+  { id: 1, image: "/cover1.webp", title: "Album One", subtitle: "Artist" },
+  { id: 2, image: "/cover2.webp", title: "Album Two", subtitle: "Artist" },
+  { id: 3, image: "/cover3.webp", title: "Album Three", subtitle: "Artist" },
 ];
 
 function useFrameScale() {
@@ -107,8 +114,17 @@ export default function About() {
               returns the real listening history whenever this gets filled in. */}
           <section
             className={[styles.shelfCard, styles.spotifyCard].join(" ")}
-            aria-hidden="true"
-          />
+            aria-label="Recent Spotify listens"
+          >
+            <CoverFlow
+              items={recentListens}
+              itemWidth={320}
+              itemHeight={320}
+              enableReflection
+              enableAudio
+              className={styles.coverFlow}
+            />
+          </section>
 
           <p className={styles.shelfLabel} style={{ top: 2794 }}>
             Some of my favorite movies.
