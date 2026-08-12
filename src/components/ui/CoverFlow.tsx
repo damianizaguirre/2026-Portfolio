@@ -497,7 +497,7 @@ export function CoverFlow({
           ))}
         </div>
 
-        <div className="absolute bottom-8 left-0 right-0 z-40 flex flex-col items-center justify-center pointer-events-none">
+        <div className="absolute bottom-2 left-0 right-0 z-40 flex flex-col items-center justify-center pointer-events-none">
           <AnimatePresence>
             <motion.div
               key={activeIndex}
