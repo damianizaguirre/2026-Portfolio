@@ -181,8 +181,8 @@ export default function About() {
           >
             <CoverFlow
               items={recentListens}
-              itemWidth={320}
-              itemHeight={320}
+              itemWidth={292}
+              itemHeight={292}
               enableAudio
               className={styles.coverFlow}
             />
