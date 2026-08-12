@@ -21,10 +21,72 @@ const movies = [
 ];
 
 const recentListens = [
-  { id: 1, image: "/about/album1.jpg", title: "The Hellp Riviera", subtitle: "The Hellp" },
-  { id: 2, image: "/about/album2.jpg", title: "April Mixtape 2", subtitle: "Snow Strippers" },
-  { id: 3, image: "/about/album3.jpg", title: "Coastal Grooves", subtitle: "Blood Orange" },
-  { id: 4, image: "/about/album4.jpg", title: "Donnie Darko", subtitle: "Michael Andrews" },
+  {
+    id: 1,
+    image: "/about/recent-listens/the-odyssey.jpg",
+    title: "The Odyssey (Original Motion Picture Soundtrack)",
+    subtitle: "Ludwig Göransson",
+  },
+  {
+    id: 2,
+    image: "/about/recent-listens/oppenheimer.jpg",
+    title: "Oppenheimer (Original Motion Picture Soundtrack)",
+    subtitle: "Ludwig Göransson",
+  },
+  {
+    id: 3,
+    image: "/about/recent-listens/oh-yeah.jpg",
+    title: "Oh yeah?",
+    subtitle: "Steve Lacy",
+  },
+  {
+    id: 4,
+    image: "/about/recent-listens/looking-for-love.jpg",
+    title: "Looking for Love",
+    subtitle: "Karen Ramirez",
+  },
+  {
+    id: 5,
+    image: "/about/recent-listens/ipod-touch.jpg",
+    title: "iPod Touch",
+    subtitle: "Ninajirachi",
+  },
+  {
+    id: 6,
+    image: "/about/recent-listens/kinda-like-it-that-way.jpg",
+    title: "Kinda Like It That Way",
+    subtitle: "Snow Strippers",
+  },
+  {
+    id: 7,
+    image: "/about/recent-listens/gentle-hum-anxiety.jpg",
+    title: "The Gentle Hum of Anxiety",
+    subtitle: "Trent Reznor & Atticus Ross",
+  },
+  {
+    id: 8,
+    image: "/about/recent-listens/easter-pink.jpg",
+    title: "Easter Pink",
+    subtitle: "fakemink",
+  },
+  {
+    id: 9,
+    image: "/about/recent-listens/on-the-line.jpg",
+    title: "On the Line (feat. Kindness)",
+    subtitle: "Blood Orange",
+  },
+  {
+    id: 10,
+    image: "/about/recent-listens/aprils-daydream.jpg",
+    title: "April’s Daydream",
+    subtitle: "Devonté Hynes",
+  },
+  {
+    id: 11,
+    image: "/about/recent-listens/you-made-it-feel-like-home.jpg",
+    title: "(You Made It Feel Like) Home",
+    subtitle: "Trent Reznor & Atticus Ross",
+  },
 ];
 
 function useFrameScale() {
