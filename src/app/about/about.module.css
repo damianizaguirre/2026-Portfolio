@@ -226,10 +226,10 @@
   left: 485px;
   top: 1996px;
   width: 949px;
-  height: 417px;
+  height: 507px;
   display: grid;
   place-items: center;
-  padding: 18px 0;
+  padding: 26px 0 58px;
 }
 
 .coverFlow {
@@ -239,7 +239,7 @@
 
 .movieCard {
   left: 485px;
-  top: 2855px;
+  top: 2945px;
   width: 857px;
   height: 273px;
 }

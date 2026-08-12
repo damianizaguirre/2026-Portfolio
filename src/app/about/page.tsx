@@ -127,10 +127,10 @@ export default function About() {
             />
           </section>
 
-          <p className={styles.shelfLabel} style={{ top: 2794 }}>
+          <p className={styles.shelfLabel} style={{ top: 2884 }}>
             Some of my favorite movies.
           </p>
-          <p className={styles.shelfSource} style={{ top: 2818 }}>
+          <p className={styles.shelfSource} style={{ top: 2908 }}>
             Letterboxd
           </p>
           <section className={[styles.shelfCard, styles.movieCard].join(" ")} aria-label="Favorite movies">
