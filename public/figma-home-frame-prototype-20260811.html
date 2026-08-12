@@ -2334,7 +2334,7 @@
       const projectVideos = Array.from(document.querySelectorAll(".project-thumbnail video"));
       const projectCards = Array.from(document.querySelectorAll(".project-card"));
       const desktopLinkItems = Array.from(document.querySelectorAll(".desktop-links a"));
-      const navContrastTargets = Array.from(document.querySelectorAll(".project-thumbnail"));
+      const navContrastTargets = Array.from(document.querySelectorAll(".project-card[data-project] .project-thumbnail img, .project-card[data-project] .project-thumbnail video"));
       const bottomClearCue = document.querySelector("#bottom-clear-cue");
       const socialIconsAnchor = document.querySelector("#social-icons");
       const projectsAnchor = document.querySelector("#projects");
@@ -2432,15 +2432,23 @@
         }
 
         let adaptiveNavFrame = 0;
+        const darkProjectIds = new Set(["mismo", "sancorda"]);
         const syncAdaptiveNavLinks = () => {
           adaptiveNavFrame = 0;
-          const targetRects = navContrastTargets.map((target) => target.getBoundingClientRect());
+          const targetRects = navContrastTargets.map((target) => {
+            const project = target.closest(".project-card");
+            return {
+              rect: target.getBoundingClientRect(),
+              isDark: darkProjectIds.has(project?.dataset.project),
+            };
+          });
 
           desktopLinkItems.forEach((link) => {
             const rect = link.getBoundingClientRect();
             const linkCenterX = rect.left + rect.width / 2;
             const linkCenterY = rect.top + rect.height / 2;
-            const isOnDarkVisual = targetRects.some((targetRect) => (
+            const isOnDarkVisual = targetRects.some(({ rect: targetRect, isDark }) => (
+              isDark &&
               linkCenterX >= targetRect.left &&
               linkCenterX <= targetRect.right &&
               linkCenterY >= targetRect.top &&
