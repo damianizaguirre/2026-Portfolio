@@ -2009,7 +2009,7 @@
         <div class="t-morph" data-open="false" id="nav-morph">
           <div class="t-morph-menu" aria-label="Circle menu">
             <button class="morph-item" type="button">Home</button>
-            <button class="morph-item" type="button">About</button>
+            <button class="morph-item" type="button" data-href="/about">About</button>
             <button class="morph-item" type="button">Resume</button>
           </div>
           <button
@@ -2028,7 +2028,7 @@
       </div>
       <nav class="desktop-links" aria-label="Primary navigation">
         <a href="#">Home</a>
-        <a href="#">About</a>
+        <a href="/about">About</a>
         <a href="#">Resume</a>
       </nav>
     </header>
@@ -3452,7 +3452,14 @@
       });
 
       morphItems.forEach((item) => {
-        item.addEventListener("click", () => setMorphOpen(false));
+        item.addEventListener("click", () => {
+          setMorphOpen(false);
+
+          // Items without a data-href are still placeholders.
+          if (item.dataset.href) {
+            window.location.href = item.dataset.href;
+          }
+        });
       });
 
       spotifyAction.addEventListener("click", () => {
