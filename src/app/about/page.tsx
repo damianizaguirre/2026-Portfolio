@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import styles from "./about.module.css";
 
 const frameWidth = 1920;
@@ -18,14 +18,6 @@ const movies = [
   { src: "/images/about/movie-3.png", alt: "Favorite movie poster three", left: 447, width: 155 },
   { src: "/images/about/movie-4.png", alt: "Favorite movie poster four", left: 639, width: 159 },
 ];
-
-interface RecentTrack {
-  id: string;
-  title: string;
-  artist: string;
-  albumArt: string | null;
-  trackUrl: string | null;
-}
 
 function useFrameScale() {
   const pageRef = useRef<HTMLElement>(null);
@@ -45,28 +37,6 @@ function useFrameScale() {
 
 export default function About() {
   const pageRef = useFrameScale();
-  const [tracks, setTracks] = useState<RecentTrack[] | null>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-
-    fetch("/api/recent-tracks")
-      .then((response) => response.json())
-      .then((data) => {
-        if (!cancelled) {
-          setTracks(Array.isArray(data.tracks) ? data.tracks.slice(0, 4) : []);
-        }
-      })
-      .catch(() => {
-        if (!cancelled) {
-          setTracks([]);
-        }
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
 
   return (
     <main className={styles.page} ref={pageRef} aria-label="About Damian Izaguirre">
@@ -133,36 +103,12 @@ export default function About() {
           <p className={styles.shelfSource} style={{ top: 1943 }}>
             Spotify
           </p>
-          <section className={[styles.shelfCard, styles.spotifyCard].join(" ")} aria-label="Recent Spotify listens">
-            {tracks && tracks.length > 0 ? (
-              <div className={styles.trackGrid}>
-                {tracks.map((track) => (
-                  <a
-                    className={styles.trackLink}
-                    key={track.id}
-                    href={track.trackUrl || "#"}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <img
-                      className={styles.trackArt}
-                      src={track.albumArt || ""}
-                      alt={`${track.title} album art`}
-                      loading="lazy"
-                    />
-                    <span>
-                      <p className={styles.trackTitle}>{track.title}</p>
-                      <p className={styles.trackArtist}>{track.artist}</p>
-                    </span>
-                  </a>
-                ))}
-              </div>
-            ) : (
-              <p className={styles.trackEmpty}>
-                {tracks === null ? "Loading recent listens..." : "Nothing playing lately."}
-              </p>
-            )}
-          </section>
+          {/* Empty in the frame for now. /api/recent-tracks is still live and
+              returns the real listening history whenever this gets filled in. */}
+          <section
+            className={[styles.shelfCard, styles.spotifyCard].join(" ")}
+            aria-hidden="true"
+          />
 
           <p className={styles.shelfLabel} style={{ top: 2794 }}>
             Some of my favorite movies.
