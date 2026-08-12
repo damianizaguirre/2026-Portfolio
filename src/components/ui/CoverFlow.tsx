@@ -514,7 +514,7 @@ export function CoverFlow({
                 {items[activeIndex]?.title}
               </h3>
               {items[activeIndex]?.subtitle && (
-                <p className="mt-1 text-sm font-medium tracking-wide text-zinc-900/60 dark:text-zinc-100/60">
+                <p className="mt-1.5 text-xs font-normal tracking-wide text-zinc-500 dark:text-zinc-400">
                   {items[activeIndex]?.subtitle}
                 </p>
               )}
