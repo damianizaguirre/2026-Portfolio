@@ -429,52 +429,37 @@
 }
 
 /* ---------------------------------------------------------------------------
-   First-load entrance ("copy first, photos follow").
+   First-load entrance.
 
-   Pure CSS on purpose: the from-state comes from animation-fill-mode: both,
-   so elements are already in their starting position on the very first paint.
-   A JS-triggered version would flash the finished layout before hydration.
-
-   Only the hero fold animates -- everything below it is off-screen at load,
-   so animating it would just burn frames on content nobody is looking at.
+   Keep this intentionally light. The About page is a large scaled Figma
+   composition, so animating every absolute-positioned image creates too many
+   layers during scroll. Text gets the motion; the collage simply resolves in.
    --------------------------------------------------------------------------- */
 
-@keyframes aboutRiseIn {
+@keyframes aboutTextIn {
   from {
     opacity: 0;
-    transform: translateY(26px);
+    transform: translate3d(0, 18px, 0);
   }
   to {
     opacity: 1;
-    transform: none;
+    transform: translate3d(0, 0, 0);
   }
 }
 
-@keyframes aboutRiseSoft {
+@keyframes aboutCollageIn {
   from {
     opacity: 0;
-    transform: translateY(14px);
   }
   to {
     opacity: 1;
-    transform: none;
-  }
-}
-
-@keyframes aboutSettleIn {
-  from {
-    opacity: 0;
-    transform: translateY(64px) scale(0.96);
-  }
-  to {
-    opacity: 1;
-    transform: none;
   }
 }
 
 .name,
-.role {
-  animation: aboutRiseIn 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+.role,
+.introCopy {
+  animation: aboutTextIn 440ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .name {
@@ -485,41 +470,21 @@
   animation-delay: 120ms;
 }
 
-.introCopy p {
-  animation: aboutRiseSoft 480ms cubic-bezier(0.22, 1, 0.36, 1) both;
+.introCopy {
+  animation-delay: 180ms;
 }
 
-.introCopy p:nth-child(1) {
-  animation-delay: 210ms;
+.heroCollage {
+  animation: aboutCollageIn 360ms ease-out 260ms both;
 }
-
-.introCopy p:nth-child(2) {
-  animation-delay: 270ms;
-}
-
-.introCopy p:nth-child(3) {
-  animation-delay: 330ms;
-}
-
-/* Photos land after the copy has settled, each one 55ms behind the last. */
-.heroPhoto {
-  animation: aboutSettleIn 620ms cubic-bezier(0.34, 1.25, 0.64, 1) both;
-}
-
-.heroPhoto:nth-child(1) { animation-delay: 430ms; }
-.heroPhoto:nth-child(2) { animation-delay: 485ms; }
-.heroPhoto:nth-child(3) { animation-delay: 540ms; }
-.heroPhoto:nth-child(4) { animation-delay: 595ms; }
-.heroPhoto:nth-child(5) { animation-delay: 650ms; }
-.heroPhoto:nth-child(6) { animation-delay: 705ms; }
-.heroPhoto:nth-child(7) { animation-delay: 760ms; }
-.heroPhoto:nth-child(8) { animation-delay: 815ms; }
 
 @media (prefers-reduced-motion: reduce) {
   .name,
   .role,
-  .introCopy p,
-  .heroPhoto {
+  .introCopy,
+  .heroCollage {
     animation: none;
+    opacity: 1;
+    transform: none;
   }
 }
