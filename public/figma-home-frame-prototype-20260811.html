@@ -366,9 +366,7 @@
         height: 261px;
         --music-meta-left: 200px;
         --music-meta-width: 184px;
-        --progress-start: #38594d;
-        --progress-mid: #8c6152;
-        --progress-end: #e84d99;
+        --progress-fill: #38594d;
       }
 
       .hero-card-stack {
@@ -690,7 +688,7 @@
 
       .progress-fill {
         width: 47.595px;
-        background: linear-gradient(90deg, var(--progress-start) 0%, var(--progress-mid) 45%, var(--progress-end) 100%);
+        background: var(--progress-fill);
         transition: background 280ms ease;
       }
 
@@ -2561,11 +2559,7 @@
       let spotifyPlayback = null;
       const spotifyProgressTrackWidth = 183.74;
       const spotifyDefaultProgressWidth = 0;
-      const spotifyDefaultProgressColors = {
-        start: "#38594d",
-        mid: "#8c6152",
-        end: "#e84d99",
-      };
+      const spotifyDefaultProgressColors = { fill: "#38594d" };
       const spotifyDefaultCard = {
         albumArt: spotifyAlbumArt.src,
         title: spotifyTrackTitleText.textContent,
@@ -3205,9 +3199,7 @@
       }
 
       function setSpotifyProgressColors(colors) {
-        musicCard.style.setProperty("--progress-start", colors.start);
-        musicCard.style.setProperty("--progress-mid", colors.mid);
-        musicCard.style.setProperty("--progress-end", colors.end);
+        musicCard.style.setProperty("--progress-fill", colors.fill);
       }
 
       function hexToRgb(hex) {
@@ -3349,25 +3341,6 @@
           .join("")}`;
       }
 
-      function mixRgb(a, b, ratio = 0.5) {
-        return {
-          r: a.r + (b.r - a.r) * ratio,
-          g: a.g + (b.g - a.g) * ratio,
-          b: a.b + (b.b - a.b) * ratio,
-        };
-      }
-
-      function shadeRgb(color, amount = 0) {
-        const target = amount < 0 ? 0 : 255;
-        const ratio = Math.abs(amount);
-
-        return mixRgb(color, { r: target, g: target, b: target }, ratio);
-      }
-
-      function getColorDistance(a, b) {
-        return Math.hypot(a.r - b.r, a.g - b.g, a.b - b.b);
-      }
-
       function rgbToHsl(r, g, b) {
         r /= 255;
         g /= 255;
@@ -3397,6 +3370,72 @@
         return { h, s, l };
       }
 
+      function hslToRgb(h, s, l) {
+        if (s === 0) {
+          const value = l * 255;
+          return { r: value, g: value, b: value };
+        }
+
+        const hueToChannel = (p, q, t) => {
+          let shifted = t;
+
+          if (shifted < 0) shifted += 1;
+          if (shifted > 1) shifted -= 1;
+          if (shifted < 1 / 6) return p + (q - p) * 6 * shifted;
+          if (shifted < 1 / 2) return q;
+          if (shifted < 2 / 3) return p + (q - p) * (2 / 3 - shifted) * 6;
+          return p;
+        };
+
+        const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+        const p = 2 * l - q;
+
+        return {
+          r: hueToChannel(p, q, h + 1 / 3) * 255,
+          g: hueToChannel(p, q, h) * 255,
+          b: hueToChannel(p, q, h - 1 / 3) * 255,
+        };
+      }
+
+      // WCAG relative luminance, used to guarantee the bar stays visible
+      // against the white card no matter what the album art looks like.
+      function relativeLuminance({ r, g, b }) {
+        const channel = (value) => {
+          const c = value / 255;
+          return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+        };
+
+        return 0.2126 * channel(r) + 0.7152 * channel(g) + 0.0722 * channel(b);
+      }
+
+      function contrastRatio(a, b) {
+        const luminanceA = relativeLuminance(a);
+        const luminanceB = relativeLuminance(b);
+        return (Math.max(luminanceA, luminanceB) + 0.05) / (Math.min(luminanceA, luminanceB) + 0.05);
+      }
+
+      // Keep the album's hue, but force enough saturation to read as a colour
+      // and enough contrast to read at all. This is the guarantee the previous
+      // implementation lacked -- it could (and did) return near-white fills
+      // that dissolved into the card on roughly half of all covers.
+      function enforceProgressLegibility(color) {
+        const white = { r: 255, g: 255, b: 255 };
+        const { h, s: rawSaturation, l: rawLightness } = rgbToHsl(color.r, color.g, color.b);
+        const s = Math.max(rawSaturation, 0.34);
+        let l = rawLightness;
+
+        let result = hslToRgb(h, s, l);
+        let guard = 0;
+
+        while (contrastRatio(result, white) < 3.1 && guard < 80) {
+          l = Math.max(0.06, l - 0.012);
+          result = hslToRgb(h, s, l);
+          guard += 1;
+        }
+
+        return result;
+      }
+
       function createProgressPaletteFromPixels(pixels) {
         const buckets = new Map();
 
@@ -3418,9 +3457,10 @@
 
           const key = `${Math.round(r / 24)}:${Math.round(g / 24)}:${Math.round(b / 24)}`;
           const bucket = buckets.get(key) || { r: 0, g: 0, b: 0, count: 0, score: 0 };
-          const contrastScore = Math.min(1, (Math.max(r, g, b) - Math.min(r, g, b)) / 128);
-          const balanceScore = 1 - Math.abs(l - 0.52);
-          const pixelScore = 1 + s * 2 + contrastScore + balanceScore;
+          // Weight purely by vividness. The old formula also rewarded
+          // mid-lightness, which surfaced washed-out pastels on covers that
+          // had a perfectly good saturated colour available.
+          const pixelScore = 1 + s * 2.6;
 
           bucket.r += r;
           bucket.g += g;
@@ -3445,17 +3485,7 @@
           return spotifyDefaultProgressColors;
         }
 
-        const primary = colors[0].color;
-        const accent = colors.find(({ color }) => getColorDistance(primary, color) > 72)?.color
-          || colors[1]?.color
-          || shadeRgb(primary, 0.32);
-        const mid = mixRgb(primary, accent, 0.45);
-
-        return {
-          start: rgbToHex(shadeRgb(primary, -0.18)),
-          mid: rgbToHex(mid),
-          end: rgbToHex(shadeRgb(accent, 0.12)),
-        };
+        return { fill: rgbToHex(enforceProgressLegibility(colors[0].color)) };
       }
 
       async function updateSpotifyProgressColorsFromAlbumArt(src) {
