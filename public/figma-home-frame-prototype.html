@@ -1694,75 +1694,6 @@
         pointer-events: none;
       }
 
-      .bottom-clear-cue {
-        position: fixed;
-        left: 50%;
-        bottom: max(30px, calc(env(safe-area-inset-bottom) + 12px));
-        z-index: 120;
-        width: 37px;
-        height: 37px;
-        display: grid;
-        place-items: center;
-        padding: 0;
-        border: 0;
-        border-radius: 999px;
-        background: transparent;
-        box-shadow: none;
-        cursor: pointer;
-        transform: translateX(-50%) translateY(0) scale(1);
-        opacity: 1;
-        transition:
-          opacity 240ms ease,
-          transform 360ms cubic-bezier(0.22, 1, 0.36, 1);
-      }
-
-      .bottom-clear-cue-base {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        display: block;
-        pointer-events: none;
-      }
-
-      .bottom-clear-cue-arrow {
-        position: relative;
-        z-index: 1;
-        width: 18px;
-        height: 18px;
-        display: block;
-        transform: rotate(90deg);
-        pointer-events: none;
-      }
-
-      .bottom-clear-cue:hover {
-        transform: translateX(-50%) scale(1.03);
-      }
-
-      .bottom-clear-cue.is-hero-active {
-        animation: bottom-clear-cue-squeeze 2.1s cubic-bezier(0.22, 1, 0.36, 1) infinite;
-      }
-
-      .bottom-clear-cue.is-hidden {
-        opacity: 0;
-        pointer-events: none;
-        transform: translateX(-50%) translateY(12px) scale(0.82);
-        animation-play-state: paused;
-      }
-
-      @keyframes bottom-clear-cue-squeeze {
-        0%,
-        100% {
-          transform: translateX(-50%) scale(1);
-        }
-        42% {
-          transform: translateX(-50%) scaleX(1.1) scaleY(0.94);
-        }
-        58% {
-          transform: translateX(-50%) scaleX(0.98) scaleY(1.04);
-        }
-      }
-
       /* ------------------------------------------------------------------
          Mobile layout ("Porfolio Mobile Version (Home)", 402x2388).
 
@@ -2219,16 +2150,6 @@
           gap: 10px;
         }
 
-        .bottom-clear-cue {
-          width: 12.333px;
-          height: 12.333px;
-          bottom: max(25px, calc(env(safe-area-inset-bottom) + 12px));
-        }
-
-        .bottom-clear-cue-arrow {
-          width: 18px;
-          height: 18px;
-        }
       }
 
       @media (prefers-reduced-motion: reduce) {
@@ -2249,7 +2170,6 @@
         .damian-llm-copy,
         .damian-llm-button,
         .damian-llm-button-label,
-        .bottom-clear-cue,
         .damian-llm-chat-heading,
         .damian-llm-chat-title,
         .damian-llm-back,
@@ -2562,11 +2482,6 @@
       </main>
     </div>
 
-    <button class="bottom-clear-cue" id="bottom-clear-cue" type="button" aria-label="Scroll to app icons">
-      <img class="bottom-clear-cue-base" src="./assets/figma-home/bottom-cue-circle.svg" alt="" aria-hidden="true" />
-      <img class="bottom-clear-cue-arrow" src="./assets/figma-home/bottom-cue-arrow.svg" alt="" aria-hidden="true" />
-    </button>
-
     <script>
       if ("scrollRestoration" in history) {
         history.scrollRestoration = "manual";
@@ -2623,9 +2538,6 @@
       const projectCards = Array.from(document.querySelectorAll(".project-card"));
       const topNav = document.querySelector(".top-nav");
       const desktopLinkItems = Array.from(document.querySelectorAll(".desktop-links a"));
-      const bottomClearCue = document.querySelector("#bottom-clear-cue");
-      const socialIconsAnchor = document.querySelector("#social-icons");
-      const projectsAnchor = document.querySelector("#projects");
       const damianLlmCard = document.querySelector(".damian-llm-card");
       const damianLlmStart = document.querySelector(".damian-llm-button");
       const damianLlmTitle = document.querySelector(".damian-llm-chat-title");
@@ -2634,7 +2546,7 @@
       const damianLlmSend = document.querySelector(".damian-llm-send");
       const damianLlmBack = document.querySelector(".damian-llm-back");
       const damianLlmChips = Array.from(document.querySelectorAll(".damian-llm-chip"));
-      const hoverSoundTargets = Array.from(document.querySelectorAll("#nav-morph-toggle, #bottom-clear-cue, .desktop-links a, .morph-item, .hero-card-stack, .project-card, .social-link, .play-button, .damian-llm-button, .damian-llm-send, .damian-llm-back, .damian-llm-chip"));
+      const hoverSoundTargets = Array.from(document.querySelectorAll("#nav-morph-toggle, .desktop-links a, .morph-item, .hero-card-stack, .project-card, .social-link, .play-button, .damian-llm-button, .damian-llm-send, .damian-llm-back, .damian-llm-chip"));
       const params = new URLSearchParams(window.location.search);
       const centralTimeFormatter = new Intl.DateTimeFormat("en-US", {
         timeZone: "America/Chicago",
@@ -2784,31 +2696,6 @@
         syncAdaptiveNavLinks();
         window.addEventListener("scroll", requestAdaptiveNavSync, { passive: true });
         window.addEventListener("resize", requestAdaptiveNavSync);
-      }
-
-      function initBottomClearCue() {
-        if (!bottomClearCue || !socialIconsAnchor) {
-          return;
-        }
-
-        bottomClearCue.addEventListener("click", () => {
-          playHoverSound(bottomClearCue);
-          const targetY = Math.max(0, getElementPageTop(socialIconsAnchor) - window.innerHeight * 0.48);
-          window.scrollTo({ top: targetY, behavior: "smooth" });
-        });
-
-        const syncCueVisibility = () => {
-          const iconTop = socialIconsAnchor.getBoundingClientRect().top;
-          const iconsAreArriving = iconTop < window.innerHeight * 0.88;
-          const projectTop = projectsAnchor ? projectsAnchor.getBoundingClientRect().top : Number.POSITIVE_INFINITY;
-          const heroIsActive = window.scrollY < window.innerHeight * 0.55 && projectTop > window.innerHeight * 0.72;
-          bottomClearCue.classList.toggle("is-hidden", iconsAreArriving);
-          bottomClearCue.classList.toggle("is-hero-active", heroIsActive && !iconsAreArriving);
-        };
-
-        syncCueVisibility();
-        window.addEventListener("scroll", syncCueVisibility, { passive: true });
-        window.addEventListener("resize", syncCueVisibility);
       }
 
       function setDamianLlmOpen(nextOpen) {
@@ -3850,7 +3737,6 @@
 
       syncScale();
       initAdaptiveNavLinks();
-      initBottomClearCue();
       initDamianLlmCard();
       initProjectVideos();
       initHoverSounds();
