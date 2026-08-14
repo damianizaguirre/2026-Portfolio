@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CoverFlow } from "@/components/ui/CoverFlow";
 import styles from "./about.module.css";
 
@@ -150,7 +150,7 @@ const recentListens = [
 ];
 
 type RecentMovie = {
-  id: number;
+  id: string | number;
   image: string;
   title: string;
   subtitle: string;
@@ -297,6 +297,33 @@ function useFrameScale() {
 
 export default function About() {
   const pageRef = useFrameScale();
+  const [movieItems, setMovieItems] = useState<RecentMovie[]>(recentMovies);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function syncLetterboxd() {
+      try {
+        const response = await fetch("/api/letterboxd");
+        if (!response.ok) return;
+
+        const data = await response.json();
+        const movies = Array.isArray(data?.movies) ? data.movies : [];
+
+        if (!cancelled && movies.length > 0) {
+          setMovieItems(movies);
+        }
+      } catch {
+        // Keep the curated fallback if the RSS feed is unavailable.
+      }
+    }
+
+    syncLetterboxd();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return (
     <main className={styles.page} ref={pageRef} aria-label="About Damian Izaguirre">
@@ -404,7 +431,7 @@ export default function About() {
           </p>
           <section className={[styles.shelfCard, styles.movieCard].join(" ")} aria-label="Recently watched movies">
             <CoverFlow
-              items={recentMovies}
+              items={movieItems}
               itemWidth={190}
               itemHeight={285}
               stackSpacing={70}
