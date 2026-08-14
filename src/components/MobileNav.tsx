@@ -155,7 +155,7 @@ export default function MobileNav({ active: initialActive }: { active: NavKey })
         />
       )}
       <div
-        className="fixed inset-x-0 top-0 z-50 flex flex-col items-center"
+        className="absolute inset-x-0 top-0 z-50 flex flex-col items-center"
         style={{ paddingTop: NAV_TOP_PAD }}
       >
         <div ref={trackRef} className="relative flex items-center gap-[5px]">

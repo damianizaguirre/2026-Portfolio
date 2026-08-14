@@ -19,7 +19,7 @@ export default function Navbar() {
   return (
     <>
       <nav
-        className="sticky top-0 z-50 flex items-center justify-between bg-white/90 backdrop-blur-md border-b border-black/[0.04]"
+        className="relative z-50 flex items-center justify-between bg-white/90 backdrop-blur-md border-b border-black/[0.04]"
         style={{ height: "var(--nav-h)", padding: "0 var(--px-side)" }}
       >
         <div className="flex items-center" style={{ gap: "clamp(12px, 1.3vw, 24px)" }}>
