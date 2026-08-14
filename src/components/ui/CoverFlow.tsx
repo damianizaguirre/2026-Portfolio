@@ -152,6 +152,7 @@ export interface CoverFlowProps {
   enableScroll?: boolean;
   enableAudio?: boolean;
   scrollThreshold?: number;
+  captionGap?: number;
   reduceMotion?: boolean;
   className?: string;
   onItemClick?: (item: CoverFlowItem, index: number) => void;
@@ -191,6 +192,7 @@ export function CoverFlow({
   enableScroll = true,
   enableAudio = false,
   scrollThreshold = 100,
+  captionGap = 12,
   reduceMotion,
   className,
   onItemClick,
@@ -497,7 +499,10 @@ export function CoverFlow({
           ))}
         </div>
 
-        <div className="relative z-40 mt-3 h-14 w-full shrink-0 pointer-events-none">
+        <div
+          className="relative z-40 h-14 w-full shrink-0 pointer-events-none"
+          style={{ marginTop: captionGap }}
+        >
           <AnimatePresence mode="wait">
             <motion.div
               key={activeIndex}
