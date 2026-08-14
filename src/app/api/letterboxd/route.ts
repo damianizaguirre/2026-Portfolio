@@ -93,7 +93,7 @@ function parseLetterboxdFeed(xml: string): LetterboxdMovie[] {
 }
 
 export async function GET() {
-  const username = process.env.LETTERBOXD_USERNAME;
+  const username = process.env.LETTERBOXD_USERNAME || "berserkerrr";
 
   if (!username) {
     return NextResponse.json(
