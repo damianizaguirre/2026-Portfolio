@@ -153,7 +153,6 @@ export interface CoverFlowProps {
   enableAudio?: boolean;
   scrollThreshold?: number;
   captionGap?: number;
-  captionOffsetY?: number;
   reduceMotion?: boolean;
   className?: string;
   onItemClick?: (item: CoverFlowItem, index: number) => void;
@@ -194,7 +193,6 @@ export function CoverFlow({
   enableAudio = false,
   scrollThreshold = 100,
   captionGap = 12,
-  captionOffsetY = 0,
   reduceMotion,
   className,
   onItemClick,
@@ -516,7 +514,6 @@ export function CoverFlow({
                 ease: [0.23, 1, 0.32, 1],
               }}
               className="absolute inset-x-0 top-0 px-6 text-center"
-              style={{ top: captionOffsetY }}
             >
               <h3 className="text-2xl font-semibold tracking-tight drop-shadow-md text-zinc-900 dark:text-zinc-100">
                 {items[activeIndex]?.title}
