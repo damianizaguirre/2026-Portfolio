@@ -13,13 +13,6 @@ const experience = [
   { role: "Association of Computing Machinery at UTD - Designer", period: "August 2025 - May 2026" },
 ];
 
-const movies = [
-  { src: "/images/about/movie-1.png", alt: "Favorite movie poster one", left: 59, width: 157 },
-  { src: "/images/about/movie-2.png", alt: "Favorite movie poster two", left: 253, width: 157 },
-  { src: "/images/about/movie-3.png", alt: "Favorite movie poster three", left: 447, width: 155 },
-  { src: "/images/about/movie-4.png", alt: "Favorite movie poster four", left: 639, width: 159 },
-];
-
 const heroPhotos = [
   {
     src: "/about/figma-hero/img-3275-2.jpg",
@@ -156,6 +149,136 @@ const recentListens = [
   },
 ];
 
+type RecentMovie = {
+  id: number;
+  image: string;
+  title: string;
+  subtitle: string;
+  url: string;
+};
+
+const recentMovies: RecentMovie[] = [
+  {
+    id: 1,
+    image: "/about/recent-movies/kikis-delivery-service.jpg",
+    title: "Kiki’s Delivery Service",
+    subtitle: "1989",
+    url: "https://letterboxd.com/film/kikis-delivery-service/",
+  },
+  {
+    id: 2,
+    image: "/about/recent-movies/parasite-2019.jpg",
+    title: "Parasite",
+    subtitle: "2019",
+    url: "https://letterboxd.com/film/parasite-2019/",
+  },
+  {
+    id: 3,
+    image: "/about/recent-movies/the-matrix.jpg",
+    title: "The Matrix",
+    subtitle: "1999",
+    url: "https://letterboxd.com/film/the-matrix/",
+  },
+  {
+    id: 4,
+    image: "/about/recent-movies/mulholland-drive.jpg",
+    title: "Mulholland Drive",
+    subtitle: "2001",
+    url: "https://letterboxd.com/film/mulholland-drive/",
+  },
+  {
+    id: 5,
+    image: "/about/recent-movies/past-lives.jpg",
+    title: "Past Lives",
+    subtitle: "2023",
+    url: "https://letterboxd.com/film/past-lives/",
+  },
+  {
+    id: 6,
+    image: "/about/recent-movies/whiplash-2014.jpg",
+    title: "Whiplash",
+    subtitle: "2014",
+    url: "https://letterboxd.com/film/whiplash-2014/",
+  },
+  {
+    id: 7,
+    image: "/about/recent-movies/la-haine.jpg",
+    title: "La Haine",
+    subtitle: "1995",
+    url: "https://letterboxd.com/film/la-haine/",
+  },
+  {
+    id: 8,
+    image: "/about/recent-movies/perfect-blue.jpg",
+    title: "Perfect Blue",
+    subtitle: "1997",
+    url: "https://letterboxd.com/film/perfect-blue/",
+  },
+  {
+    id: 9,
+    image: "/about/recent-movies/spirited-away.jpg",
+    title: "Spirited Away",
+    subtitle: "2001",
+    url: "https://letterboxd.com/film/spirited-away/",
+  },
+  {
+    id: 10,
+    image: "/about/recent-movies/infernal-affairs.jpg",
+    title: "Infernal Affairs",
+    subtitle: "2002",
+    url: "https://letterboxd.com/film/infernal-affairs/",
+  },
+  {
+    id: 11,
+    image: "/about/recent-movies/goodfellas.jpg",
+    title: "GoodFellas",
+    subtitle: "1990",
+    url: "https://letterboxd.com/film/goodfellas/",
+  },
+  {
+    id: 12,
+    image: "/about/recent-movies/there-will-be-blood.jpg",
+    title: "There Will Be Blood",
+    subtitle: "2007",
+    url: "https://letterboxd.com/film/there-will-be-blood/",
+  },
+  {
+    id: 13,
+    image: "/about/recent-movies/the-social-network.jpg",
+    title: "The Social Network",
+    subtitle: "2010",
+    url: "https://letterboxd.com/film/the-social-network/",
+  },
+  {
+    id: 14,
+    image: "/about/recent-movies/aftersun.jpg",
+    title: "Aftersun",
+    subtitle: "2022",
+    url: "https://letterboxd.com/film/aftersun/",
+  },
+  {
+    id: 15,
+    image: "/about/recent-movies/oppenheimer-2023.jpg",
+    title: "Oppenheimer",
+    subtitle: "2023",
+    url: "https://letterboxd.com/film/oppenheimer-2023/",
+  },
+  {
+    id: 16,
+    image: "/about/recent-movies/moonlight-2016.jpg",
+    title: "Moonlight",
+    subtitle: "2016",
+    url: "https://letterboxd.com/film/moonlight-2016/",
+  },
+  {
+    id: 17,
+    image: "/about/recent-movies/in-the-mood-for-love.jpg",
+    title: "In the Mood for Love",
+    subtitle: "2000",
+    url: "https://letterboxd.com/film/in-the-mood-for-love/",
+  },
+];
+
 function useFrameScale() {
   const pageRef = useRef<HTMLElement>(null);
 
@@ -274,22 +397,26 @@ export default function About() {
           </section>
 
           <p className={styles.shelfLabel} style={{ top: 2481 }}>
-            Some of my favorite movies.
+            Recently watched.
           </p>
           <p className={styles.shelfSource} style={{ top: 2505 }}>
             Letterboxd
           </p>
-          <section className={[styles.shelfCard, styles.movieCard].join(" ")} aria-label="Favorite movies">
-            {movies.map((movie) => (
-              <img
-                className={styles.moviePoster}
-                key={movie.src}
-                src={movie.src}
-                alt={movie.alt}
-                loading="lazy"
-                style={{ left: movie.left, width: movie.width }}
-              />
-            ))}
+          <section className={[styles.shelfCard, styles.movieCard].join(" ")} aria-label="Recently watched movies">
+            <CoverFlow
+              items={recentMovies}
+              itemWidth={190}
+              itemHeight={285}
+              stackSpacing={70}
+              centerGap={180}
+              rotation={42}
+              enableAudio
+              className={styles.movieCoverFlow}
+              onItemClick={(item) => {
+                const movie = item as RecentMovie;
+                window.open(movie.url, "_blank", "noopener,noreferrer");
+              }}
+            />
           </section>
         </div>
       </div>
