@@ -2795,7 +2795,6 @@
         const botBubble = appendDamianLlmBubble("bot", getDamianLlmTypingMarkup(), true);
 
         damianLlmCard.dataset.sent = "true";
-        damianLlmTitle.textContent = "DamianLLM";
         damianLlmInput.value = "";
         damianLlmInput.placeholder = "Ask a follow-up...";
         setDamianLlmOpen(true);
@@ -2821,7 +2820,6 @@
 
         damianLlmInput.value = "";
         damianLlmInput.placeholder = "Type your question...";
-        damianLlmTitle.textContent = "Chat with me";
         damianLlmCard.dataset.returning = "true";
         damianLlmCard.dataset.sent = "false";
         syncDamianLlmComposer();
