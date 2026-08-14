@@ -475,15 +475,6 @@ export default function About() {
             <div className={styles.footerIconRow}>
               <a
                 className={styles.footerSocialLink}
-                href="https://instagram.com/damianpizaguirre"
-                target="_blank"
-                rel="noreferrer"
-                aria-label="Instagram"
-              >
-                <img src="/assets/social-icons/instagram.jpg" alt="" />
-              </a>
-              <a
-                className={styles.footerSocialLink}
                 href="https://x.com/damianizaguirre"
                 target="_blank"
                 rel="noreferrer"

@@ -30,15 +30,6 @@ export default function Footer() {
         >
           EMAIL
         </a>
-        <a
-          href="https://instagram.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="font-normal text-black hover:text-muted transition-colors"
-          style={{ fontSize: "var(--text-card)" }}
-        >
-          INSTAGRAM
-        </a>
       </div>
     </footer>
   );
