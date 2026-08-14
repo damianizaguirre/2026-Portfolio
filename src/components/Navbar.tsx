@@ -25,10 +25,17 @@ export default function Navbar() {
         <div className="flex items-center" style={{ gap: "clamp(12px, 1.3vw, 24px)" }}>
           <Link
             href="/"
-            className="font-medium tracking-[-0.01em] text-black"
-            style={{ fontSize: "var(--text-nav)" }}
+            className="group relative block h-[34px] w-[48px] overflow-hidden text-black no-underline transition-[width] duration-[340ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:w-[146px] focus-visible:w-[146px]"
+            style={{ fontSize: 24, lineHeight: 1, fontWeight: 500, letterSpacing: 0 }}
+            aria-label="Go to Work"
           >
-            DAMIAN IZAGUIRRE
+            <span className="inline-block min-w-[48px] whitespace-nowrap">
+              D[I
+              <span className="inline-block max-w-0 origin-left translate-x-[-1px] scale-x-[0.84] overflow-hidden align-bottom whitespace-nowrap transition-[max-width,transform] duration-[170ms] ease-[cubic-bezier(0.18,1.35,0.34,1)] group-hover:max-w-[98px] group-hover:translate-x-0 group-hover:scale-x-100 group-focus-visible:max-w-[98px] group-focus-visible:translate-x-0 group-focus-visible:scale-x-100">
+                zaguirre
+              </span>
+              ]
+            </span>
           </Link>
           <span
             className="hidden sm:inline font-medium text-muted"

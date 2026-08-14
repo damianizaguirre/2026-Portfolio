@@ -67,7 +67,7 @@ const NAV_ITEMS: {
   labelPx: number;
   labelMaxWidth: number;
 }[] = [
-  { key: "home", label: "Home", href: "/", Icon: HomeIcon, iconClassName: "w-[21px] h-[18px]", labelPx: 17, labelMaxWidth: 50 },
+  { key: "home", label: "Work", href: "/", Icon: HomeIcon, iconClassName: "w-[21px] h-[18px]", labelPx: 17, labelMaxWidth: 46 },
   { key: "fun", label: "Fun", href: "/fun", Icon: FunIcon, iconClassName: "w-[26px] h-[20px]", labelPx: 17, labelMaxWidth: 32 },
   { key: "about", label: "About", href: "/about", Icon: AboutIcon, iconClassName: "w-[18px] h-[18px]", labelPx: 17, labelMaxWidth: 50 },
   { key: "resume", label: "Resume", href: "/resume", Icon: ResumeIcon, iconClassName: "w-[20px] h-[19px]", labelPx: 17, labelMaxWidth: 68 },

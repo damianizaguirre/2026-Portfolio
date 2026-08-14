@@ -328,9 +328,17 @@ export default function About() {
   return (
     <main className={styles.page} ref={pageRef} aria-label="About Damian Izaguirre">
       <header className={styles.topNav} aria-label="Top Navigation Bar">
-        <a className={styles.navDot} href="/" aria-label="Home" />
+        <div className={styles.morphAnchor}>
+          <div className={styles.tMorph}>
+            <a className={styles.tMorphPlus} href="/" aria-label="Go to Work">
+              <span className={styles.brandLogo}>
+                D[I<span className={styles.brandRest}>zaguirre</span>]
+              </span>
+            </a>
+          </div>
+        </div>
         <nav className={styles.navLinks} aria-label="Primary navigation">
-          <a href="/">Home</a>
+          <a href="/">Work</a>
           <a href="/about">About</a>
           <a href="/resume">Resume</a>
         </nav>
