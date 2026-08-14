@@ -104,14 +104,14 @@
 
       .t-morph:hover,
       .t-morph:focus-within {
-        width: 214px;
-        background: rgba(0, 0, 0, 0.035);
+        width: 146px;
+        background: transparent;
       }
 
       .t-morph-plus {
         position: absolute;
         inset: 0 auto auto 0;
-        width: 214px;
+        width: 146px;
         height: 34px;
         display: flex;
         align-items: center;
@@ -144,14 +144,23 @@
 
       .brand-short {
         min-width: 48px;
+        opacity: 1;
+        transition: opacity 180ms ease;
       }
 
       .brand-full {
+        position: absolute;
+        left: 0;
         opacity: 0;
-        transform: translateX(-8px);
+        transform: translateX(0);
         transition:
-          opacity 260ms ease,
+          opacity 220ms ease,
           transform 340ms cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      .t-morph:hover .brand-short,
+      .t-morph:focus-within .brand-short {
+        opacity: 0;
       }
 
       .t-morph:hover .brand-full,
@@ -2274,7 +2283,7 @@
             aria-label="Go to Work"
           >
             <span class="brand-short">D[I]</span>
-            <span class="brand-full">Damian Izaguirre</span>
+            <span class="brand-full">D[Izaguirre]</span>
           </a>
         </div>
       </div>
@@ -2300,7 +2309,7 @@
             loading="eager"
           ></iframe>
         </div>
-        <section class="hero-card-stack" aria-label="Artwork card stack">
+        <section class="hero-card-stack" aria-label="Artwork card stack" hidden>
           <div class="hero-card-stack-stage">
             <figure class="hero-stack-card">
               <img src="./assets/figma-home/mismo-poster.png" alt="" />
@@ -2324,7 +2333,7 @@
           <span class="hero-stack-badge coplin">@coplin</span>
           <span class="hero-stack-badge andrea">@andrea</span>
         </section>
-        <section class="music-card" aria-label="Music card" hidden>
+        <section class="music-card" aria-label="Music card">
           <div class="music-card-gradient music-card-gradient-current" id="spotify-gradient-current" aria-hidden="true"></div>
           <div class="music-card-gradient music-card-gradient-next" id="spotify-gradient-next" aria-hidden="true"></div>
           <img class="album-art album-art-current" id="spotify-album-art" alt="" crossorigin="anonymous" />
