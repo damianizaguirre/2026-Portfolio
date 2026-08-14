@@ -13,6 +13,11 @@ export const metadata: Metadata = {
   title: "Damian Izaguirre - Product Designer",
   description:
     "Product designer giving data life through meaningful design. Currently studying at The University of Texas at Dallas.",
+  icons: {
+    icon: "/favicon.svg",
+    shortcut: "/favicon.svg",
+    apple: "/favicon.svg",
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
