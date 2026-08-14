@@ -605,7 +605,7 @@ const CoverFlowItemCard = memo(function CoverFlowItemCard({
   return (
     <motion.div
       className={cn(
-        "absolute top-1/2 left-1/2 preserve-3d will-change-transform group-[.is-dragging]/cf:!cursor-grabbing",
+        "absolute top-1/2 left-1/2 preserve-3d will-change-transform overflow-hidden rounded-xl isolate group-[.is-dragging]/cf:!cursor-grabbing",
         cursorClass,
       )}
       style={{
@@ -618,6 +618,7 @@ const CoverFlowItemCard = memo(function CoverFlowItemCard({
         rotateY,
         zIndex,
         pointerEvents: "auto",
+        clipPath: "inset(0 round 0.75rem)",
       }}
       onClick={() => onCardClick(item, index)}
     >
