@@ -80,102 +80,88 @@
       .morph-anchor {
         position: absolute;
         left: 0;
-        top: 11px;
-        width: 212px;
-        height: 204px;
+        top: 17px;
+        width: 236px;
+        height: 38px;
         z-index: 2;
-        pointer-events: none;
+        pointer-events: auto;
       }
 
       .t-morph {
         position: relative;
-        width: 45px;
-        height: 45px;
+        width: 48px;
+        height: 34px;
         overflow: hidden;
-        border: 1px solid #efefef;
-        border-radius: var(--morph-r-closed);
-        background: #71dd88;
+        border: 0;
+        border-radius: 999px;
+        background: transparent;
         box-shadow: none;
         pointer-events: auto;
         transition:
-          width var(--morph-close-dur) var(--morph-close-ease),
-          height var(--morph-close-dur) var(--morph-close-ease),
-          border-radius var(--morph-close-dur) var(--morph-close-ease),
-          box-shadow var(--morph-close-dur) var(--morph-close-ease);
+          width 340ms cubic-bezier(0.22, 1, 0.36, 1),
+          background-color 220ms ease;
       }
 
-      .t-morph[data-open="true"] {
-        width: 183px;
-        height: 172px;
-        border-radius: var(--morph-r-open);
-        box-shadow: 0 14px 38px rgba(0, 0, 0, 0.08);
-        transition:
-          width var(--morph-open-dur) var(--morph-ease),
-          height var(--morph-open-dur) var(--morph-ease),
-          border-radius var(--morph-open-dur) var(--morph-ease),
-          box-shadow var(--morph-open-dur) var(--morph-ease);
+      .t-morph:hover,
+      .t-morph:focus-within {
+        width: 214px;
+        background: rgba(0, 0, 0, 0.035);
       }
 
       .t-morph-plus {
         position: absolute;
-        inset: auto 0 0 auto;
-        width: 45px;
-        height: 45px;
-        display: grid;
-        place-items: center;
+        inset: 0 auto auto 0;
+        width: 214px;
+        height: 34px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
         border: 0;
         background: transparent;
         cursor: pointer;
-        color: transparent;
+        color: #000000;
+        font-family: "Geist", system-ui, sans-serif;
+        font-size: 24px;
+        line-height: 1;
+        font-weight: 500;
+        letter-spacing: 0;
+        text-align: left;
+        text-decoration: none;
         transition:
-          opacity var(--morph-fade-dur) var(--morph-close-ease),
-          transform var(--morph-open-dur) var(--morph-close-ease),
-          filter var(--morph-fade-dur) var(--morph-close-ease);
+          transform 200ms ease,
+          color 180ms ease;
       }
 
-      .t-morph-plus svg {
-        width: 15px;
-        height: 15px;
+      .t-morph-plus:active {
+        transform: scale(0.985);
+      }
+
+      .brand-short,
+      .brand-full {
+        display: inline-block;
+        white-space: nowrap;
+      }
+
+      .brand-short {
+        min-width: 48px;
+      }
+
+      .brand-full {
         opacity: 0;
-        transition: transform var(--morph-open-dur) var(--morph-close-ease);
-      }
-
-      .t-morph[data-open="true"] .t-morph-plus {
-        opacity: 0;
-        transform: translateY(calc(-1 * var(--morph-slide)));
-        filter: blur(var(--morph-blur));
-        pointer-events: none;
-      }
-
-      .t-morph[data-open="true"] .t-morph-plus svg {
-        transform: scale(var(--morph-scale)) rotate(var(--morph-rotate));
-      }
-
-      .t-morph-menu {
-        position: absolute;
-        inset: 0;
-        display: grid;
-        align-content: start;
-        gap: 4px;
-        padding: 14px;
-        opacity: 0;
-        transform: translateY(var(--morph-slide)) translateX(8px) scale(var(--morph-scale));
-        filter: blur(var(--morph-blur));
-        pointer-events: none;
+        transform: translateX(-8px);
         transition:
-          opacity var(--morph-fade-dur) var(--morph-close-ease),
-          transform var(--morph-open-dur) var(--morph-close-ease),
-          filter var(--morph-fade-dur) var(--morph-close-ease);
+          opacity 260ms ease,
+          transform 340ms cubic-bezier(0.22, 1, 0.36, 1);
       }
 
-      .t-morph[data-open="true"] .t-morph-menu {
+      .t-morph:hover .brand-full,
+      .t-morph:focus-within .brand-full {
         opacity: 1;
-        transform: translateY(0) translateX(0) scale(1);
-        filter: blur(0);
-        pointer-events: auto;
+        transform: translateX(0);
       }
 
       .morph-item {
+        display: none;
         min-height: 32px;
         border: 0;
         border-radius: 10px;
@@ -227,6 +213,70 @@
       .desktop-links a.is-on-dark {
         color: #ffffff;
         text-shadow: 0 1px 10px rgba(0, 0, 0, 0.28);
+      }
+
+      .site-footer-pages,
+      .site-footer-talk {
+        position: absolute;
+        top: 2690px;
+        color: #000000;
+        font-size: 20px;
+        line-height: 26px;
+        letter-spacing: 0;
+      }
+
+      .site-footer-pages {
+        left: 112px;
+      }
+
+      .site-footer-talk {
+        left: 1544px;
+      }
+
+      .site-footer-heading {
+        margin: 0 0 26px;
+        font-size: 20px;
+        line-height: 26px;
+        font-weight: 400;
+      }
+
+      .site-footer-link-list {
+        display: grid;
+        gap: 20px;
+      }
+
+      .site-footer-link {
+        color: #000000;
+        font-size: 20px;
+        line-height: 26px;
+        font-weight: 300;
+        text-decoration: none;
+        transition:
+          color 160ms ease,
+          transform 180ms ease;
+      }
+
+      .site-footer-link:hover {
+        color: #5b5b5b;
+        transform: translateX(2px);
+      }
+
+      .site-footer-icon-row {
+        display: flex;
+        gap: 10.74px;
+        align-items: center;
+      }
+
+      .site-footer-icon-row .social-link {
+        position: static;
+        width: 42.968px;
+        height: 42.968px;
+        border-radius: 9.61px;
+      }
+
+      .site-footer-icon-row .social-link:hover {
+        transform: translateY(-2px) translateZ(0);
+        box-shadow: none;
       }
 
       .name,
@@ -313,6 +363,123 @@
         --progress-start: #38594d;
         --progress-mid: #8c6152;
         --progress-end: #e84d99;
+      }
+
+      .hero-card-stack {
+        position: absolute;
+        left: 1019px;
+        top: calc(451px + var(--hero-y-offset));
+        width: 413px;
+        height: 261px;
+        overflow: hidden;
+        border: 1px solid #efefef;
+        border-radius: 10px;
+        background: #ffffff;
+        box-shadow: 0 0 1px rgba(149, 149, 149, 0.25);
+        isolation: isolate;
+      }
+
+      .hero-card-stack-stage {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        perspective: 900px;
+      }
+
+      .hero-stack-card {
+        position: absolute;
+        width: 146px;
+        height: 188px;
+        overflow: hidden;
+        border-radius: 16px;
+        background: #f3f3f3;
+        border: 1px solid rgba(255, 255, 255, 0.7);
+        box-shadow: 0 20px 36px rgba(0, 0, 0, 0.18);
+        transform-origin: 50% 70%;
+      }
+
+      .hero-stack-card img {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+      }
+
+      .hero-stack-card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background:
+          linear-gradient(140deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0) 42%),
+          linear-gradient(180deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.16));
+        pointer-events: none;
+      }
+
+      .hero-stack-card:nth-child(1) {
+        transform: translate3d(-118px, 2px, -86px) rotateY(42deg) rotateZ(-8deg) scale(0.82);
+        opacity: 0.72;
+        z-index: 1;
+      }
+
+      .hero-stack-card:nth-child(2) {
+        transform: translate3d(-72px, -4px, -42px) rotateY(32deg) rotateZ(-5deg) scale(0.9);
+        opacity: 0.9;
+        z-index: 2;
+      }
+
+      .hero-stack-card:nth-child(3) {
+        transform: translate3d(0, 0, 0) rotateY(0deg) rotateZ(0deg) scale(1);
+        opacity: 1;
+        z-index: 5;
+      }
+
+      .hero-stack-card:nth-child(4) {
+        transform: translate3d(76px, -4px, -42px) rotateY(-32deg) rotateZ(5deg) scale(0.9);
+        opacity: 0.9;
+        z-index: 4;
+      }
+
+      .hero-stack-card:nth-child(5) {
+        transform: translate3d(122px, 2px, -86px) rotateY(-42deg) rotateZ(8deg) scale(0.82);
+        opacity: 0.72;
+        z-index: 3;
+      }
+
+      .hero-stack-card:nth-child(6) {
+        transform: translate3d(164px, 8px, -128px) rotateY(-52deg) rotateZ(11deg) scale(0.72);
+        opacity: 0.42;
+        z-index: 0;
+      }
+
+      .hero-stack-badge {
+        position: absolute;
+        z-index: 8;
+        min-width: 70px;
+        min-height: 28px;
+        display: inline-grid;
+        place-items: center;
+        padding: 0 12px;
+        border-radius: 999px;
+        color: #ffffff;
+        font-size: 13px;
+        line-height: 1;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.18);
+      }
+
+      .hero-stack-badge.coplin {
+        left: 86px;
+        top: 54px;
+        background: #3b82f6;
+      }
+
+      .hero-stack-badge.andrea {
+        right: 58px;
+        bottom: 50px;
+        background: #22c55e;
       }
 
       .music-card-gradient {
@@ -1623,7 +1790,7 @@
           top: calc(70px * var(--scale));
           width: auto;
           height: auto;
-          transform: scale(calc(var(--scale) * 0.5111));
+          transform: scale(calc(var(--scale) * 0.74));
         }
 
         .name {
@@ -1732,7 +1899,8 @@
           height: 65.898px;
         }
 
-        .music-card {
+        .music-card,
+        .hero-card-stack {
           left: 190px;
           top: calc(473px + var(--hero-y-offset));
           width: 166px;
@@ -1742,6 +1910,54 @@
           box-shadow: 0 0 0.4px rgba(0, 0, 0, 0.25);
           --music-meta-left: 89px;
           --music-meta-width: 68px;
+        }
+
+        .hero-stack-card {
+          width: 70px;
+          height: 86px;
+          border-radius: 10px;
+          box-shadow: 0 10px 18px rgba(0, 0, 0, 0.18);
+        }
+
+        .hero-stack-card:nth-child(1) {
+          transform: translate3d(-58px, 1px, -70px) rotateY(42deg) rotateZ(-8deg) scale(0.74);
+        }
+
+        .hero-stack-card:nth-child(2) {
+          transform: translate3d(-34px, -2px, -34px) rotateY(32deg) rotateZ(-5deg) scale(0.84);
+        }
+
+        .hero-stack-card:nth-child(3) {
+          transform: translate3d(0, 0, 0) rotateY(0deg) rotateZ(0deg) scale(1);
+        }
+
+        .hero-stack-card:nth-child(4) {
+          transform: translate3d(34px, -2px, -34px) rotateY(-32deg) rotateZ(5deg) scale(0.84);
+        }
+
+        .hero-stack-card:nth-child(5) {
+          transform: translate3d(58px, 1px, -70px) rotateY(-42deg) rotateZ(8deg) scale(0.74);
+        }
+
+        .hero-stack-card:nth-child(6) {
+          transform: translate3d(80px, 4px, -100px) rotateY(-52deg) rotateZ(11deg) scale(0.66);
+        }
+
+        .hero-stack-badge {
+          min-width: 45px;
+          min-height: 18px;
+          padding: 0 8px;
+          font-size: 8px;
+        }
+
+        .hero-stack-badge.coplin {
+          left: 28px;
+          top: 18px;
+        }
+
+        .hero-stack-badge.andrea {
+          right: 18px;
+          bottom: 16px;
         }
 
         /* The mobile card is plain white -- no blurred album-art wash. */
@@ -1940,26 +2156,63 @@
         }
 
         .social-link {
-          top: 2122px;
-          width: 65.826px;
-          height: 65.826px;
-          border-radius: 14.723px;
+          top: 2164px;
+          width: 37px;
+          height: 37px;
+          border-radius: 8.28px;
         }
 
         .social-link.instagram {
-          left: 41px;
+          left: 256px;
         }
 
         .social-link.x {
-          left: 126.06px;
+          left: 303px;
         }
 
         .social-link.linkedin {
-          left: 211.11px;
+          left: 350px;
         }
 
         .social-link.mail {
-          left: 296.17px;
+          left: 256px;
+          top: 2213px;
+        }
+
+        .site-footer-pages,
+        .site-footer-talk {
+          top: 2056px;
+          font-size: 14px;
+          line-height: 18px;
+        }
+
+        .site-footer-pages {
+          left: 47px;
+        }
+
+        .site-footer-talk {
+          left: 256px;
+        }
+
+        .site-footer-heading {
+          margin-bottom: 14px;
+          font-size: 14px;
+          line-height: 18px;
+        }
+
+        .site-footer-link-list {
+          gap: 12px;
+        }
+
+        .site-footer-link {
+          font-size: 14px;
+          line-height: 18px;
+        }
+
+        .site-footer-icon-row {
+          width: 84px;
+          flex-wrap: wrap;
+          gap: 10px;
         }
 
         .bottom-clear-cue {
@@ -2013,29 +2266,22 @@
     <header class="top-nav" aria-label="Top Navigation Bar">
       <div class="morph-anchor">
         <div class="t-morph" data-open="false" id="nav-morph">
-          <div class="t-morph-menu" aria-label="Circle menu">
-            <button class="morph-item" type="button">Home</button>
-            <button class="morph-item" type="button" data-href="/about">About</button>
-            <button class="morph-item" type="button">Resume</button>
-          </div>
-          <button
+          <a
             class="t-morph-plus"
-            type="button"
             id="nav-morph-toggle"
-            aria-label="Open navigation menu"
-            aria-expanded="false"
+            href="/"
+            target="_parent"
+            aria-label="Go to Work"
           >
-            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" aria-hidden="true">
-              <path d="M8 3v10" />
-              <path d="M3 8h10" />
-            </svg>
-          </button>
+            <span class="brand-short">D[I]</span>
+            <span class="brand-full">Damian Izaguirre</span>
+          </a>
         </div>
       </div>
       <nav class="desktop-links" aria-label="Primary navigation">
-        <a href="#">Home</a>
-        <a href="/about">About</a>
-        <a href="#">Resume</a>
+        <a href="/" target="_parent">Work</a>
+        <a href="/about" target="_parent">About</a>
+        <a href="/resume" target="_parent">Resume</a>
       </nav>
     </header>
 
@@ -2054,7 +2300,31 @@
             loading="eager"
           ></iframe>
         </div>
-        <section class="music-card" aria-label="Music card">
+        <section class="hero-card-stack" aria-label="Artwork card stack">
+          <div class="hero-card-stack-stage">
+            <figure class="hero-stack-card">
+              <img src="./assets/figma-home/mismo-poster.png" alt="" />
+            </figure>
+            <figure class="hero-stack-card">
+              <img src="./assets/figma-home/carfully-selected.png" alt="" />
+            </figure>
+            <figure class="hero-stack-card">
+              <img src="./assets/figma-home/sancorda-selected.png" alt="" />
+            </figure>
+            <figure class="hero-stack-card">
+              <img src="./assets/figma-home/integra-selected.png" alt="" />
+            </figure>
+            <figure class="hero-stack-card">
+              <img src="./assets/figma-home/music-preview-coastal-grooves.jpg" alt="" />
+            </figure>
+            <figure class="hero-stack-card">
+              <img src="./assets/figma-home/music-preview-riviera.png" alt="" />
+            </figure>
+          </div>
+          <span class="hero-stack-badge coplin">@coplin</span>
+          <span class="hero-stack-badge andrea">@andrea</span>
+        </section>
+        <section class="music-card" aria-label="Music card" hidden>
           <div class="music-card-gradient music-card-gradient-current" id="spotify-gradient-current" aria-hidden="true"></div>
           <div class="music-card-gradient music-card-gradient-next" id="spotify-gradient-next" aria-hidden="true"></div>
           <img class="album-art album-art-current" id="spotify-album-art" alt="" crossorigin="anonymous" />
@@ -2236,6 +2506,19 @@
           <p class="project-year">2025</p>
         </section>
 
+        <footer class="site-footer-pages" aria-label="Footer page links">
+          <p class="site-footer-heading">Pages</p>
+          <div class="site-footer-link-list">
+            <a class="site-footer-link" href="/" target="_parent">Work</a>
+            <a class="site-footer-link" href="/about" target="_parent">About</a>
+            <a class="site-footer-link" href="/resume" target="_parent">Resume</a>
+          </div>
+        </footer>
+
+        <footer class="site-footer-talk" aria-label="Social links">
+          <p class="site-footer-heading">Let’s talk!</p>
+          <div class="site-footer-icon-row">
+
         <a
           class="social-link instagram"
           id="social-icons"
@@ -2271,6 +2554,8 @@
         >
           <img src="./assets/social-icons/mail.jpg" alt="" loading="lazy" />
         </a>
+          </div>
+        </footer>
       </main>
     </div>
 
@@ -2346,7 +2631,7 @@
       const damianLlmSend = document.querySelector(".damian-llm-send");
       const damianLlmBack = document.querySelector(".damian-llm-back");
       const damianLlmChips = Array.from(document.querySelectorAll(".damian-llm-chip"));
-      const hoverSoundTargets = Array.from(document.querySelectorAll("#nav-morph-toggle, #bottom-clear-cue, .desktop-links a, .morph-item, .project-card, .social-link, .play-button, .damian-llm-button, .damian-llm-send, .damian-llm-back, .damian-llm-chip"));
+      const hoverSoundTargets = Array.from(document.querySelectorAll("#nav-morph-toggle, #bottom-clear-cue, .desktop-links a, .morph-item, .hero-card-stack, .project-card, .social-link, .play-button, .damian-llm-button, .damian-llm-send, .damian-llm-back, .damian-llm-chip"));
       const params = new URLSearchParams(window.location.search);
       const centralTimeFormatter = new Intl.DateTimeFormat("en-US", {
         timeZone: "America/Chicago",
