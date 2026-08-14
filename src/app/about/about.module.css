@@ -434,50 +434,6 @@
   pointer-events: none;
 }
 
-/* ---------------------------------------------------------------------------
-   First-load entrance.
-
-   Keep this intentionally light. The About page is a large scaled Figma
-   composition, so the smoothest version avoids transform animation entirely.
-   Text opacity resolves in; image and shelf layers stay visually stable.
-   --------------------------------------------------------------------------- */
-
-@keyframes aboutFadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-.name,
-.role,
-.introCopy {
-  animation: aboutFadeIn 260ms ease-out both;
-}
-
-.name {
-  animation-delay: 40ms;
-}
-
-.role {
-  animation-delay: 80ms;
-}
-
-.introCopy {
-  animation-delay: 120ms;
-}
-
 .heroCollage {
   contain: paint;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .name,
-  .role,
-  .introCopy {
-    animation: none;
-    opacity: 1;
-  }
 }
