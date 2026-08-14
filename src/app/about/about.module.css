@@ -231,9 +231,9 @@
 .shelfCard {
   position: absolute;
   overflow: hidden;
-  border-radius: 13px;
+  border: 1px solid #efefef;
+  border-radius: 10px;
   background: #ffffff;
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
 }
 
 .spotifyCard {
@@ -242,9 +242,6 @@
   width: 949px;
   height: 417px;
   overflow: hidden;
-  border-radius: 13px;
-  background: #ffffff;
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
   display: grid;
   place-items: center;
   padding: 38px 0;
