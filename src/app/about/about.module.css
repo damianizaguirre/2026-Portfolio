@@ -73,59 +73,73 @@
 
 .name,
 .role,
-.currentlyLabel,
-.currentlyCopy {
+.introCopy {
   position: absolute;
-  left: 485px;
   margin: 0;
   line-height: normal;
 }
 
 .name {
-  top: 162px;
+  left: 486px;
+  top: 175px;
   font-size: 32px;
   font-weight: 500;
   white-space: nowrap;
 }
 
 .role {
-  top: 214px;
+  left: 486px;
+  top: 222px;
   font-size: 24px;
   font-weight: 400;
   white-space: nowrap;
 }
 
-.currentlyLabel {
-  top: 281px;
-  font-size: 20px;
-  font-weight: 500;
-  white-space: nowrap;
-}
-
-.currentlyCopy {
-  top: 317px;
-  width: 950px;
+.introCopy {
+  left: 919px;
+  top: 0;
+  width: 516px;
   color: #5b5b5b;
   font-size: 24px;
   font-weight: 300;
 }
 
-.currentlyCopy p {
+.introCopy p {
+  position: absolute;
+  left: 0;
+  width: 516px;
   margin: 0;
   line-height: normal;
   white-space: pre-wrap;
 }
 
-/* Hero slot -- still an empty container in the design. */
-.heroSlot {
+.introCopy p:nth-child(1) {
+  top: 175px;
+}
+
+.introCopy p:nth-child(2) {
+  top: 293px;
+}
+
+.introCopy p:nth-child(3) {
+  top: 349px;
+}
+
+.introCopy span {
+  color: #000000;
+}
+
+.heroCollage {
   position: absolute;
-  left: 485px;
-  top: 491px;
-  width: 950px;
-  height: 420px;
-  border: 1px solid #efefef;
-  border-radius: 10px;
-  background: #ffffff;
+  inset: 0;
+  pointer-events: none;
+}
+
+.heroPhoto {
+  position: absolute;
+  max-width: none;
+  object-fit: cover;
+  pointer-events: none;
 }
 
 /* Section headings carry a short rule beneath them. Every heading in the
@@ -226,12 +240,11 @@
   left: 485px;
   top: 1996px;
   width: 949px;
-  height: 507px;
+  height: 417px;
   overflow: hidden;
-  border: 1px solid #efefef;
-  border-radius: 10px;
+  border-radius: 13px;
   background: #ffffff;
-  box-shadow: none;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
   display: grid;
   place-items: center;
   padding: 38px 0;
@@ -244,15 +257,15 @@
 
 .movieCard {
   left: 485px;
-  top: 2945px;
-  width: 857px;
-  height: 273px;
+  top: 2563px;
+  width: 949px;
+  height: 417px;
 }
 
 .moviePoster {
   position: absolute;
-  top: 21px;
-  height: 232px;
+  top: 73px;
+  height: 272px;
   overflow: hidden;
   border-radius: 5px;
   object-fit: cover;

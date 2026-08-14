@@ -20,6 +20,73 @@ const movies = [
   { src: "/images/about/movie-4.png", alt: "Favorite movie poster four", left: 639, width: 159 },
 ];
 
+const heroPhotos = [
+  {
+    src: "/about/figma-hero/img-3275-2.jpg",
+    alt: "Architecture detail",
+    left: 352,
+    top: 727,
+    width: 189.114,
+    height: 252.152,
+  },
+  {
+    src: "/about/figma-hero/img-3113-2.jpg",
+    alt: "Colorful outfit detail",
+    left: 1465,
+    top: 727,
+    width: 189.114,
+    height: 252.152,
+  },
+  {
+    src: "/about/figma-hero/img-2954-2.jpg",
+    alt: "Architecture window detail",
+    left: 1308,
+    top: 488,
+    width: 252.152,
+    height: 189.114,
+  },
+  {
+    src: "/about/figma-hero/img-2861-2.jpg",
+    alt: "Building facade",
+    left: 264,
+    top: 488,
+    width: 252.152,
+    height: 189.114,
+  },
+  {
+    src: "/about/figma-hero/img-1947-2.jpg",
+    alt: "Concert crowd",
+    left: 776,
+    top: 727,
+    width: 189.114,
+    height: 252.152,
+  },
+  {
+    src: "/about/figma-hero/dsc03056-4.jpg",
+    alt: "Damian holding a certificate",
+    left: 884,
+    top: 488,
+    width: 256.155,
+    height: 170.728,
+  },
+  {
+    src: "/about/figma-hero/img-3290-2.jpg",
+    alt: "Person outdoors",
+    left: 638,
+    top: 488,
+    width: 123.825,
+    height: 220.133,
+  },
+  {
+    src: "/about/figma-hero/img-2866-2.jpg",
+    alt: "Sunset landscape",
+    left: 1053,
+    top: 727,
+    width: 220.133,
+    height: 123.825,
+  },
+];
+
 const recentListens = [
   {
     id: 1,
@@ -123,13 +190,31 @@ export default function About() {
         <div className={styles.frame}>
           <h1 className={styles.name}>Damian Izaguirre</h1>
           <p className={styles.role}>Product Designer</p>
-          <p className={styles.currentlyLabel}>Currently</p>
-          <div className={styles.currentlyCopy}>
-            <p>Designing and building meaningful products, giving data life through meaningful design.</p>
-            <p>In pursuit of greatness - continuously designing and building.</p>
+          <div className={styles.introCopy}>
+            <p>I love design, technology, and business and the way they all meet to create meaningful products for people.</p>
+            <p>In pursuit of greatness - continuously creating.</p>
+            <p>
+              Open to work on new opportunities. <span>Let’s chat!</span>
+            </p>
           </div>
 
-          <div className={styles.heroSlot} aria-hidden="true" />
+          <div className={styles.heroCollage} aria-label="Personal photo collage">
+            {heroPhotos.map((photo) => (
+              <img
+                key={photo.src}
+                className={styles.heroPhoto}
+                src={photo.src}
+                alt={photo.alt}
+                loading="eager"
+                style={{
+                  left: photo.left,
+                  top: photo.top,
+                  width: photo.width,
+                  height: photo.height,
+                }}
+              />
+            ))}
+          </div>
 
           <h2 className={styles.sectionHeading} style={{ top: 1097 }}>
             Experience
@@ -188,10 +273,10 @@ export default function About() {
             />
           </section>
 
-          <p className={styles.shelfLabel} style={{ top: 2884 }}>
+          <p className={styles.shelfLabel} style={{ top: 2481 }}>
             Some of my favorite movies.
           </p>
-          <p className={styles.shelfSource} style={{ top: 2908 }}>
+          <p className={styles.shelfSource} style={{ top: 2505 }}>
             Letterboxd
           </p>
           <section className={[styles.shelfCard, styles.movieCard].join(" ")} aria-label="Favorite movies">
