@@ -420,6 +420,7 @@ export default function About() {
               itemHeight={292}
               enableAudio
               captionGap={28}
+              captionOffsetY={24}
               className={styles.coverFlow}
             />
           </section>
