@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import styles from "./mismo-case-study.module.css";
 
 const frameWidth = 1920;
-const frameHeight = 6412;
+const frameHeight = 6564;
 const rulerActivationRatio = 0.18;
 
 const rulerTicks = [
@@ -536,6 +536,25 @@ export default function MismoCaseStudy() {
           <h2 className={styles.sectionTitle} style={{ left: 401, top: 6102 }}>
             Insights from designing and building my first 0-1 app
           </h2>
+          <p className={styles.sectionCopy} style={{ left: 401, top: 6166, width: 1111 }}>
+            What surprised me most was how far design instinct carries in engineering. I
+            couldn&apos;t always name the right pattern, but I could always tell when a flow
+            wasn&apos;t going to work for the user.
+          </p>
+          <p className={styles.sectionCopy} style={{ left: 401, top: 6240, width: 1111 }}>
+            AI was the easy part. Claude and Deepgram worked; the craft was in everything around
+            them. Timezone math, retry logic, rate limits, making a 6-second pipeline feel
+            intentional instead of slow.
+          </p>
+          <p className={styles.sectionCopy} style={{ left: 401, top: 6314, width: 1111 }}>
+            Though I presented this at capstone project ceremony and received a Capital One award
+            for version 1 of the app, the progression and overall journey of the app has been
+            amazing to look at.
+          </p>
+          <p className={styles.sectionCopy} style={{ left: 401, top: 6388, width: 1111 }}>
+            Still pending approval from Apple&apos;s App Store, Mismo is scheduled to launch
+            September 2026.
+          </p>
         </div>
       </div>
     </main>
