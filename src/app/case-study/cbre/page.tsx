@@ -227,7 +227,7 @@ export default function CBRECaseStudy() {
         <nav className={styles.navLinks} aria-label="Primary navigation">
           <a href="/" onPointerEnter={(event) => playHoverSound(event.currentTarget)}>Work</a>
           <a href="/about" onPointerEnter={(event) => playHoverSound(event.currentTarget)}>About</a>
-          <a href="/resume" onPointerEnter={(event) => playHoverSound(event.currentTarget)}>Resume</a>
+          <a href="/Damian-Izaguirre-Resume.pdf" onPointerEnter={(event) => playHoverSound(event.currentTarget)}>Resume</a>
         </nav>
       </header>
 

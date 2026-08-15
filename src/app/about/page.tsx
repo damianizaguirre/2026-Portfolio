@@ -340,7 +340,7 @@ export default function About() {
         <nav className={styles.navLinks} aria-label="Primary navigation">
           <a href="/">Work</a>
           <a href="/about">About</a>
-          <a href="/resume">Resume</a>
+          <a href="/Damian-Izaguirre-Resume.pdf">Resume</a>
         </nav>
       </header>
 
@@ -464,7 +464,7 @@ export default function About() {
               <a className={styles.footerLink} href="/about">
                 About
               </a>
-              <a className={styles.footerLink} href="/resume">
+              <a className={styles.footerLink} href="/Damian-Izaguirre-Resume.pdf">
                 Resume
               </a>
             </div>

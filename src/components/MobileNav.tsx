@@ -70,7 +70,7 @@ const NAV_ITEMS: {
   { key: "home", label: "Work", href: "/", Icon: HomeIcon, iconClassName: "w-[21px] h-[18px]", labelPx: 17, labelMaxWidth: 46 },
   { key: "fun", label: "Fun", href: "/fun", Icon: FunIcon, iconClassName: "w-[26px] h-[20px]", labelPx: 17, labelMaxWidth: 32 },
   { key: "about", label: "About", href: "/about", Icon: AboutIcon, iconClassName: "w-[18px] h-[18px]", labelPx: 17, labelMaxWidth: 50 },
-  { key: "resume", label: "Resume", href: "/resume", Icon: ResumeIcon, iconClassName: "w-[20px] h-[19px]", labelPx: 17, labelMaxWidth: 68 },
+  { key: "resume", label: "Resume", href: "/Damian-Izaguirre-Resume.pdf", Icon: ResumeIcon, iconClassName: "w-[20px] h-[19px]", labelPx: 17, labelMaxWidth: 68 },
 ];
 
 const PILL_EASE = "cubic-bezier(0.2, 0.8, 0.2, 1)";
