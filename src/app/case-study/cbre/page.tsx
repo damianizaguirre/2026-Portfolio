@@ -1,12 +1,13 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import Footer from "@/components/Footer";
 import styles from "./integra-case-study.module.css";
 
 const frameWidth = 1920;
 // The Figma frame is 9579 tall, but that leaves a 344px gap under the closing
 // team photos. Trimmed to a 150px tail to match the Sancorda study.
-const frameHeight = 9385;
+const frameHeight = 9668;
 const rulerActivationRatio = 0.18;
 
 const rulerTicks = [
@@ -530,6 +531,7 @@ export default function CBRECaseStudy() {
             alt="The team celebrating the CBRE design challenge win"
             style={{ left: 952, top: 8905, width: 586, height: 330 }}
           />
+          <Footer className={styles.siteFooter} />
         </div>
       </div>
     </main>

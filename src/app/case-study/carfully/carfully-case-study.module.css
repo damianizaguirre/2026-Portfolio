@@ -31,6 +31,12 @@
   transform-origin: top left;
 }
 
+.siteFooter {
+  position: absolute;
+  left: 0;
+  top: calc((var(--frame-height) * 1px) - 278px);
+}
+
 .topNav {
   position: absolute;
   left: calc(67px * var(--scale));

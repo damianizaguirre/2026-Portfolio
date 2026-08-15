@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import Footer from "@/components/Footer";
 import styles from "./carfully-case-study.module.css";
 
 const frameWidth = 1920;
@@ -506,6 +507,7 @@ export default function CarfullyCaseStudy() {
               projects.
             </p>
           </div>
+          <Footer className={styles.siteFooter} />
         </div>
       </div>
     </main>

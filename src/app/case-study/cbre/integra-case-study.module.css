@@ -1,7 +1,7 @@
 .page {
   position: relative;
   --frame-width: 1920;
-  --frame-height: 9385;
+  --frame-height: 9668;
   --scale: 1;
   min-height: calc(var(--frame-height) * 1px * var(--scale));
   background: #fbfbfb;
@@ -29,6 +29,12 @@
   background: #fbfbfb;
   transform: scale(var(--scale));
   transform-origin: top left;
+}
+
+.siteFooter {
+  position: absolute;
+  left: 0;
+  top: calc((var(--frame-height) * 1px) - 278px);
 }
 
 .topNav {

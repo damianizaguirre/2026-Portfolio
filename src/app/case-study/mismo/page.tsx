@@ -1,10 +1,11 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import Footer from "@/components/Footer";
 import styles from "./mismo-case-study.module.css";
 
 const frameWidth = 1920;
-const frameHeight = 6564;
+const frameHeight = 6830;
 const rulerActivationRatio = 0.18;
 
 const rulerTicks = [
@@ -555,6 +556,7 @@ export default function MismoCaseStudy() {
             Still pending approval from Apple&apos;s App Store, Mismo is scheduled to launch
             September 2026.
           </p>
+          <Footer className={styles.siteFooter} />
         </div>
       </div>
     </main>

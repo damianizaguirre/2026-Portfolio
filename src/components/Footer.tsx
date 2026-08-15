@@ -1,36 +1,57 @@
-export default function Footer() {
+import styles from "./Footer.module.css";
+
+export default function Footer({
+  className = "",
+}: {
+  className?: string;
+}) {
   return (
-    <footer
-      className="bg-surface flex items-center justify-between"
-      style={{ height: "var(--footer-h)", padding: "0 var(--px-side)" }}
-    >
-      <p
-        className="font-normal text-black"
-        style={{ fontSize: "var(--text-card)" }}
-      >
-        designed + vibe coded by damian
-      </p>
-      <div
-        className="flex items-center"
-        style={{ gap: "clamp(16px, 1.67vw, 32px)" }}
-      >
-        <a
-          href="https://linkedin.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="font-normal text-black hover:text-muted transition-colors"
-          style={{ fontSize: "var(--text-card)" }}
-        >
-          LINKEDIN
-        </a>
-        <a
-          href="mailto:hello@damian.design"
-          className="font-normal text-black hover:text-muted transition-colors"
-          style={{ fontSize: "var(--text-card)" }}
-        >
-          EMAIL
-        </a>
-      </div>
-    </footer>
+    <div className={[styles.siteFooter, className].filter(Boolean).join(" ")}>
+      <footer className={styles.footerPages} aria-label="Footer page links">
+        <p className={styles.footerHeading}>Pages</p>
+        <div className={styles.footerLinkList}>
+          <a className={styles.footerLink} href="/">
+            Work
+          </a>
+          <a className={styles.footerLink} href="/about">
+            About
+          </a>
+          <a className={styles.footerLink} href="/Damian-Izaguirre-Resume.pdf">
+            Resume
+          </a>
+        </div>
+      </footer>
+
+      <footer className={styles.footerTalk} aria-label="Social links">
+        <p className={styles.footerHeading}>Let&rsquo;s talk!</p>
+        <div className={styles.footerIconRow}>
+          <a
+            className={styles.footerSocialLink}
+            href="https://x.com/damianizaguirre"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="X"
+          >
+            <img src="/assets/social-icons/x.jpg" alt="" />
+          </a>
+          <a
+            className={styles.footerSocialLink}
+            href="https://linkedin.com/in/damianizaguirre"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="LinkedIn"
+          >
+            <img src="/assets/social-icons/linkedin.jpg" alt="" />
+          </a>
+          <a
+            className={styles.footerSocialLink}
+            href="mailto:izaguirredamian20@gmail.com"
+            aria-label="Email"
+          >
+            <img src="/assets/social-icons/mail.jpg" alt="" />
+          </a>
+        </div>
+      </footer>
+    </div>
   );
 }

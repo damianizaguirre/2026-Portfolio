@@ -1,10 +1,11 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import Footer from "@/components/Footer";
 import styles from "./sancorda-case-study.module.css";
 
 const frameWidth = 1920;
-const frameHeight = 7950;
+const frameHeight = 8130;
 const rulerActivationRatio = 0.18;
 
 const rulerTicks = [
@@ -454,6 +455,7 @@ export default function SancordaCaseStudy() {
             I gained insightful experience with user-flow mapping and overall creating a smooth guide
             to users.
           </p>
+          <Footer className={styles.siteFooter} />
         </div>
       </div>
     </main>
