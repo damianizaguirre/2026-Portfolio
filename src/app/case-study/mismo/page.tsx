@@ -529,7 +529,15 @@ export default function MismoCaseStudy() {
           <h2 className={styles.sectionTitle} style={{ left: 401, top: 5257 }}>
             Exploring and simplifying the users experience
           </h2>
-          <div className={styles.processBlock} />
+          <div className={styles.processBlock}>
+            <img
+              loading="lazy"
+              decoding="async"
+              className={styles.processImage}
+              src="/images/mismo/process-screenshot.png"
+              alt="Mismo process board showing onboarding, folder, recording, and processing interface frames"
+            />
+          </div>
 
           <p className={styles.sectionKicker} style={{ left: 401, top: 6071 }}>
             Reflection
