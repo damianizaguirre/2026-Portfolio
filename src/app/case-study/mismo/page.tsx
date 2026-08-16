@@ -365,8 +365,8 @@ export default function MismoCaseStudy() {
             How can we make note taking more powerful with voice?
           </h2>
           <p className={styles.sectionCopy} style={{ left: 395, top: 1198, width: 1216 }}>
-            Over the course of the semester, my goal was to pick, design, and build a working
-            prototype of a digital product.
+            People record hundreds of them and never listen to a single one twice. The problem was
+            never capture, it&apos;s that nobody wants to do the filing.
           </p>
 
           <p className={styles.sectionKicker} style={{ left: 395, top: 1322 }}>
