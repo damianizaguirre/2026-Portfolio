@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Footer from "@/components/Footer";
-import MobileCaseStudy from "@/components/MobileCaseStudy";
 import styles from "./carfully-case-study.module.css";
 
 const frameWidth = 1920;
@@ -31,56 +30,6 @@ const rulerTicks = [
 const sectionNavItems = rulerTicks
   .map((tick, index) => ({ label: tick.label, tickIndex: index, type: tick.type }))
   .filter((item) => item.type === "section");
-
-const mobileCaseStudy = {
-  title: "Carfully",
-  description:
-    "A transparent auto-financing tool built to help first-time buyers understand readiness, monthly payments, and next steps.",
-  hero: {
-    src: "/images/carfully-thumbnail.png",
-    alt: "Carfully project preview",
-  },
-  sections: [
-    {
-      eyebrow: "Challenge",
-      title: "Car financing is confusing before it is expensive",
-      body:
-        "Carfully helps buyers understand the hidden variables in affordability, readiness, and financing decisions before walking into a dealership.",
-    },
-    {
-      eyebrow: "Solution",
-      title: "A guided path to a smarter purchase",
-      body:
-        "The experience breaks the process into approachable steps, from readiness checks to learning modules and financial help.",
-      image: {
-        src: "/images/carfully/landing-page.png",
-        alt: "Carfully landing page",
-      },
-    },
-    {
-      eyebrow: "Core Flows",
-      title: "Quiz, learning, and financial support",
-      body:
-        "The product combines a home-page quiz, readiness score, education modules, and financial guidance into one flow.",
-      image: {
-        src: "/images/carfully/home-page-quiz.png",
-        alt: "Carfully home page quiz",
-      },
-    },
-    {
-      eyebrow: "Research",
-      title: "Learning from real buying anxiety",
-      body:
-        "Survey and interview work exposed how much confidence buyers lose when financing language becomes abstract or hidden.",
-    },
-    {
-      eyebrow: "Reflection",
-      title: "Designing trust through clarity",
-      body:
-        "The strongest moments came from replacing financial fog with simple language, clear steps, and visual reassurance.",
-    },
-  ],
-};
 
 // @soundcn/click-soft, CC0 sound by Kenney.
 const clickSoftSoundDataUri =
@@ -262,7 +211,6 @@ export default function CarfullyCaseStudy() {
 
   return (
     <main className={styles.page} ref={pageRef} aria-label="Carfully case study">
-      <MobileCaseStudy {...mobileCaseStudy} />
       <header className={styles.topNav} aria-label="Top Navigation Bar">
         <div className={styles.morphAnchor}>
           <div className={styles.tMorph}>

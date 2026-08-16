@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Footer from "@/components/Footer";
-import MobileCaseStudy from "@/components/MobileCaseStudy";
 import styles from "./sancorda-case-study.module.css";
 
 const frameWidth = 1920;
@@ -27,56 +26,6 @@ const sectionNavItems = rulerTicks.map((tick, index) => ({
   label: tick.label,
   tickIndex: index,
 }));
-
-const mobileCaseStudy = {
-  title: "Sancorda",
-  description:
-    "An interactive medical planning platform for understanding complex biomedical workflows and simulation-based decision support.",
-  hero: {
-    src: "/images/sancorda-thumbnail.png",
-    alt: "Sancorda project preview",
-  },
-  sections: [
-    {
-      eyebrow: "Overview",
-      title: "A compact planning experience for complex care",
-      body:
-        "The project translated dense biomedical and bioengineering workflows into a guided interface for analysis, planning, and review.",
-      image: {
-        src: "/images/sancorda/hero-recon-ai.png",
-        alt: "Sancorda Recon AI interface",
-      },
-    },
-    {
-      eyebrow: "Research",
-      title: "Mapping what clinicians need to compare",
-      body:
-        "Research focused on understanding current tools, user flows, and where split Recon ST and Recon AI workflows created friction.",
-    },
-    {
-      eyebrow: "Design",
-      title: "Dense, scannable, and still approachable",
-      body:
-        "The layout explored how to maximize space for necessary information while keeping navigation and decision points clear.",
-      image: {
-        src: "/images/sancorda/design-style.png",
-        alt: "Sancorda design system and icons",
-      },
-    },
-    {
-      eyebrow: "Demo",
-      title: "Recon ST and Recon AI flows",
-      body:
-        "The final flow supports different analysis paths while keeping the interaction model consistent between the two modes.",
-    },
-    {
-      eyebrow: "Reflection",
-      title: "Designing for unfamiliar complexity",
-      body:
-        "The work pushed me to learn a new domain quickly and balance technical specificity with user-friendly presentation.",
-    },
-  ],
-};
 
 // @soundcn/click-soft, CC0 sound by Kenney.
 const clickSoftSoundDataUri =
@@ -258,7 +207,6 @@ export default function SancordaCaseStudy() {
 
   return (
     <main className={styles.page} ref={pageRef} aria-label="Sancorda case study">
-      <MobileCaseStudy {...mobileCaseStudy} />
       <header className={styles.topNav} aria-label="Top Navigation Bar">
         <div className={styles.morphAnchor}>
           <div className={styles.tMorph}>

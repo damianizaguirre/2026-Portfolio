@@ -16,19 +16,6 @@
     sans-serif;
 }
 
-@media (max-width: 700px) {
-  .page {
-    min-height: 100svh;
-  }
-
-  .topNav,
-  .backLink,
-  .rulerNav,
-  .stage {
-    display: none;
-  }
-}
-
 .stage {
   width: calc(var(--frame-width) * 1px * var(--scale));
   height: calc(var(--frame-height) * 1px * var(--scale));
