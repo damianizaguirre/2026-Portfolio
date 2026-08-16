@@ -5,9 +5,8 @@ import Footer from "@/components/Footer";
 import styles from "./mismo-case-study.module.css";
 
 const frameWidth = 1920;
-const frameHeight = 7195;
+const frameHeight = 6830;
 const rulerActivationRatio = 0.18;
-const postProcessOffset = 365;
 
 const rulerTicks = [
   { y: 5, type: "section", label: "Overview", section: 0, frameY: 1112 },
@@ -21,12 +20,12 @@ const rulerTicks = [
   { y: 101, type: "content", label: "Solution content", section: 2, frameY: 2528 },
   { y: 113, type: "content", label: "Solution content", section: 2, frameY: 3108 },
   { y: 125, type: "content", label: "Solution content", section: 2, frameY: 3688 },
-  { y: 137, type: "section", label: "Research", section: 3, frameY: 4871 + postProcessOffset },
-  { y: 149, type: "content", label: "Research content", section: 3, frameY: 4966 + postProcessOffset },
-  { y: 161, type: "content", label: "Research content", section: 3, frameY: 5060 + postProcessOffset },
-  { y: 173, type: "section", label: "Process", section: 4, frameY: 5226 + postProcessOffset },
-  { y: 185, type: "content", label: "Process content", section: 4, frameY: 5332 + postProcessOffset },
-  { y: 197, type: "section", label: "Reflection", section: 5, frameY: 6071 + postProcessOffset },
+  { y: 137, type: "section", label: "Research", section: 3, frameY: 4871 },
+  { y: 149, type: "content", label: "Research content", section: 3, frameY: 4966 },
+  { y: 161, type: "content", label: "Research content", section: 3, frameY: 5060 },
+  { y: 173, type: "section", label: "Process", section: 4, frameY: 5226 },
+  { y: 185, type: "content", label: "Process content", section: 4, frameY: 5332 },
+  { y: 197, type: "section", label: "Reflection", section: 5, frameY: 6071 },
 ];
 
 const sectionLabels = ["Overview", "Problem", "Solution", "Research", "Process", "Reflection"];
@@ -93,238 +92,6 @@ function DemoVideo({ label, src }: { label: string; src: string }) {
     >
       <source src={src} type="video/mp4" />
     </video>
-  );
-}
-
-const boardScreens = [
-  { kind: "welcome-map", title: "Welcome to Mismo", tone: "light" },
-  { kind: "welcome-plain", title: "Welcome to Mismo", tone: "light" },
-  { kind: "welcome-gradient", title: "Welcome to Mismo", tone: "dark" },
-  { kind: "welcome-gradient", title: "Welcome to Mismo", tone: "dark" },
-  { kind: "chips", title: "What do you want Mismo to help with?", tone: "light" },
-  { kind: "permission", title: "Let Mismo listen to you", tone: "light" },
-  { kind: "trial", title: "Get notified by Mismo", tone: "light" },
-  { kind: "capture", title: "Capture your conversations", tone: "light" },
-  { kind: "memo", title: "Try your first voice memo", tone: "light" },
-  { kind: "signin", title: "Your thoughts deserve a home.", tone: "dark" },
-  { kind: "folder-empty", title: "My Collection", tone: "sheet" },
-  { kind: "folder-create", title: "My Collection", tone: "sheet" },
-  { kind: "folder-colors", title: "My Collection", tone: "sheet" },
-  { kind: "folder-icons", title: "My Collection", tone: "sheet" },
-  { kind: "folder-list", title: "My Collection", tone: "sheet" },
-  { kind: "folder-list", title: "My Collection", tone: "sheet" },
-  { kind: "folder-list", title: "My Collection", tone: "sheet" },
-  { kind: "summary", title: "App Design System", tone: "detail" },
-  { kind: "transcript", title: "App Design System", tone: "detail" },
-  { kind: "record-idle", title: "Recording Audio...", tone: "overlay" },
-  { kind: "recording", title: "Recording Audio...", tone: "overlay" },
-  { kind: "recording", title: "Recording Audio...", tone: "overlay" },
-  { kind: "discard", title: "Discard draft?", tone: "overlay" },
-  { kind: "processing", title: "Mismo is analyzing...", tone: "overlay" },
-  { kind: "processing", title: "Mismo is noticing...", tone: "overlay" },
-  { kind: "ready", title: "Analysis complete", tone: "overlay" },
-  { kind: "sorted-green", title: "Mismo sorted your memo", tone: "overlay" },
-  { kind: "sorted-red", title: "Mismo sorted your memo", tone: "overlay" },
-] as const;
-
-function MismoGlyph({ className = "" }: { className?: string }) {
-  return <span className={[styles.mismoGlyph, className].join(" ")} aria-hidden="true" />;
-}
-
-function MiniPhone({ screen }: { screen: (typeof boardScreens)[number] }) {
-  const toneClass = styles[`boardPhone${screen.tone}` as keyof typeof styles];
-
-  return (
-    <div className={[styles.boardPhone, toneClass].filter(Boolean).join(" ")}>
-      <div className={styles.miniStatus}>
-        <span>9:41</span>
-        <span className={styles.miniIsland} />
-        <span>▮▮▮</span>
-      </div>
-      <div className={styles.miniScreen}>{renderMiniScreen(screen.kind, screen.title)}</div>
-    </div>
-  );
-}
-
-function renderMiniScreen(kind: (typeof boardScreens)[number]["kind"], title: string) {
-  switch (kind) {
-    case "welcome-map":
-      return (
-        <>
-          <div className={styles.miniDotMap} />
-          <div className={styles.miniWelcomeContent}>
-            <MismoGlyph />
-            <strong>{title}</strong>
-            <span>AI-powered voice memos, completely private.</span>
-            <b>Get Started</b>
-          </div>
-        </>
-      );
-    case "welcome-plain":
-      return (
-        <div className={styles.miniWelcomeContent}>
-          <MismoGlyph />
-          <strong>{title}</strong>
-          <span>AI-powered voice memos, completely private.</span>
-          <b>Get Started</b>
-        </div>
-      );
-    case "welcome-gradient":
-      return (
-        <>
-          <div className={styles.miniGradientHero} />
-          <div className={styles.miniWelcomeContent}>
-            <MismoGlyph />
-            <strong>{title}</strong>
-            <span>AI-powered voice memos, completely private.</span>
-            <b>Get Started</b>
-          </div>
-        </>
-      );
-    case "chips":
-      return (
-        <div className={styles.miniCard}>
-          <div className={styles.miniDots}>
-            <i />
-            <i />
-            <i />
-            <i />
-            <i />
-          </div>
-          <h4>{title}</h4>
-          <div className={styles.miniChipCloud}>
-            {["Work", "Reminders", "Lists", "Summaries", "Ideas", "To-Dos"].map((chip) => (
-              <span key={chip}>{chip}</span>
-            ))}
-          </div>
-          <button>Continue</button>
-        </div>
-      );
-    case "permission":
-    case "trial":
-    case "capture":
-      return (
-        <div className={styles.miniCard}>
-          <div className={styles.miniDots}>
-            <i />
-            <i className={styles.miniDotActive} />
-            <i />
-            <i />
-            <i />
-          </div>
-          <h4>{title}</h4>
-          <p>Turn your voice into reminders, notes, and summaries.</p>
-          <div className={styles.miniPulse} />
-          <button>{kind === "permission" ? "Enable microphone" : "Continue"}</button>
-        </div>
-      );
-    case "memo":
-      return (
-        <div className={styles.miniCard}>
-          <h4>{title}</h4>
-          <p>Say what you need to remember.</p>
-          <div className={styles.miniWave}>
-            {Array.from({ length: 18 }).map((_, index) => (
-              <i key={index} style={{ height: `${4 + Math.abs(9 - index) * 0.9}px` }} />
-            ))}
-          </div>
-          <div className={styles.miniRecordButton}>Ⅱ</div>
-        </div>
-      );
-    case "signin":
-      return (
-        <div className={styles.miniSignin}>
-          <div className={styles.miniDotMap} />
-          <strong>{title}</strong>
-          <span>Continue with Google</span>
-          <span>Continue with Apple</span>
-        </div>
-      );
-    case "folder-empty":
-    case "folder-create":
-    case "folder-colors":
-    case "folder-icons":
-    case "folder-list":
-      return (
-        <div className={styles.miniHomeSheet}>
-          <div className={styles.miniHomeHeader}>Damian&apos;s Mismo</div>
-          <div className={styles.miniSheet}>
-            <strong>{title}</strong>
-            {kind === "folder-empty" && <p>No recordings yet.</p>}
-            {kind === "folder-create" && <div className={styles.miniPlus}>+</div>}
-            {kind === "folder-colors" && (
-              <div className={styles.miniColorRow}>{["#ffcc4d", "#fd2d3a", "#2f7cff", "#01c566", "#9b51e0"].map((color) => <i key={color} style={{ background: color }} />)}</div>
-            )}
-            {kind === "folder-icons" && <div className={styles.miniIconRow}>⌂ ☆ ✎ ⚑</div>}
-            {kind === "folder-list" && (
-              <div className={styles.miniFolderList}>
-                <span>Recent Thoughts</span>
-                <span>Shopping & Errands</span>
-                <span>App Setup & Testing</span>
-              </div>
-            )}
-          </div>
-        </div>
-      );
-    case "summary":
-    case "transcript":
-      return (
-        <div className={styles.miniDetail}>
-          <strong>{title}</strong>
-          <span>April 4th 2026</span>
-          <div className={styles.miniTabs}>
-            <b>AI Summary</b>
-            <b>Transcript</b>
-          </div>
-          <div className={styles.miniParagraphs}>
-            <p>Users need a fast way to capture thoughts and come back to them.</p>
-            <p>Folders, reminders, and summaries become the follow-through layer.</p>
-            <p>Every memo becomes searchable personal context.</p>
-          </div>
-        </div>
-      );
-    case "record-idle":
-    case "recording":
-    case "discard":
-    case "processing":
-    case "ready":
-    case "sorted-green":
-    case "sorted-red":
-      return (
-        <div className={styles.miniOverlay}>
-          <div className={styles.miniHomeHeader}>Damian&apos;s Mismo</div>
-          <div className={styles.miniRecorderSheet}>
-            <strong>{title}</strong>
-            {kind === "discard" ? (
-              <div className={styles.miniDialog}>
-                <b>Discard draft?</b>
-                <span>Keep</span>
-                <span>Discard</span>
-              </div>
-            ) : kind === "processing" ? (
-              <div className={styles.miniProgress}><i /></div>
-            ) : kind === "ready" || kind === "sorted-green" || kind === "sorted-red" ? (
-              <div className={kind === "sorted-red" ? styles.miniCheckRed : styles.miniCheck}>✓</div>
-            ) : (
-              <div className={styles.miniRecordButton}>Ⅱ</div>
-            )}
-          </div>
-        </div>
-      );
-    default:
-      return null;
-  }
-}
-
-function MismoProcessBoard() {
-  return (
-    <section className={styles.mismoProcessBoard} aria-label="Mismo interface exploration board">
-      <div className={styles.boardGrid}>
-        {boardScreens.map((screen, index) => (
-          <MiniPhone key={`${screen.kind}-${index}`} screen={screen} />
-        ))}
-      </div>
-    </section>
   );
 }
 
@@ -683,49 +450,109 @@ export default function MismoCaseStudy() {
             Pick what you want help with, record a real memo, and see Mismo in action.
           </p>
 
-          <MismoProcessBoard />
+          <div className={styles.wideSlot} />
+          <a
+            className={styles.researchIconLink}
+            href="https://apps.apple.com/us/app/voice-memos/id1069512134"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Open Apple Voice Memos on the App Store"
+            style={{ left: 645 }}
+            onPointerEnter={(event) => playHoverSound(event.currentTarget)}
+          >
+            <img loading="lazy" decoding="async"
+              className={styles.researchIcon}
+              src="/images/mismo/research-app-apple-voice-memos.png"
+              alt=""
+            />
+          </a>
+          <a
+            className={styles.researchIconLink}
+            href="https://apps.apple.com/us/app/otter-transcribe-voice-notes/id1276437113"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Open Otter on the App Store"
+            style={{ left: 821 }}
+            onPointerEnter={(event) => playHoverSound(event.currentTarget)}
+          >
+            <img loading="lazy" decoding="async"
+              className={styles.researchIcon}
+              src="/images/mismo/research-app-otter-ai.png"
+              alt=""
+            />
+          </a>
+          <a
+            className={styles.researchIconLink}
+            href="https://apps.apple.com/us/app/audiopen-ai-voice-to-text/id6502638001"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Open AudioPen on the App Store"
+            style={{ left: 997 }}
+            onPointerEnter={(event) => playHoverSound(event.currentTarget)}
+          >
+            <img loading="lazy" decoding="async"
+              className={styles.researchIcon}
+              src="/images/mismo/research-app-audiopen.png"
+              alt=""
+            />
+          </a>
+          <a
+            className={styles.researchIconLink}
+            href="https://apps.apple.com/us/app/voicenotes-ai-notes-meetings/id6483293628"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Open Voicenotes on the App Store"
+            style={{ left: 1173 }}
+            onPointerEnter={(event) => playHoverSound(event.currentTarget)}
+          >
+            <img loading="lazy" decoding="async"
+              className={styles.researchIcon}
+              src="/images/mismo/research-app-voicenotes.png"
+              alt=""
+            />
+          </a>
 
-          <p className={styles.sectionKicker} style={{ left: 395, top: 5236 }}>
+          <p className={styles.sectionKicker} style={{ left: 395, top: 4871 }}>
             Research
           </p>
-          <h2 className={styles.sectionTitle} style={{ left: 395, top: 5267 }}>
+          <h2 className={styles.sectionTitle} style={{ left: 395, top: 4902 }}>
             Nobody loses at capture, everybody misses at what happens after
           </h2>
-          <p className={styles.sectionCopy} style={{ left: 395, top: 5331, width: 1111 }}>
+          <p className={styles.sectionCopy} style={{ left: 395, top: 4966, width: 1111 }}>
             From pre-installed apps, to large market share ones, Mismo moved the product&apos;s
             center of gravity from the record button to the pipeline behind it.
           </p>
 
-          <p className={styles.sectionKicker} style={{ left: 401, top: 5591 }}>
+          <p className={styles.sectionKicker} style={{ left: 401, top: 5226 }}>
             Process
           </p>
-          <h2 className={styles.sectionTitle} style={{ left: 401, top: 5622 }}>
+          <h2 className={styles.sectionTitle} style={{ left: 401, top: 5257 }}>
             Exploring and simplifying the users experience
           </h2>
           <div className={styles.processBlock} />
 
-          <p className={styles.sectionKicker} style={{ left: 401, top: 6436 }}>
+          <p className={styles.sectionKicker} style={{ left: 401, top: 6071 }}>
             Reflection
           </p>
-          <h2 className={styles.sectionTitle} style={{ left: 401, top: 6467 }}>
+          <h2 className={styles.sectionTitle} style={{ left: 401, top: 6102 }}>
             Insights from designing and building my first 0-1 app
           </h2>
-          <p className={styles.sectionCopy} style={{ left: 401, top: 6531, width: 1111 }}>
+          <p className={styles.sectionCopy} style={{ left: 401, top: 6166, width: 1111 }}>
             What surprised me most was how far design instinct carries in engineering. I
             couldn&apos;t always name the right pattern, but I could always tell when a flow
             wasn&apos;t going to work for the user.
           </p>
-          <p className={styles.sectionCopy} style={{ left: 401, top: 6605, width: 1111 }}>
+          <p className={styles.sectionCopy} style={{ left: 401, top: 6240, width: 1111 }}>
             AI was the easy part. Claude and Deepgram worked; the craft was in everything around
             them. Timezone math, retry logic, rate limits, making a 6-second pipeline feel
             intentional instead of slow.
           </p>
-          <p className={styles.sectionCopy} style={{ left: 401, top: 6679, width: 1111 }}>
+          <p className={styles.sectionCopy} style={{ left: 401, top: 6314, width: 1111 }}>
             Though I presented this at capstone project ceremony and received a Capital One award
             for version 1 of the app, the progression and overall journey of the app has been
             amazing to look at.
           </p>
-          <p className={styles.sectionCopy} style={{ left: 401, top: 6753, width: 1111 }}>
+          <p className={styles.sectionCopy} style={{ left: 401, top: 6388, width: 1111 }}>
             Still pending approval from Apple&apos;s App Store, Mismo is scheduled to launch
             September 2026.
           </p>
