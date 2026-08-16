@@ -645,8 +645,274 @@
   }
 }
 
+/* ---------------------------------------------------------------------------
+   Mobile: stop scaling the 1920px frame down and reflow it as a document.
+
+   Same approach as the other case studies. Scaling the frame keeps the
+   composition but shrinks body copy to ~4px on a phone, so below 700px every
+   positioned child returns to normal flow and is re-spaced. The `!important`
+   flags are load-bearing: each element carries its Figma coordinates in an
+   inline style attribute, which a plain rule loses to.
+   --------------------------------------------------------------------------- */
 @media (max-width: 700px) {
   .rulerNav {
     display: none;
+  }
+
+  .page {
+    min-height: 0;
+    padding-top: 60px;
+  }
+
+  .stage {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  .frame {
+    width: 100%;
+    height: auto;
+    padding: 8px 24px 0;
+    box-sizing: border-box;
+    transform: none;
+  }
+
+  .frame > *:not(.siteFooter) {
+    position: static !important;
+    left: auto !important;
+    top: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    width: auto !important;
+    height: auto !important;
+    max-width: 100% !important;
+    white-space: normal !important;
+  }
+
+  /* --- top chrome --- */
+  .topNav {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 60px;
+    transform: none;
+    background: rgba(251, 251, 251, 0.92);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  .morphAnchor {
+    left: 24px;
+    top: 13px;
+  }
+
+  .navLinks {
+    right: 24px;
+    top: 19px;
+    gap: 26px;
+    font-size: 15px;
+  }
+
+  .backLink {
+    position: static;
+    margin: 22px 0 6px 24px;
+    display: inline-flex;
+    transform: none;
+    font-size: 14px;
+  }
+
+  /* --- masthead --- */
+  .capstoneLabel {
+    font-size: 13px;
+    letter-spacing: 0.02em;
+  }
+
+  .title {
+    margin: 2px 0 24px;
+    font-size: 40px;
+    line-height: 1.1;
+  }
+
+  /* --- hero: a portrait phone recording. The desktop card is landscape with
+     the video inset; on a phone that leaves the video tiny, so the card turns
+     portrait and the video is centred in it. Selector is `.frame > .heroCard`
+     to outrank the blanket flow reset above. --- */
+  .frame > .heroCard {
+    position: relative !important;
+    display: flex;
+    aspect-ratio: 3 / 4;
+    align-items: center;
+    justify-content: center;
+    margin: 28px 0 0;
+  }
+
+  .heroVideo {
+    position: static !important;
+    width: auto !important;
+    height: 92% !important;
+  }
+
+  /* --- demo recordings: square cards, one per row --- */
+  .demoCard {
+    aspect-ratio: 1 / 1;
+    margin: 28px 0 0;
+  }
+
+  /* --- project meta: 4 label/value columns become a stacked list --- */
+  .metaGrid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    margin: 36px 0 0;
+    row-gap: 0;
+    font-size: 16px;
+  }
+
+  .metaGrid > *:nth-child(1) {
+    grid-area: 1 / 1;
+  }
+  .metaGrid > *:nth-child(5) {
+    grid-area: 2 / 1;
+  }
+  .metaGrid > *:nth-child(2) {
+    grid-area: 3 / 1;
+  }
+  .metaGrid > *:nth-child(6) {
+    grid-area: 4 / 1;
+  }
+  .metaGrid > *:nth-child(3) {
+    grid-area: 5 / 1;
+  }
+  .metaGrid > *:nth-child(7) {
+    grid-area: 6 / 1;
+  }
+  .metaGrid > *:nth-child(4) {
+    grid-area: 7 / 1;
+  }
+  .metaGrid > *:nth-child(8) {
+    grid-area: 8 / 1;
+  }
+
+  .metaLabel {
+    margin-top: 18px !important;
+    font-size: 13px;
+    color: #8a8a8a;
+  }
+
+  .metaValue {
+    margin-top: 4px !important;
+    font-size: 16px;
+    line-height: 1.45;
+  }
+
+  /* --- problem trio: three desktop columns stack into three blocks. These are
+     grandchildren of the frame, so the blanket reset above does not reach
+     them. --- */
+  .problemGrid {
+    margin: 0;
+  }
+
+  .problemGrid > * {
+    position: static !important;
+    left: auto !important;
+    top: auto !important;
+    width: auto !important;
+    max-width: 100% !important;
+  }
+
+  .problemTitle {
+    margin: 30px 0 8px !important;
+    font-size: 20px;
+    line-height: 1.3;
+  }
+
+  .problemCopy {
+    margin: 0 !important;
+    font-size: 16px;
+    line-height: 1.55;
+  }
+
+  /* --- research apps: the backing card is desktop-only chrome. The icons
+     become a plain row; each button stays `relative` so its popover still
+     anchors to the icon rather than escaping to the frame. --- */
+  .wideSlot {
+    display: none;
+  }
+
+  .frame > .researchIconButton {
+    position: relative !important;
+    display: inline-block;
+    width: 62px !important;
+    height: 62px !important;
+    margin: 28px 10px 0 0;
+    vertical-align: top;
+    border-radius: 14px;
+  }
+
+  .researchIcon {
+    border-radius: 14px;
+  }
+
+  .researchPopover {
+    width: 232px;
+  }
+
+  /* --- process board --- */
+  .processBlock {
+    aspect-ratio: 1126 / 641;
+    margin: 28px 0 0;
+  }
+
+  /* --- section rhythm --- */
+  .sectionKicker {
+    margin: 56px 0 8px !important;
+    font-size: 14px;
+    color: #8a8a8a;
+  }
+
+  .sectionTitle {
+    margin: 28px 0 12px !important;
+    font-size: 26px;
+    line-height: 1.28;
+  }
+
+  .sectionKicker + .sectionTitle {
+    margin-top: 0 !important;
+  }
+
+  .sectionCopy {
+    margin: 0 !important;
+    font-size: 16.5px;
+    line-height: 1.6;
+  }
+
+  .sectionCopy + .sectionCopy {
+    margin-top: 18px !important;
+  }
+
+  /* Feature captions follow their demo card, so they lead with a tight gap. */
+  .featureTitle {
+    margin: 22px 0 8px !important;
+    font-size: 23px;
+    line-height: 1.3;
+  }
+
+  .featureCopy {
+    margin: 0 !important;
+    font-size: 16px;
+    line-height: 1.55;
+  }
+
+  /* --- footer spans the full width, outside the frame gutter ---
+     Stays `relative`, not `static`: the Footer component positions its own
+     columns absolutely and needs this element as their containing block. */
+  .siteFooter {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    width: auto !important;
+    height: 172px !important;
+    margin: 64px -24px 0;
   }
 }
