@@ -369,9 +369,9 @@
 
 .rulerNav {
   position: fixed;
-  left: calc(29px * var(--scale));
-  top: calc(214px * var(--scale));
-  width: 260px;
+  left: calc(67px * var(--scale));
+  top: calc(193px * var(--scale));
+  width: 187px;
   height: 230px;
   z-index: 25;
   pointer-events: none;
@@ -439,7 +439,7 @@
 
 .ruler {
   position: absolute;
-  left: 32px;
+  left: 0;
   top: 0;
   width: 32px;
   height: 206px;
@@ -462,7 +462,7 @@
 }
 
 .tick {
-  right: 13px;
+  left: 5px;
   width: 8px;
   height: 4px;
   background: rgba(17, 24, 39, 0.25);
@@ -473,7 +473,7 @@
 }
 
 .tickSection {
-  right: 7px;
+  left: 5px;
   width: 14px;
   background: rgba(17, 24, 39, 0.5);
 }
@@ -484,7 +484,7 @@
 }
 
 .activeTick {
-  right: 0;
+  left: 5px;
   top: 5px;
   width: 22px;
   height: 4px;
