@@ -213,8 +213,16 @@
   top: 349px;
 }
 
-.introCopy span {
+.introCopy a {
   color: #000000;
+  text-decoration: none;
+  transition: color 160ms ease;
+}
+
+.introCopy a:hover,
+.introCopy a:focus-visible {
+  color: #5b5b5b;
+  outline: none;
 }
 
 .heroCollage {
