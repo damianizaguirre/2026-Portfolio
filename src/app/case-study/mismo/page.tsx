@@ -33,6 +33,36 @@ const sectionNavItems = sectionLabels.map((label, index) => ({
   label,
   tickIndex: rulerTicks.findIndex((tick) => tick.type === "section" && tick.section === index),
 }));
+const researchApps = [
+  {
+    name: "Apple Voice Memos",
+    src: "/images/mismo/research-app-apple-voice-memos.png",
+    left: 645,
+    strength: "Zero friction, pre-installed, trusted.",
+    gap: "A pile of files. No transcription-first design, no organization, no memory.",
+  },
+  {
+    name: "Otter.ai",
+    src: "/images/mismo/research-app-otter-ai.png",
+    left: 821,
+    strength: "Strong meeting transcription.",
+    gap: "Built for meetings, not personal thought. Corporate feel, no auto-organization.",
+  },
+  {
+    name: "AudioPen",
+    src: "/images/mismo/research-app-audiopen.png",
+    left: 997,
+    strength: "Cleans rambles into readable text.",
+    gap: "Stops at text. No folders, no reminders, no compounding knowledge of the user.",
+  },
+  {
+    name: "Voicenotes",
+    src: "/images/mismo/research-app-voicenotes.png",
+    left: 1173,
+    strength: "Fast capture, AI Q&A over notes.",
+    gap: "Organization still manual; retrieval leans on search.",
+  },
+] as const;
 
 // @soundcn/click-soft, CC0 sound by Kenney.
 const clickSoftSoundDataUri =
@@ -102,6 +132,7 @@ export default function MismoCaseStudy() {
   const hoverSoundLastPlayedRef = useRef(new WeakMap<HTMLElement, number>());
   const [activeTickIndex, setActiveTickIndex] = useState(0);
   const [isRulerCardVisible, setIsRulerCardVisible] = useState(false);
+  const [activeResearchApp, setActiveResearchApp] = useState<string | null>(null);
   const activeTick = rulerTicks[activeTickIndex] || rulerTicks[0];
 
   const getClickSoftPlayer = useCallback(() => {
@@ -451,66 +482,32 @@ export default function MismoCaseStudy() {
           </p>
 
           <div className={styles.wideSlot} />
-          <a
-            className={styles.researchIconLink}
-            href="https://apps.apple.com/us/app/voice-memos/id1069512134"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Open Apple Voice Memos on the App Store"
-            style={{ left: 645 }}
-            onPointerEnter={(event) => playHoverSound(event.currentTarget)}
-          >
-            <img loading="lazy" decoding="async"
-              className={styles.researchIcon}
-              src="/images/mismo/research-app-apple-voice-memos.png"
-              alt=""
-            />
-          </a>
-          <a
-            className={styles.researchIconLink}
-            href="https://apps.apple.com/us/app/otter-transcribe-voice-notes/id1276437113"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Open Otter on the App Store"
-            style={{ left: 821 }}
-            onPointerEnter={(event) => playHoverSound(event.currentTarget)}
-          >
-            <img loading="lazy" decoding="async"
-              className={styles.researchIcon}
-              src="/images/mismo/research-app-otter-ai.png"
-              alt=""
-            />
-          </a>
-          <a
-            className={styles.researchIconLink}
-            href="https://apps.apple.com/us/app/audiopen-ai-voice-to-text/id6502638001"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Open AudioPen on the App Store"
-            style={{ left: 997 }}
-            onPointerEnter={(event) => playHoverSound(event.currentTarget)}
-          >
-            <img loading="lazy" decoding="async"
-              className={styles.researchIcon}
-              src="/images/mismo/research-app-audiopen.png"
-              alt=""
-            />
-          </a>
-          <a
-            className={styles.researchIconLink}
-            href="https://apps.apple.com/us/app/voicenotes-ai-notes-meetings/id6483293628"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Open Voicenotes on the App Store"
-            style={{ left: 1173 }}
-            onPointerEnter={(event) => playHoverSound(event.currentTarget)}
-          >
-            <img loading="lazy" decoding="async"
-              className={styles.researchIcon}
-              src="/images/mismo/research-app-voicenotes.png"
-              alt=""
-            />
-          </a>
+          {researchApps.map((app) => (
+            <button
+              key={app.name}
+              type="button"
+              className={`${styles.researchIconButton} ${
+                activeResearchApp === app.name ? styles.researchIconButtonActive : ""
+              }`}
+              aria-label={`Show ${app.name} research notes`}
+              aria-expanded={activeResearchApp === app.name}
+              style={{ left: app.left }}
+              onClick={() => setActiveResearchApp((current) => (current === app.name ? null : app.name))}
+              onBlur={() => setActiveResearchApp(null)}
+              onPointerEnter={(event) => {
+                setActiveResearchApp(app.name);
+                playHoverSound(event.currentTarget);
+              }}
+              onPointerLeave={() => setActiveResearchApp(null)}
+            >
+              <img loading="lazy" decoding="async" className={styles.researchIcon} src={app.src} alt="" />
+              <span className={styles.researchPopover} role="status">
+                <strong>{app.name}</strong>
+                <b>{app.strength}</b>
+                <span>{app.gap}</span>
+              </span>
+            </button>
+          ))}
 
           <p className={styles.sectionKicker} style={{ left: 395, top: 4871 }}>
             Research
