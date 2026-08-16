@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Footer from "@/components/Footer";
+import MobileCaseStudy from "@/components/MobileCaseStudy";
 import styles from "./mismo-case-study.module.css";
 
 const frameWidth = 1920;
@@ -33,6 +34,53 @@ const sectionNavItems = sectionLabels.map((label, index) => ({
   label,
   tickIndex: rulerTicks.findIndex((tick) => tick.type === "section" && tick.section === index),
 }));
+
+const mobileCaseStudy = {
+  eyebrow: "Capstone 2026",
+  title: "Mismo",
+  description:
+    "An AI-powered voice memo app that transcribes, summarizes, and sorts recordings into a living node graph.",
+  hero: {
+    src: "/images/mismo-thumbnail.png",
+    alt: "Mismo node graph interface",
+  },
+  sections: [
+    {
+      eyebrow: "Overview",
+      title: "From voice capture to organized memory",
+      body:
+        "Mismo turns messy spoken thoughts into searchable recordings, summaries, reminders, and folders without asking users to manage everything manually.",
+    },
+    {
+      eyebrow: "Problem",
+      title: "Voice memos usually become another pile",
+      body:
+        "The recording button is easy. The hard part is remembering what was said, where it belongs, and what needs to happen next.",
+    },
+    {
+      eyebrow: "Solution",
+      title: "A recording flow that sorts itself",
+      body:
+        "After each memo, Mismo processes the audio, suggests folders, extracts reminders, and keeps the result visible through an interactive node graph.",
+      image: {
+        src: "/assets/figma-home/mismo-selected.png",
+        alt: "Mismo selected project preview",
+      },
+    },
+    {
+      eyebrow: "Research",
+      title: "The product shifted from recording to retrieval",
+      body:
+        "Competitive research showed that the opportunity was not only transcription. It was making the user's personal thoughts easier to rediscover and act on.",
+    },
+    {
+      eyebrow: "Reflection",
+      title: "Designing around the six seconds after recording",
+      body:
+        "The AI worked; the craft was making waiting, sorting, and confirmation feel intentional instead of slow.",
+    },
+  ],
+};
 
 // @soundcn/click-soft, CC0 sound by Kenney.
 const clickSoftSoundDataUri =
@@ -249,6 +297,7 @@ export default function MismoCaseStudy() {
 
   return (
     <main className={styles.page} ref={pageRef} aria-label="Mismo case study">
+      <MobileCaseStudy {...mobileCaseStudy} />
       <header className={styles.topNav} aria-label="Top Navigation Bar">
         <div className={styles.morphAnchor}>
           <div className={styles.tMorph}>

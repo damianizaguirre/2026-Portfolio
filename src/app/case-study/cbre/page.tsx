@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Footer from "@/components/Footer";
+import MobileCaseStudy from "@/components/MobileCaseStudy";
 import styles from "./integra-case-study.module.css";
 
 const frameWidth = 1920;
@@ -29,6 +30,56 @@ const rulerTicks = [
 const sectionNavItems = rulerTicks
   .map((tick, index) => ({ label: tick.label, tickIndex: index, type: tick.type }))
   .filter((item) => item.type === "section");
+
+const mobileCaseStudy = {
+  title: "Integra",
+  description:
+    "An employee-centered workplace solution for navigating tasks, analytics, virtual rooms, and company support flows.",
+  hero: {
+    src: "/images/cbre-thumbnail.png",
+    alt: "Integra project preview",
+  },
+  sections: [
+    {
+      eyebrow: "Overview",
+      title: "A workplace system built around employees",
+      body:
+        "Integra explores how employees can move through company resources, tasks, analytics, and support without losing context.",
+      image: {
+        src: "/images/integra/hero.png",
+        alt: "Integra hero interface",
+      },
+    },
+    {
+      eyebrow: "Company Track",
+      title: "Connecting scattered work moments",
+      body:
+        "The experience organizes workplace needs across dashboards, virtual rooms, analytics, and task management.",
+    },
+    {
+      eyebrow: "Core Flows",
+      title: "Dashboard, room, analytics, and tasks",
+      body:
+        "Each core flow was designed to feel connected while still serving a specific employee need.",
+      image: {
+        src: "/images/integra/dashboard.png",
+        alt: "Integra dashboard",
+      },
+    },
+    {
+      eyebrow: "Research",
+      title: "Comparing tools and mapping the journey",
+      body:
+        "Research covered current solutions, feature comparison, journey sentiment, and early wireframe exploration.",
+    },
+    {
+      eyebrow: "Reflection",
+      title: "Designing a calmer enterprise tool",
+      body:
+        "The product direction became quieter, more structured, and easier to scan with repeated workplace use in mind.",
+    },
+  ],
+};
 
 // @soundcn/click-soft, CC0 sound by Kenney.
 const clickSoftSoundDataUri =
@@ -210,6 +261,7 @@ export default function CBRECaseStudy() {
 
   return (
     <main className={styles.page} ref={pageRef} aria-label="Integra case study">
+      <MobileCaseStudy {...mobileCaseStudy} />
       <header className={styles.topNav} aria-label="Top Navigation Bar">
         <div className={styles.morphAnchor}>
           <div className={styles.tMorph}>
