@@ -423,8 +423,8 @@
 
 .rulerCard {
   position: absolute;
-  left: 5px;
-  top: 5px;
+  left: 0;
+  top: 0;
   width: 216px;
   height: 318px;
   overflow: hidden;
