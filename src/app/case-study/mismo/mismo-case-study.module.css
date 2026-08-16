@@ -406,6 +406,522 @@
   background: #ebebeb;
 }
 
+.mismoProcessBoard {
+  position: absolute;
+  left: 401px;
+  top: 5332px;
+  width: 1126px;
+  height: 641px;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #202020;
+}
+
+.boardGrid {
+  position: absolute;
+  left: 107px;
+  top: 60px;
+  display: grid;
+  width: 912px;
+  height: 512px;
+  grid-template-columns: repeat(10, 73px);
+  grid-auto-rows: 159px;
+  gap: 14px 20px;
+  align-content: start;
+}
+
+.boardPhone {
+  position: relative;
+  width: 73px;
+  height: 159px;
+  overflow: hidden;
+  border-radius: 7px;
+  background: #f8f8f8;
+  box-shadow: 0 0 0 0.8px rgba(255, 255, 255, 0.2);
+}
+
+.boardPhonedark {
+  background: #07111f;
+}
+
+.boardPhonesheet,
+.boardPhoneoverlay {
+  background: #d5d5d5;
+}
+
+.boardPhonedetail {
+  background: #fbfbfb;
+}
+
+.miniStatus {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 6;
+  display: flex;
+  width: 100%;
+  height: 12px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 5px;
+  color: #000000;
+  font-size: 4px;
+  font-weight: 700;
+  letter-spacing: -0.1px;
+}
+
+.boardPhonedark .miniStatus {
+  color: #ffffff;
+}
+
+.miniIsland {
+  position: absolute;
+  left: 25px;
+  top: 2px;
+  width: 23px;
+  height: 6px;
+  border-radius: 999px;
+  background: #000000;
+}
+
+.miniScreen {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.miniDotMap {
+  position: absolute;
+  inset: -5px -8px auto -8px;
+  height: 92px;
+  opacity: 0.45;
+  background-image: radial-gradient(circle, rgba(49, 122, 242, 0.7) 1px, transparent 1.4px);
+  background-position:
+    0 0,
+    4px 4px;
+  background-size: 7px 7px;
+  mask-image:
+    radial-gradient(ellipse at 28% 45%, #000 0 20%, transparent 21%),
+    radial-gradient(ellipse at 74% 45%, #000 0 24%, transparent 25%),
+    radial-gradient(ellipse at 52% 73%, #000 0 15%, transparent 16%);
+}
+
+.miniGradientHero {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 70%, rgba(0, 119, 255, 0.95), transparent 38%),
+    linear-gradient(180deg, #eef6ff 0%, #2c7dff 47%, #030404 100%);
+}
+
+.miniWelcomeContent,
+.miniSignin {
+  position: absolute;
+  left: 6px;
+  right: 6px;
+  bottom: 6px;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  color: #111111;
+  text-align: center;
+}
+
+.boardPhonedark .miniWelcomeContent,
+.miniSignin {
+  color: #ffffff;
+}
+
+.miniWelcomeContent strong,
+.miniSignin strong {
+  font-size: 7px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.miniWelcomeContent span {
+  font-size: 3.2px;
+  line-height: 1.2;
+  opacity: 0.6;
+}
+
+.miniWelcomeContent b,
+.miniSignin span {
+  display: block;
+  width: 56px;
+  height: 9px;
+  border-radius: 999px;
+  background: #2f2f2f;
+  color: #ffffff;
+  font-size: 3.5px;
+  font-weight: 700;
+  line-height: 9px;
+}
+
+.miniSignin span {
+  background: #f1f1f1;
+  color: #111111;
+}
+
+.mismoGlyph {
+  position: relative;
+  display: block;
+  width: 14px;
+  height: 14px;
+}
+
+.mismoGlyph::before,
+.mismoGlyph::after {
+  position: absolute;
+  content: "";
+  border-radius: 999px;
+  background: currentColor;
+}
+
+.mismoGlyph::before {
+  left: 2px;
+  top: 6px;
+  width: 10px;
+  height: 4px;
+  box-shadow:
+    -4px 0 0 currentColor,
+    5px -5px 0 currentColor,
+    5px 5px 0 currentColor;
+}
+
+.mismoGlyph::after {
+  left: 5px;
+  top: 2px;
+  width: 4px;
+  height: 10px;
+}
+
+.miniCard {
+  position: absolute;
+  left: 2px;
+  top: 44px;
+  width: 69px;
+  height: 111px;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #2f2f2f;
+  text-align: center;
+  box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.1);
+}
+
+.miniCard h4 {
+  margin: 18px auto 0;
+  width: 52px;
+  font-size: 6px;
+  font-weight: 700;
+  line-height: 1.12;
+}
+
+.miniCard p {
+  margin: 4px auto 0;
+  width: 48px;
+  color: #828282;
+  font-size: 3.8px;
+  line-height: 1.25;
+}
+
+.miniCard button {
+  position: absolute;
+  left: 6px;
+  bottom: 5px;
+  width: 57px;
+  height: 10px;
+  border: 0;
+  border-radius: 999px;
+  background: #2f2f2f;
+  color: #ffffff;
+  font-size: 3.8px;
+  font-weight: 700;
+}
+
+.miniDots {
+  position: absolute;
+  left: 26px;
+  top: 8px;
+  display: flex;
+  gap: 2px;
+}
+
+.miniDots i {
+  width: 2px;
+  height: 2px;
+  border-radius: 999px;
+  background: #d9d9d9;
+}
+
+.miniDots .miniDotActive {
+  width: 6px;
+  background: #4f82ff;
+}
+
+.miniChipCloud {
+  position: absolute;
+  left: 5px;
+  top: 37px;
+  display: flex;
+  width: 60px;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.miniChipCloud span {
+  padding: 2px 4px;
+  border-radius: 999px;
+  background: #e8f1ff;
+  color: #111827;
+  font-size: 3.5px;
+  font-weight: 700;
+}
+
+.miniPulse {
+  width: 31px;
+  height: 31px;
+  margin: 12px auto 0;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle, #2f2f2f 0 20%, transparent 22%),
+    repeating-radial-gradient(circle, rgba(47, 47, 47, 0.5) 0 1px, transparent 1px 4px);
+}
+
+.miniWave {
+  display: flex;
+  height: 22px;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  margin-top: 24px;
+}
+
+.miniWave i {
+  display: block;
+  width: 2px;
+  border-radius: 999px;
+  background: #a4a4a4;
+}
+
+.miniRecordButton {
+  position: absolute;
+  left: 27px;
+  bottom: 9px;
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  background: #ff2635;
+  color: #ffffff;
+  font-size: 8px;
+  font-weight: 800;
+  line-height: 20px;
+  text-align: center;
+  box-shadow: 0 0 0 4px rgba(255, 38, 53, 0.18);
+}
+
+.miniHomeSheet,
+.miniOverlay {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 70% 68%, rgba(255, 59, 64, 0.4), transparent 8%),
+    radial-gradient(circle at 42% 52%, rgba(39, 111, 255, 0.35), transparent 10%),
+    #d1d1d1;
+}
+
+.miniHomeHeader {
+  position: absolute;
+  left: 9px;
+  top: 23px;
+  width: 44px;
+  height: 11px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  color: #111827;
+  font-size: 3.8px;
+  font-weight: 700;
+  line-height: 11px;
+  text-align: center;
+}
+
+.miniSheet,
+.miniRecorderSheet {
+  position: absolute;
+  left: 4px;
+  right: 4px;
+  bottom: 5px;
+  height: 58px;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #111827;
+  text-align: center;
+  box-shadow: 0 -3px 14px rgba(0, 0, 0, 0.18);
+}
+
+.miniSheet strong,
+.miniRecorderSheet strong {
+  display: block;
+  margin-top: 7px;
+  font-size: 5px;
+}
+
+.miniSheet p {
+  color: #9ca3af;
+  font-size: 4px;
+}
+
+.miniPlus {
+  width: 18px;
+  height: 18px;
+  margin: 11px auto 0;
+  border-radius: 999px;
+  background: #35c971;
+  color: #ffffff;
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.miniColorRow {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  margin-top: 25px;
+}
+
+.miniColorRow i {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+}
+
+.miniIconRow {
+  margin-top: 24px;
+  color: #4f82ff;
+  font-size: 8px;
+  letter-spacing: 2px;
+}
+
+.miniFolderList {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 10px auto 0;
+  width: 48px;
+}
+
+.miniFolderList span {
+  display: block;
+  height: 8px;
+  border-radius: 6px;
+  background: #f4f7fb;
+  color: #111827;
+  font-size: 3.2px;
+  line-height: 8px;
+}
+
+.miniDetail {
+  position: absolute;
+  inset: 0;
+  padding: 25px 5px 0;
+  color: #111827;
+}
+
+.miniDetail strong {
+  display: block;
+  margin-bottom: 3px;
+  font-size: 5px;
+}
+
+.miniDetail > span {
+  color: #8a8a8a;
+  font-size: 3.5px;
+}
+
+.miniTabs {
+  display: flex;
+  margin-top: 9px;
+  border-radius: 5px;
+  background: #f2f3f4;
+}
+
+.miniTabs b {
+  flex: 1;
+  padding: 3px 0;
+  font-size: 3.2px;
+}
+
+.miniParagraphs {
+  margin-top: 8px;
+}
+
+.miniParagraphs p {
+  margin: 0 0 6px;
+  color: #374151;
+  font-size: 3.5px;
+  line-height: 1.45;
+}
+
+.miniRecorderSheet {
+  height: 70px;
+}
+
+.miniDialog {
+  width: 45px;
+  margin: 9px auto 0;
+  padding: 5px;
+  border-radius: 6px;
+  background: #ffffff;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.miniDialog b,
+.miniDialog span {
+  display: block;
+  font-size: 3.5px;
+  line-height: 1.6;
+}
+
+.miniDialog span:last-child {
+  color: #ff2635;
+}
+
+.miniProgress {
+  width: 44px;
+  height: 7px;
+  margin: 24px auto 0;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e5e7eb;
+}
+
+.miniProgress i {
+  display: block;
+  width: 65%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #317af2, #08c86a);
+}
+
+.miniCheck,
+.miniCheckRed {
+  width: 24px;
+  height: 24px;
+  margin: 18px auto 0;
+  border-radius: 999px;
+  background: #08c86a;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 24px;
+}
+
+.miniCheckRed {
+  background: #ff2635;
+}
+
 .rulerNav {
   position: fixed;
   left: calc(67px * var(--scale));
