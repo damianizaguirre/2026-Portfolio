@@ -284,7 +284,7 @@ export default function SancordaCaseStudy() {
       <div className={styles.stage}>
         <div className={styles.frame}>
           <p className={styles.projectLabel}>Product Design Internship 2026</p>
-          <h1 className={styles.title}>Interactive Medical PlanningPlatform</h1>
+          <h1 className={styles.title}>Interactive Medical Planning Platform</h1>
 
           <section className={styles.heroCard} aria-label="Sancorda hero preview">
             <img loading="eager" decoding="async"

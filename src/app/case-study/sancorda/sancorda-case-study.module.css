@@ -529,8 +529,239 @@
   }
 }
 
+/* ---------------------------------------------------------------------------
+   Mobile: stop scaling the 1920px frame down and reflow it as a document.
+
+   The desktop layout is a fixed-size frame of absolutely positioned elements
+   scaled by transform. Scaling keeps the composition but shrinks type to ~4px
+   on a phone, so below 700px every positioned child is returned to normal flow
+   and re-spaced. The `!important` flags are load-bearing: each element carries
+   its Figma coordinates in an inline style attribute, which a plain rule loses
+   to.
+   --------------------------------------------------------------------------- */
 @media (max-width: 700px) {
   .rulerNav {
     display: none;
+  }
+
+  .page {
+    min-height: 0;
+    padding-top: 60px;
+  }
+
+  .stage {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  .frame {
+    width: 100%;
+    height: auto;
+    padding: 8px 24px 0;
+    box-sizing: border-box;
+    transform: none;
+  }
+
+  /* Return every frame child to flow. Images keep their intrinsic ratio via
+     width:auto + max-width:100% + height:auto. */
+  .frame > *:not(.siteFooter) {
+    position: static !important;
+    left: auto !important;
+    top: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    width: auto !important;
+    height: auto !important;
+    max-width: 100% !important;
+    white-space: normal !important;
+  }
+
+  /* --- top chrome --- */
+  .topNav {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 60px;
+    transform: none;
+    background: rgba(251, 251, 251, 0.92);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  .morphAnchor {
+    left: 24px;
+    top: 13px;
+  }
+
+  .navLinks {
+    right: 24px;
+    top: 19px;
+    gap: 26px;
+    font-size: 15px;
+  }
+
+  .backLink {
+    position: static;
+    margin: 22px 0 6px 24px;
+    display: inline-flex;
+    transform: none;
+    font-size: 14px;
+  }
+
+  /* --- masthead --- */
+  .projectLabel {
+    font-size: 13px;
+    letter-spacing: 0.02em;
+  }
+
+  .title {
+    margin: 2px 0 24px;
+    font-size: 36px;
+    line-height: 1.1;
+  }
+
+  /* --- media cards: fixed-size boxes become fluid, ratio-preserving ones --- */
+  .heroCard,
+  .imageCard {
+    display: flex;
+    width: 100% !important;
+    aspect-ratio: 1131 / 637;
+    align-items: center;
+    justify-content: center;
+    padding: 0 5%;
+    box-sizing: border-box;
+  }
+
+  .heroImage,
+  .whatImageFrame {
+    position: static !important;
+    left: auto !important;
+    top: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    max-width: 100%;
+  }
+
+  .whatImage {
+    position: static !important;
+    left: auto !important;
+    top: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    object-fit: contain;
+  }
+
+  .heroCard,
+  .imageCard,
+  .wideImage,
+  .designImage,
+  .designDemoImage {
+    margin: 28px 0 0;
+    border-radius: 10px;
+  }
+
+  .demoGrid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+    margin-top: 20px;
+  }
+
+  .demoImage {
+    height: auto;
+  }
+
+  /* --- project meta: 4 label/value columns become a stacked list --- */
+  .metaGrid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    margin: 36px 0 0;
+    row-gap: 0;
+    font-size: 16px;
+  }
+
+  .metaGrid > *:nth-child(1) {
+    grid-area: 1 / 1;
+  }
+  .metaGrid > *:nth-child(5) {
+    grid-area: 2 / 1;
+  }
+  .metaGrid > *:nth-child(2) {
+    grid-area: 3 / 1;
+  }
+  .metaGrid > *:nth-child(6) {
+    grid-area: 4 / 1;
+  }
+  .metaGrid > *:nth-child(3) {
+    grid-area: 5 / 1;
+  }
+  .metaGrid > *:nth-child(7) {
+    grid-area: 6 / 1;
+  }
+  .metaGrid > *:nth-child(4) {
+    grid-area: 7 / 1;
+  }
+  .metaGrid > *:nth-child(8) {
+    grid-area: 8 / 1;
+  }
+
+  .metaLabel {
+    margin-top: 18px !important;
+    font-size: 13px;
+    color: #8a8a8a;
+  }
+
+  /* Multi-item values ("Jeremy Warren John Woo") are single strings that rely on
+     a narrow desktop column to break between entries. Cap the measure so they
+     keep breaking here instead of running together on one line. */
+  .metaValue {
+    margin-top: 4px !important;
+    max-width: 190px;
+    font-size: 16px;
+    line-height: 1.45;
+  }
+
+  /* --- section rhythm --- */
+  .sectionKicker {
+    margin: 56px 0 8px !important;
+    font-size: 14px;
+    color: #8a8a8a;
+  }
+
+  .sectionTitle {
+    margin: 28px 0 12px !important;
+    font-size: 26px;
+    line-height: 1.28;
+  }
+
+  /* A title directly under its kicker is part of the same block, not a new one. */
+  .sectionKicker + .sectionTitle {
+    margin-top: 0 !important;
+  }
+
+  .sectionCopy {
+    margin: 0 !important;
+    font-size: 16.5px;
+    line-height: 1.6;
+  }
+
+  .sectionCopy p + p {
+    margin-top: 18px;
+  }
+
+  /* --- footer spans the full width, outside the frame gutter ---
+     Stays `relative`, not `static`: the Footer component positions its own
+     columns absolutely and needs this element as their containing block. */
+  .siteFooter {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    width: auto !important;
+    /* Taller than the shared 120px: the columns are absolutely positioned, so
+       the box cannot grow to fit the heading plus two rows of social icons. */
+    height: 172px !important;
+    margin: 64px -24px 0;
   }
 }

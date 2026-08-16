@@ -108,8 +108,10 @@
     line-height: 18px;
   }
 
+  /* 88px, not 84: two 37.032px icons plus the 10px gap measure 84.064px, so an
+     84px track wrapped every icon onto its own row instead of making a 2x2. */
   .footerIconRow {
-    width: 84px;
+    width: 88px;
     flex-wrap: wrap;
     gap: 10px;
   }
