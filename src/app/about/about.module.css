@@ -677,8 +677,8 @@
      bottom padding does not give the caption anywhere to go, it takes room
      away. Hence tall cards with slim vertical padding. */
   .frame > .spotifyCard {
-    height: 340px !important;
-    padding: 14px 46px 14px;
+    height: 300px !important;
+    padding: 14px 68px 14px;
   }
 
   .frame > .movieCard {
