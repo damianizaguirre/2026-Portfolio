@@ -677,13 +677,13 @@
      bottom padding does not give the caption anywhere to go, it takes room
      away. Hence tall cards with slim vertical padding. */
   .frame > .spotifyCard {
-    height: 300px !important;
-    padding: 14px 68px 14px;
+    height: 280px !important;
+    padding: 16px 48px 14px;
   }
 
   .frame > .movieCard {
-    height: 386px !important;
-    padding: 18px 66px 14px;
+    height: 360px !important;
+    padding: 18px 48px 14px;
   }
 
   /* The CoverFlow caption is a 24px heading in a fixed 56px (h-14) block. At

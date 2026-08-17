@@ -143,8 +143,12 @@ export interface CoverFlowProps {
   items: CoverFlowItem[];
   itemWidth?: number;
   itemHeight?: number;
+  mobileItemWidth?: number;
+  mobileItemHeight?: number;
   stackSpacing?: number;
+  mobileStackSpacing?: number;
   centerGap?: number;
+  mobileCenterGap?: number;
   rotation?: number;
   initialIndex?: number;
   enableReflection?: boolean;
@@ -183,8 +187,12 @@ export function CoverFlow({
   items,
   itemWidth = 400,
   itemHeight = 400,
+  mobileItemWidth,
+  mobileItemHeight,
   stackSpacing = 100,
+  mobileStackSpacing,
   centerGap = 250,
+  mobileCenterGap,
   rotation = 50,
   initialIndex = 0,
   enableReflection = false,
@@ -236,11 +244,15 @@ export function CoverFlow({
     return () => mql.removeEventListener?.("change", apply);
   }, []);
 
-  const scale = containerWidth > 0 && itemWidth > 0 ? Math.min(1, (containerWidth * 0.78) / itemWidth) : 1;
-  const effectiveWidth = Math.round(itemWidth * scale);
-  const effectiveHeight = Math.round(itemHeight * scale);
-  const effectiveStackSpacing = Math.round(stackSpacing * scale);
-  const effectiveCenterGap = Math.round(centerGap * scale);
+  const baseItemWidth = isMobile && mobileItemWidth ? mobileItemWidth : itemWidth;
+  const baseItemHeight = isMobile && mobileItemHeight ? mobileItemHeight : itemHeight;
+  const baseStackSpacing = isMobile && mobileStackSpacing ? mobileStackSpacing : stackSpacing;
+  const baseCenterGap = isMobile && mobileCenterGap ? mobileCenterGap : centerGap;
+  const scale = containerWidth > 0 && baseItemWidth > 0 ? Math.min(1, (containerWidth * 0.78) / baseItemWidth) : 1;
+  const effectiveWidth = Math.round(baseItemWidth * scale);
+  const effectiveHeight = Math.round(baseItemHeight * scale);
+  const effectiveStackSpacing = Math.round(baseStackSpacing * scale);
+  const effectiveCenterGap = Math.round(baseCenterGap * scale);
 
   const reflectionFilterId =
     isMounted && enableReflection && !isMobile && !isSafari

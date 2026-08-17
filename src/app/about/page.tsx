@@ -427,6 +427,10 @@ export default function About() {
               items={recentListens}
               itemWidth={292}
               itemHeight={292}
+              mobileItemWidth={172}
+              mobileItemHeight={172}
+              mobileStackSpacing={42}
+              mobileCenterGap={134}
               enableAudio
               captionGap={10}
               className={styles.coverFlow}
@@ -444,8 +448,12 @@ export default function About() {
               items={movieItems}
               itemWidth={190}
               itemHeight={285}
+              mobileItemWidth={118}
+              mobileItemHeight={177}
               stackSpacing={70}
+              mobileStackSpacing={44}
               centerGap={180}
+              mobileCenterGap={116}
               rotation={42}
               enableAudio
               className={styles.movieCoverFlow}
