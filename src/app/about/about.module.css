@@ -474,3 +474,246 @@
 .heroCollage {
   contain: paint;
 }
+
+/* ---------------------------------------------------------------------------
+   Mobile: stop scaling the 1920px frame down and reflow it as a document.
+
+   Same approach as the case studies. Scaling the frame keeps the composition
+   but shrinks this page to 874px tall on a phone, so below 700px every
+   positioned child returns to normal flow and is re-spaced. The `!important`
+   flags are load-bearing: several elements carry their Figma coordinates in an
+   inline style attribute, which a plain rule loses to.
+
+   The first-load entrance animation above still applies — it animates opacity
+   and translate only, so it is layout-independent.
+   --------------------------------------------------------------------------- */
+@media (max-width: 700px) {
+  .page {
+    min-height: 0;
+    padding-top: 60px;
+  }
+
+  .stage {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  .frame {
+    width: 100%;
+    height: auto;
+    padding: 30px 24px 0;
+    box-sizing: border-box;
+    transform: none;
+  }
+
+  .frame > *:not(.siteFooter) {
+    position: static !important;
+    left: auto !important;
+    top: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    width: auto !important;
+    height: auto !important;
+    max-width: 100% !important;
+    white-space: normal !important;
+  }
+
+  /* --- top chrome --- */
+  .topNav {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 60px;
+    transform: none;
+    background: rgba(251, 251, 251, 0.92);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  .morphAnchor {
+    left: 24px;
+    top: 13px;
+  }
+
+  .navLinks {
+    right: 24px;
+    top: 19px;
+    gap: 26px;
+    font-size: 15px;
+  }
+
+  /* --- hero: name, role, intro, then the photos --- */
+  .name {
+    margin: 0 0 2px !important;
+    font-size: 30px;
+    line-height: 1.15;
+  }
+
+  .role {
+    margin: 0 0 26px !important;
+    font-size: 18px;
+  }
+
+  .introCopy p {
+    position: static !important;
+    left: auto !important;
+    top: auto !important;
+    width: auto !important;
+    font-size: 16.5px;
+    line-height: 1.6;
+  }
+
+  .introCopy p + p {
+    margin-top: 16px !important;
+  }
+
+  /* The desktop collage scatters eight photos across 1400px. Shrunk to a phone
+     they would be thumbnails, so they become a full-bleed swipeable strip at a
+     size you can actually see. */
+  .frame > .heroCollage {
+    position: relative !important;
+    display: flex;
+    margin: 30px -24px 0;
+    padding: 0 24px 6px;
+    gap: 10px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+    contain: none;
+    pointer-events: auto;
+  }
+
+  .heroPhoto {
+    position: static !important;
+    left: auto !important;
+    top: auto !important;
+    width: auto !important;
+    height: 158px !important;
+    max-width: none !important;
+    flex: 0 0 auto;
+    border-radius: 8px;
+    scroll-snap-align: center;
+    pointer-events: auto;
+  }
+
+  /* --- section headings. Must stay `relative`: the underline rule is an
+     absolutely positioned ::after, and against a static heading it would
+     anchor to the frame and stack at the top of the page instead.
+     Selector must be `.frame > .sectionHeading` to outrank the blanket flow
+     reset above — a bare `.sectionHeading` loses to it even with
+     `!important`. --- */
+  .frame > .sectionHeading {
+    position: relative !important;
+    margin: 52px 0 24px !important;
+    font-size: 22px;
+  }
+
+  .sectionHeading::after {
+    top: 31px;
+  }
+
+  .headingMedium {
+    font-size: 22px;
+  }
+
+  /* --- experience / education / certifications --- */
+  .entryList {
+    display: flex;
+    margin: 0 !important;
+    gap: 22px;
+  }
+
+  .entry {
+    margin: 0 !important;
+  }
+
+  /* These are grandchildren of the frame, so the blanket reset does not reach
+     them; without dropping `nowrap` the longer role titles push the page into
+     horizontal scroll. */
+  .entryRole,
+  .entryPeriod {
+    white-space: normal !important;
+  }
+
+  .entryRole {
+    font-size: 17px;
+    line-height: 1.4;
+  }
+
+  .entryPeriod {
+    font-size: 14px;
+  }
+
+  /* --- shelf --- */
+  .shelfLabel {
+    margin: 34px 0 2px !important;
+    font-size: 18px;
+  }
+
+  .shelfSource {
+    margin: 0 !important;
+    font-size: 14px;
+  }
+
+  /* The cover flows lay out from fixed pixel item sizes, so the card keeps
+     `overflow: hidden` and crops to the centred item rather than trying to fit
+     the whole reel. content-visibility is dropped because its reserved
+     intrinsic size is the desktop one. */
+  .frame > .shelfCard {
+    width: 100% !important;
+    margin-top: 16px;
+    content-visibility: visible;
+    contain: none;
+  }
+
+  /* CoverFlow sizes its items from its container width (itemWidth capped at
+     containerWidth * 0.78), so the horizontal padding here is what shrinks the
+     reel — without it the covers render near full size and the caption
+     collides with the flanking art. Heights are set to clear item + caption. */
+  /* The CoverFlow fills the card's *content* box and clips its own overflow,
+     so the covers-plus-caption column has to fit inside height minus padding —
+     bottom padding does not give the caption anywhere to go, it takes room
+     away. Hence tall cards with slim vertical padding. */
+  .frame > .spotifyCard {
+    height: 340px !important;
+    padding: 14px 46px 14px;
+  }
+
+  .frame > .movieCard {
+    height: 386px !important;
+    padding: 18px 66px 14px;
+  }
+
+  /* The CoverFlow caption is a 24px heading in a fixed 56px (h-14) block. At
+     this width a title runs to three lines and overflows the block, which the
+     reel then clips — and because the block is fixed, the overflow is a
+     constant few pixels no matter how tall the card gets. So the title is
+     scaled down and clamped to two lines, and the block is given room for it
+     plus the subtitle. */
+  .frame > .shelfCard h3 {
+    display: -webkit-box;
+    overflow: hidden;
+    font-size: 16px;
+    line-height: 1.25;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  .frame > .shelfCard div[class~="h-14"] {
+    height: 70px;
+  }
+
+  /* --- footer spans the full width, outside the frame gutter ---
+     Stays `relative`, not `static`: the Footer component positions its own
+     columns absolutely and needs this element as their containing block. */
+  .siteFooter {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    width: auto !important;
+    height: 172px !important;
+    margin: 60px -24px 0;
+  }
+}
