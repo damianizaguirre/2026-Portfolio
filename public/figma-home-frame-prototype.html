@@ -681,13 +681,19 @@
         border-radius: 5.534px;
       }
 
+      /* Track width follows the meta column so the bar always spans the same
+         width as the title above it, at every breakpoint. */
       .progress-track {
-        width: 183.74px;
+        width: var(--music-meta-width);
         background: #d9d9d9;
       }
 
+      /* The fill is a sibling of the track, not a child, so a percentage width
+         would resolve against the card instead of the bar. JS sets
+         --progress-pct (0-1) and the width is derived from the same variable
+         the track uses, so it stays correct at every breakpoint. */
       .progress-fill {
-        width: 47.595px;
+        width: calc(var(--music-meta-width) * var(--progress-pct, 0.259));
         background: var(--progress-fill);
         transition: background 280ms ease;
       }
@@ -1833,48 +1839,86 @@
         }
 
         .time-digit,
-        .time-colon,
-        .time-card.has-two-digit-hour .time-digit,
-        .time-card.has-two-digit-hour .time-colon {
+        .time-colon {
           font-size: 52.573px;
         }
 
-        .time-digit.hour-one,
-        .time-card.has-two-digit-hour .time-digit.hour-one {
+        .time-digit.hour-one {
           left: 19px;
           top: 10px;
           width: 41.355px;
           height: 65.898px;
         }
 
-        .time-colon,
-        .time-card.has-two-digit-hour .time-colon {
+        .time-colon {
           left: 52.08px;
           top: 10.19px;
         }
 
-        .time-digit.minute-ten,
-        .time-card.has-two-digit-hour .time-digit.minute-ten {
+        .time-digit.minute-ten {
           left: 56.19px;
           top: 10.56px;
           width: 39.701px;
           height: 65.039px;
         }
 
-        .time-digit.minute-one,
-        .time-card.has-two-digit-hour .time-digit.minute-one {
+        .time-digit.minute-one {
           left: 86.16px;
           top: 10.6px;
           width: 31.658px;
           height: 64.851px;
         }
 
-        .time-digit.hour-ten,
-        .time-card.has-two-digit-hour .time-digit.hour-ten {
+        /* Parked off-card while hidden; the two-digit block below brings it in. */
+        .time-digit.hour-ten {
           left: -6px;
           top: 10px;
           width: 30px;
           height: 65.898px;
+        }
+
+        /* Two-digit hours (10, 11, 12) add a fourth digit to a 136px card.
+           Previously both cases shared the single-digit positions, which left
+           the tens digit parked at left:-6px -- clipped by the card edge and
+           overlapping the hours digit. The row is re-laid slightly smaller so
+           all four digits sit inside the card, mirroring what the desktop
+           .has-two-digit-hour block does at full size. */
+        .time-card.has-two-digit-hour .time-digit,
+        .time-card.has-two-digit-hour .time-colon {
+          font-size: 47.8px;
+        }
+
+        .time-card.has-two-digit-hour .time-digit.hour-ten {
+          left: 8.4px;
+          top: 12.1px;
+          width: 28.3px;
+          height: 61.3px;
+        }
+
+        .time-card.has-two-digit-hour .time-digit.hour-one {
+          left: 28.2px;
+          top: 10.35px;
+          width: 35.4px;
+          height: 62.7px;
+        }
+
+        .time-card.has-two-digit-hour .time-colon {
+          left: 55.8px;
+          top: 12.8px;
+        }
+
+        .time-card.has-two-digit-hour .time-digit.minute-ten {
+          left: 58.6px;
+          top: 12.8px;
+          width: 36.1px;
+          height: 60.6px;
+        }
+
+        .time-card.has-two-digit-hour .time-digit.minute-one {
+          left: 86.2px;
+          top: 11.8px;
+          width: 30.4px;
+          height: 61.3px;
         }
 
         .music-card,
@@ -1886,8 +1930,12 @@
           border-width: 0.4px;
           border-radius: 3.96px;
           box-shadow: 0 0 0.4px rgba(0, 0, 0, 0.25);
-          --music-meta-left: 89px;
-          --music-meta-width: 68px;
+          /* Track titles are the widest variable content in the hero. The art
+             gives up a few pixels and the gutter tightens so the text column
+             goes from 68px to 84px -- roughly two more words visible before
+             the title has to pan. */
+          --music-meta-left: 74px;
+          --music-meta-width: 84px;
         }
 
         .hero-stack-card {
@@ -1946,8 +1994,8 @@
         .album-art {
           left: 6.6px;
           top: 10.6px;
-          width: 64.421px;
-          height: 64.709px;
+          width: 58px;
+          height: 58.26px;
           border-radius: 4.948px;
         }
 
@@ -1970,13 +2018,8 @@
           border-radius: 3.125px;
         }
 
-        .progress-track {
-          width: 53px;
-        }
-
-        .progress-fill {
-          width: 13.729px;
-        }
+        /* Width and fill both come from the shared rules now -- the track
+           follows --music-meta-width and the fill is a percentage of it. */
 
         /* Not present in the mobile frame. */
         .track-time,
@@ -2595,8 +2638,7 @@
       let previewTime = parsePreviewTime(params.get("time"));
       let spotifyTrackUrl = "";
       let spotifyPlayback = null;
-      const spotifyProgressTrackWidth = 183.74;
-      const spotifyDefaultProgressWidth = 0;
+      const spotifyDefaultProgressPercent = 0;
       const spotifyDefaultProgressColors = { fill: "#38594d" };
       const spotifyDefaultCard = {
         albumArt: spotifyAlbumArt.src,
@@ -3586,7 +3628,7 @@
         spotifyAlbumArtNext.removeAttribute("src");
         spotifyTrackTitleText.textContent = spotifyDefaultCard.title;
         spotifyTrackArtist.textContent = spotifyDefaultCard.artist;
-        spotifyProgressFill.style.width = `${spotifyDefaultProgressWidth}px`;
+        spotifyProgressFill.style.setProperty("--progress-pct", String(spotifyDefaultProgressPercent));
         spotifyProgressCurrent.textContent = spotifyDefaultCard.current;
         spotifyProgressDuration.textContent = spotifyDefaultCard.duration;
         spotifyActionLabel.textContent = "Play";
@@ -3625,14 +3667,14 @@
           isPlaying: Boolean(data.isPlaying),
           currentLabel: formatDuration(progressMs),
           durationLabel: formatDuration(durationMs),
-          progressWidth: spotifyProgressTrackWidth * (Math.max(0, Math.min(percent, 100)) / 100),
+          progressPercent: Math.max(0, Math.min(percent, 100)),
         };
       }
 
       function writeCurrentSpotifyMeta(state) {
         spotifyTrackTitleText.textContent = state.title;
         spotifyTrackArtist.textContent = state.artist;
-        spotifyProgressFill.style.width = `${state.progressWidth.toFixed(2)}px`;
+        spotifyProgressFill.style.setProperty("--progress-pct", (state.progressPercent / 100).toFixed(4));
         spotifyProgressCurrent.textContent = state.currentLabel;
         spotifyProgressDuration.textContent = state.durationLabel;
         spotifyRenderedTrackKey = state.key;
@@ -3642,7 +3684,7 @@
       function writeNextSpotifyMeta(state) {
         spotifyMetaNextTitle.textContent = state.title;
         spotifyMetaNextArtist.textContent = state.artist;
-        spotifyMetaNextProgress.style.width = `${state.progressWidth.toFixed(2)}px`;
+        spotifyMetaNextProgress.style.setProperty("--progress-pct", (state.progressPercent / 100).toFixed(4));
         spotifyMetaNextCurrent.textContent = state.currentLabel;
         spotifyMetaNextDuration.textContent = state.durationLabel;
       }
@@ -3691,9 +3733,9 @@
         const elapsed = spotifyPlayback.isPlaying ? Date.now() - spotifyPlayback.syncedAt : 0;
         const progress = Math.min(spotifyPlayback.progressMs + elapsed, spotifyPlayback.durationMs);
         const percent = spotifyPlayback.durationMs ? (progress / spotifyPlayback.durationMs) * 100 : 0;
-        const progressWidth = spotifyProgressTrackWidth * (Math.max(0, Math.min(percent, 100)) / 100);
+        const progressPercent = Math.max(0, Math.min(percent, 100));
 
-        spotifyProgressFill.style.width = `${progressWidth.toFixed(2)}px`;
+        spotifyProgressFill.style.setProperty("--progress-pct", (progressPercent / 100).toFixed(4));
         spotifyProgressCurrent.textContent = formatDuration(progress);
         spotifyProgressDuration.textContent = formatDuration(spotifyPlayback.durationMs);
       }
