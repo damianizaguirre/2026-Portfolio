@@ -2271,6 +2271,11 @@
         }
       }
     </style>
+    <!-- Vercel Web Analytics. This page is served by a middleware rewrite
+         straight out of /public, so it never renders the Next.js layout and
+         does not get the <Analytics /> component the React routes use. Same
+         first-party endpoint, so the existing CSP covers it. -->
+    <script defer src="/_vercel/insights/script.js"></script>
   </head>
   <body>
     <header class="top-nav" aria-label="Top Navigation Bar">

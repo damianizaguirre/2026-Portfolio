@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import { ReflectiveProvider } from "@/context/ReflectiveContext";
 import "./globals.css";
 
@@ -44,6 +45,10 @@ export default function RootLayout({
     <html lang="en" className={geist.variable}>
       <body>
         <ReflectiveProvider>{children}</ReflectiveProvider>
+        {/* Covers every React route. The homepage is a static file served by a
+            middleware rewrite, so it bypasses this layout entirely and loads
+            /_vercel/insights/script.js with its own tag. */}
+        <Analytics />
       </body>
     </html>
   );
