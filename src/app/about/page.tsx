@@ -353,7 +353,7 @@ export default function About() {
             <p>I love design, technology, and business and the way they all meet to create meaningful products for people.</p>
             <p>In pursuit of greatness - continuously creating.</p>
             <p>
-              Open to work on new opportunities. <a href="mailto:izaguirredamian20@gmail.com">Let’s chat!</a>
+              Open to work on new opportunities. <a href="mailto:damianpizaguirre@gmail.com">Let’s chat!</a>
             </p>
           </div>
 

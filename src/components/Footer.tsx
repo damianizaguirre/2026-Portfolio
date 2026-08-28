@@ -45,7 +45,7 @@ export default function Footer({
           </a>
           <a
             className={styles.footerSocialLink}
-            href="mailto:izaguirredamian20@gmail.com"
+            href="mailto:damianpizaguirre@gmail.com"
             aria-label="Email"
           >
             <img src="/assets/social-icons/mail.jpg" alt="" />
