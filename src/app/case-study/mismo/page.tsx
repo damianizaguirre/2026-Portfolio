@@ -386,7 +386,7 @@ export default function MismoCaseStudy() {
             <p className={styles.metaValue}>Product Designer/Developer</p>
             <p className={styles.metaValue}>Jan - May 2026</p>
             <p className={styles.metaValue}>Solo</p>
-            <p className={styles.metaValue}>Shipped</p>
+            <p className={styles.metaValue}>Pending</p>
           </section>
 
           <p className={styles.sectionKicker} style={{ left: 395, top: 1112 }}>
